@@ -10,7 +10,30 @@
   },
   "home": {
     "greeting": "What needs fixing?",
-    "counter": "₹{{amount}} earned by workers in {{city}} — 100% kept by them"
+    "counter": "₹{{amount}} earned by workers in {{city}} — 100% kept by them",
+    "available": "Available now",
+    "comingSoon": "Coming soon"
+  },
+  "category": {
+    "noProviders": "No pros here yet",
+    "noProvidersSub": "We're onboarding providers in your area.",
+    "comingSoonTitle": "{{category}} is coming soon",
+    "comingSoonSub": "Leave your number and we'll message you the day it goes live.",
+    "phonePlaceholder": "10-digit mobile number",
+    "notifyMe": "Notify me",
+    "waitlistDone": "You're on the list",
+    "waitlistDoneSub": "We'll message you when it launches."
+  },
+  "provider": {
+    "verified": "Verified",
+    "jobsDone": "{{count}} jobs done",
+    "yearsExp": "{{count}} yrs experience",
+    "ribbon": "₹0 commission — keeps 100% of what you pay",
+    "about": "About",
+    "visitCharge": "Visiting charge",
+    "request": "Request this pro",
+    "ctaSoon": "Booking opens soon",
+    "notFound": "Provider not found"
   },
   "common": {
     "comingSoon": "Coming soon"

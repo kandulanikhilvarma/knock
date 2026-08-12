@@ -10,7 +10,30 @@
   },
   "home": {
     "greeting": "क्या ठीक करवाना है?",
-    "counter": "{{city}} में मज़दूरों ने कमाए ₹{{amount}} — 100% उन्हीं के पास"
+    "counter": "{{city}} में मज़दूरों ने कमाए ₹{{amount}} — 100% उन्हीं के पास",
+    "available": "अभी उपलब्ध",
+    "comingSoon": "जल्द आ रहा है"
+  },
+  "category": {
+    "noProviders": "यहाँ अभी कोई प्रो नहीं",
+    "noProvidersSub": "हम आपके इलाके में प्रोवाइडर जोड़ रहे हैं.",
+    "comingSoonTitle": "{{category}} जल्द आ रहा है",
+    "comingSoonSub": "अपना नंबर दें, लॉन्च के दिन हम मैसेज करेंगे.",
+    "phonePlaceholder": "10 अंकों का मोबाइल नंबर",
+    "notifyMe": "मुझे सूचित करें",
+    "waitlistDone": "आप लिस्ट में हैं",
+    "waitlistDoneSub": "लॉन्च होने पर हम मैसेज करेंगे."
+  },
+  "provider": {
+    "verified": "वेरिफ़ाइड",
+    "jobsDone": "{{count}} काम पूरे",
+    "yearsExp": "{{count}} साल का अनुभव",
+    "ribbon": "₹0 कमीशन — आप जो देंगे उसका 100% उन्हीं को",
+    "about": "परिचय",
+    "visitCharge": "विज़िटिंग चार्ज",
+    "request": "इस प्रो को रिक्वेस्ट करें",
+    "ctaSoon": "बुकिंग जल्द शुरू होगी",
+    "notFound": "प्रोवाइडर नहीं मिला"
   },
   "common": {
     "comingSoon": "जल्द आ रहा है"
