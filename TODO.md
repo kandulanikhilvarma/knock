@@ -26,9 +26,13 @@ Phases per master-plan §9. One phase per session. App must run after every phas
 - [x] React Query wired · all screens have loading/error/empty states
 - [ ] Real provider photos + voice-intro (needs onboarding, P6) — avatars for now
 
-## P1 — Auth + roles  (backend blocked on SMS provider)
-- [ ] Phone OTP UI + Supabase signInWithOtp · role choice · profile stubs
-- [ ] **BLOCKED:** enable Phone provider in Supabase Auth + MSG91/2Factor SMS creds (no MCP for auth config — dashboard step)
+## P1 — Auth + roles  ✅ UI built (verify once test-OTP enabled)
+- [x] Phone OTP flow: phone entry → OTP → role choice, Supabase signInWithOtp
+- [x] Profile tab drives sign in/out; non-gating (browse stays open signed-out)
+- [x] Schema recorded in-repo: `supabase/migrations/0001_init_core_schema.sql`
+- [x] build-guard agent review passed (RLS on profiles verified owner-only)
+- [ ] **BLOCKED to test:** Supabase → Auth → enable Phone provider + add a test number w/ fixed OTP (free, no SMS). Then login is testable on iPhone.
+- [ ] Production SMS: MSG91/2Factor account + Supabase SMS hook
 - [ ] Day 3: EAS Android build + Play closed test (needs Expo account)
 
 ## P3 Dispatch · P4 Chat · P5 Verify+pay+reviews · P6 Onboarding+KYC · P7 Harden · P8 Ship

@@ -35,6 +35,28 @@
     "ctaSoon": "Booking opens soon",
     "notFound": "Provider not found"
   },
+  "auth": {
+    "phoneTitle": "Enter your mobile number",
+    "phoneSub": "We'll send a one-time code to verify it.",
+    "phonePlaceholder": "10-digit mobile number",
+    "sendCode": "Send code",
+    "sending": "Sending…",
+    "otpTitle": "Enter the code",
+    "otpSub": "Sent to {{phone}}",
+    "verify": "Verify",
+    "verifying": "Verifying…",
+    "roleTitle": "How will you use the app?",
+    "roleCustomer": "I need a service",
+    "roleCustomerSub": "Find and book local pros.",
+    "roleProvider": "I'm a professional",
+    "roleProviderSub": "Get jobs near you. Keep 100%."
+  },
+  "profileTab": {
+    "language": "Language",
+    "phone": "Mobile number",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
   "common": {
     "comingSoon": "Coming soon"
   }

@@ -52,6 +52,9 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="category/[slug]" options={{ headerShown: true, title: '' }} />
           <Stack.Screen name="provider/[id]" options={{ headerShown: true, title: '' }} />
+          <Stack.Screen name="auth/phone" options={{ headerShown: true, title: '' }} />
+          <Stack.Screen name="auth/otp" options={{ headerShown: true, title: '' }} />
+          <Stack.Screen name="auth/role" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>
     </QueryClientProvider>

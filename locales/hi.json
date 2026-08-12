@@ -35,6 +35,28 @@
     "ctaSoon": "बुकिंग जल्द शुरू होगी",
     "notFound": "प्रोवाइडर नहीं मिला"
   },
+  "auth": {
+    "phoneTitle": "अपना मोबाइल नंबर डालें",
+    "phoneSub": "वेरिफ़ाई करने के लिए हम एक कोड भेजेंगे.",
+    "phonePlaceholder": "10 अंकों का मोबाइल नंबर",
+    "sendCode": "कोड भेजें",
+    "sending": "भेजा जा रहा है…",
+    "otpTitle": "कोड डालें",
+    "otpSub": "{{phone}} पर भेजा गया",
+    "verify": "वेरिफ़ाई करें",
+    "verifying": "वेरिफ़ाई हो रहा है…",
+    "roleTitle": "आप ऐप कैसे इस्तेमाल करेंगे?",
+    "roleCustomer": "मुझे सर्विस चाहिए",
+    "roleCustomerSub": "स्थानीय प्रो ढूँढें और बुक करें.",
+    "roleProvider": "मैं प्रोफ़ेशनल हूँ",
+    "roleProviderSub": "आस-पास काम पाएँ. 100% अपने पास रखें."
+  },
+  "profileTab": {
+    "language": "भाषा",
+    "phone": "मोबाइल नंबर",
+    "signIn": "साइन इन",
+    "signOut": "साइन आउट"
+  },
   "common": {
     "comingSoon": "जल्द आ रहा है"
   }
