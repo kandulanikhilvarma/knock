@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, Alert, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -27,106 +28,231 @@ export default function ProviderScreen() {
 
   return (
     <View style={styles.screen}>
-      <Stack.Screen options={{ title: '' }} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.hero}>
-          <Avatar name={name} photoUrl={data.photo_url} size={88} />
-          <Text style={styles.name}>{name}</Text>
-          {verified && (
-            <View style={styles.badge}>
-              <Ionicons name="shield-checkmark" size={13} color={colors.surface} />
-              <Text style={styles.badgeTxt}>{t('provider.verified')}</Text>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Black hero */}
+        <SafeAreaView edges={['top']} style={styles.hero}>
+          <View style={styles.heroTop}>
+            <View style={styles.avaWrap}>
+              <Avatar name={name} photoUrl={data.photo_url} size={76} />
+              {verified && (
+                <View style={styles.avaRing}>
+                  <Ionicons name="checkmark" size={13} color={colors.surface} />
+                </View>
+              )}
             </View>
-          )}
-          <View style={styles.metaRow}>
-            <Ionicons name="star" size={15} color={colors.accent} />
-            <Text style={styles.meta}>{stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
-            <Text style={styles.dot}>·</Text>
-            <Text style={styles.meta}>{t('provider.jobsDone', { count: stats?.jobs_done ?? 0 })}</Text>
-            {data.years_exp ? (
-              <>
-                <Text style={styles.dot}>·</Text>
-                <Text style={styles.meta}>{t('provider.yearsExp', { count: data.years_exp })}</Text>
-              </>
-            ) : null}
+            <View style={{ flex: 1 }}>
+              <Text style={styles.name}>{name}</Text>
+              <Text style={styles.role}>{t('provider.roleLine')}</Text>
+              <View style={styles.rr}>
+                <Text style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
+                <Text style={styles.rrMut}>
+                  · {t('provider.jobsDone', { count: stats?.jobs_done ?? 0 })}
+                  {data.years_exp ? ` · ${t('provider.yearsExp', { count: data.years_exp })}` : ''}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.voice}>
+            <View style={styles.voicePlay}>
+              <Ionicons name="play" size={13} color={colors.surface} />
+            </View>
+            <Text style={styles.voiceTxt}>{t('provider.voiceIntro')}</Text>
+          </View>
+        </SafeAreaView>
+
+        <View style={styles.body}>
+          <View style={styles.facts}>
+            <Fact icon="shield-checkmark" color={colors.success} label={t('provider.factKyc')} />
+            <Fact icon="time-outline" color={colors.ink} label={t('provider.factEta')} />
+            <Fact icon="star" color={colors.goldDeep} label={t('provider.factRating')} />
+          </View>
+
+          {/* ₹0 coin on its ink stage */}
+          <View style={styles.seal}>
+            <View style={styles.coin}>
+              <Text style={styles.coinTxt}>₹0</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.sealTitle}>{t('provider.sealTitle')}</Text>
+              <Text style={styles.sealSub}>{t('provider.sealSub')}</Text>
+            </View>
+          </View>
+
+          <View style={styles.price}>
+            <Text style={styles.priceLbl}>{t('provider.priceLabel')}</Text>
+            <View style={styles.priceRow}>
+              <Text style={styles.priceK}>{t('provider.visitCharge')}</Text>
+              <Text style={styles.priceV}>₹{data.visiting_charge ?? '—'}</Text>
+            </View>
+          </View>
+
+          <View style={styles.verifyNote}>
+            <Ionicons name="qr-code-outline" size={19} color={colors.accent} />
+            <Text style={styles.verifyTxt}>{t('provider.qrNote')}</Text>
           </View>
         </View>
-
-        <View style={styles.ribbon}>
-          <Text style={styles.ribbonTxt}>{t('provider.ribbon')}</Text>
-        </View>
-
-        {data.bio ? (
-          <View style={styles.block}>
-            <Text style={styles.blockLabel}>{t('provider.about')}</Text>
-            <Text style={styles.blockBody}>{data.bio}</Text>
-          </View>
-        ) : null}
-
-        {data.visiting_charge != null && (
-          <View style={styles.block}>
-            <Text style={styles.blockLabel}>{t('provider.visitCharge')}</Text>
-            <Text style={styles.blockBody}>₹{data.visiting_charge}</Text>
-          </View>
-        )}
       </ScrollView>
 
-      {/* Sticky CTA — §5. Booking flow wires in at P3 (dispatch). */}
-      <View style={styles.footer}>
+      {/* Saffron request bar — the one action */}
+      <SafeAreaView edges={['bottom']} style={styles.footer}>
         <Pressable style={styles.cta} onPress={() => Alert.alert(t('provider.ctaSoon'))}>
           <Text style={styles.ctaTxt}>{t('provider.request')}</Text>
         </Pressable>
-      </View>
+        <Pressable style={styles.ghost}>
+          <Ionicons name="call-outline" size={19} color={colors.ink} />
+        </Pressable>
+      </SafeAreaView>
+    </View>
+  );
+}
+
+function Fact({ icon, color, label }: { icon: any; color: string; label: string }) {
+  return (
+    <View style={styles.fact}>
+      <Ionicons name={icon} size={19} color={color} />
+      <Text style={styles.factTxt}>{label}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: space.lg, gap: space.lg, paddingBottom: 120 },
-  hero: { alignItems: 'center', gap: space.sm, paddingTop: space.md },
-  name: { fontFamily: font.bold, fontSize: type.h1, color: colors.ink },
-  badge: {
+  content: { paddingBottom: 110 },
+  hero: { backgroundColor: colors.ink, paddingHorizontal: space.lg, paddingBottom: space.xl },
+  heroTop: { flexDirection: 'row', gap: space.md, alignItems: 'center', paddingTop: space.sm },
+  avaWrap: { position: 'relative' },
+  avaRing: {
+    position: 'absolute',
+    right: -4,
+    bottom: -4,
+    width: 25,
+    height: 25,
+    borderRadius: radius.pill,
+    backgroundColor: colors.success,
+    borderWidth: 3,
+    borderColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  name: { fontFamily: font.teBold, fontSize: type.h1, color: colors.onDark },
+  role: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, marginTop: 2 },
+  rr: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
+  star: { fontFamily: font.bold, fontSize: type.small, color: colors.gold },
+  rrMut: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted },
+  voice: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: colors.success,
-    paddingHorizontal: space.md,
-    paddingVertical: 3,
-    borderRadius: radius.pill,
+    gap: space.sm,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    borderRadius: radius.chip,
+    padding: space.sm,
+    marginTop: space.lg,
   },
-  badgeTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.surface },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  meta: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
-  dot: { color: colors.line },
-  ribbon: { backgroundColor: '#EAF2FB', borderRadius: radius.card, padding: space.md, alignItems: 'center' },
-  ribbonTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.primary },
-  block: {
+  voicePlay: {
+    width: 28,
+    height: 28,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  voiceTxt: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted },
+
+  body: { padding: space.lg, gap: space.md },
+  facts: { flexDirection: 'row', gap: space.sm },
+  fact: {
+    flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.line,
-    padding: space.lg,
-    gap: 4,
+    borderRadius: radius.chip,
+    padding: space.md,
+    alignItems: 'center',
+    gap: 5,
   },
-  blockLabel: { fontFamily: font.semibold, fontSize: type.small, color: colors.inkMuted },
-  blockBody: { fontFamily: font.regular, fontSize: type.body, color: colors.ink },
+  factTxt: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted, textAlign: 'center', lineHeight: 14 },
+
+  seal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    backgroundColor: colors.ink,
+    borderRadius: radius.card,
+    padding: space.lg,
+  },
+  coin: {
+    width: 46,
+    height: 46,
+    borderRadius: radius.pill,
+    backgroundColor: colors.ink,
+    borderWidth: 2,
+    borderColor: colors.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coinTxt: { fontFamily: font.bold, fontSize: 15, color: colors.gold },
+  sealTitle: { fontFamily: font.teBold, fontSize: type.small, color: colors.onDark, lineHeight: 18 },
+  sealSub: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted, marginTop: 2 },
+
+  price: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: radius.chip,
+    padding: space.md,
+  },
+  priceLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted },
+  priceRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 },
+  priceK: { fontFamily: font.te, fontSize: type.small, color: colors.ink, fontWeight: '600' },
+  priceV: { fontFamily: font.mono, fontSize: type.body, color: colors.ink, fontWeight: '700' },
+
+  verifyNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+    backgroundColor: 'rgba(255,122,26,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,122,26,0.4)',
+    borderStyle: 'dashed',
+    borderRadius: radius.chip,
+    padding: space.md,
+  },
+  verifyTxt: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.ink2, lineHeight: 18 },
+
   footer: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    padding: space.lg,
+    flexDirection: 'row',
+    gap: space.sm,
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
     backgroundColor: colors.bg,
     borderTopWidth: 1,
     borderTopColor: colors.line,
   },
   cta: {
+    flex: 1,
     height: tap.min,
     borderRadius: radius.card,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ctaTxt: { fontFamily: font.bold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  ghost: {
+    width: tap.min,
+    height: tap.min,
+    borderRadius: radius.card,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

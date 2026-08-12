@@ -36,6 +36,19 @@ export async function getProvidersByCategory(slug: string): Promise<ProviderCard
   );
 }
 
+// Top-rated available provider in a live category — the Home "near you" feature.
+export async function getFeaturedProvider(): Promise<ProviderCard | null> {
+  const { data, error } = await supabase
+    .from('provider_profiles')
+    .select('*, profiles(full_name), provider_stats(*)')
+    .eq('availability_status', 'available')
+    .limit(20);
+  if (error) throw error;
+  const rows = (data ?? []) as unknown as ProviderCard[];
+  rows.sort((a, b) => (b.provider_stats?.rating_avg ?? 0) - (a.provider_stats?.rating_avg ?? 0));
+  return rows[0] ?? null;
+}
+
 export async function getProvider(id: string): Promise<ProviderCard | null> {
   const { data, error } = await supabase
     .from('provider_profiles')

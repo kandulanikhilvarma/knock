@@ -26,34 +26,41 @@ export default function ProviderCard({
             </Text>
             {verified && (
               <View style={styles.badge}>
-                <Ionicons name="shield-checkmark" size={12} color={colors.surface} />
-                <Text style={styles.badgeTxt}>Verified</Text>
+                <Ionicons name="checkmark" size={11} color={colors.ink} />
+                <Text style={styles.badgeTxt}>VERIFIED</Text>
               </View>
             )}
           </View>
           <View style={styles.metaRow}>
-            <Ionicons name="star" size={13} color={colors.accent} />
-            <Text style={styles.meta}>{stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
+            <Text style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
             <Text style={styles.dot}>·</Text>
-            <Text style={styles.meta}>{stats?.jobs_done ?? 0} jobs</Text>
+            <Text style={styles.meta}>{stats?.jobs_done ?? 0} జాబ్‌లు</Text>
             {provider.years_exp ? (
               <>
                 <Text style={styles.dot}>·</Text>
-                <Text style={styles.meta}>{provider.years_exp}y exp</Text>
+                <Text style={styles.meta}>{provider.years_exp} ఏళ్లు</Text>
               </>
             ) : null}
           </View>
-          {provider.visiting_charge != null && (
-            <View style={styles.chip}>
-              <Text style={styles.chipTxt}>Visit ₹{provider.visiting_charge}</Text>
+          <View style={styles.tags}>
+            <View style={styles.tag}>
+              <Text style={styles.tagTxt}>తెలుగు మాట్లాడతారు</Text>
             </View>
-          )}
+            {provider.visiting_charge != null && (
+              <View style={styles.tag}>
+                <Text style={styles.tagTxt}>విజిట్ ₹{provider.visiting_charge}</Text>
+              </View>
+            )}
+          </View>
         </View>
       </View>
 
-      {/* ₹0-commission ribbon — §5 signature, on every provider card */}
-      <View style={styles.ribbon}>
-        <Text style={styles.ribbonTxt}>₹0 commission · keeps 100%</Text>
+      {/* ₹0 minted coin — the signature, on every provider card */}
+      <View style={styles.coinRow}>
+        <View style={styles.coin}>
+          <Text style={styles.coinTxt}>₹0</Text>
+        </View>
+        <Text style={styles.coinLabel}>మీరు చెల్లించే ప్రతి రూపాయి 100% వారికే — కమిషన్ లేదు.</Text>
       </View>
     </Pressable>
   );
@@ -71,34 +78,51 @@ const styles = StyleSheet.create({
   top: { flexDirection: 'row', gap: space.md },
   info: { flex: 1, gap: 4, justifyContent: 'center' },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  name: { flexShrink: 1, fontFamily: font.bold, fontSize: type.h3, color: colors.ink },
+  name: { flexShrink: 1, fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    backgroundColor: colors.success,
+    gap: 2,
+    backgroundColor: colors.gold,
     paddingHorizontal: space.sm,
     paddingVertical: 2,
     borderRadius: radius.pill,
   },
-  badgeTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.surface },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  badgeTxt: { fontFamily: font.bold, fontSize: 9, color: colors.ink, letterSpacing: 0.4 },
+  metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  rating: { fontFamily: font.bold, fontSize: type.small, color: colors.goldDeep },
   meta: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
-  dot: { color: colors.line, fontSize: type.small },
-  chip: {
-    alignSelf: 'flex-start',
-    marginTop: 2,
+  dot: { color: colors.line },
+  tags: { flexDirection: 'row', gap: 6, marginTop: 3, flexWrap: 'wrap' },
+  tag: {
     backgroundColor: colors.bg,
+    borderWidth: 1,
+    borderColor: colors.line,
     paddingHorizontal: space.sm,
     paddingVertical: 3,
     borderRadius: radius.pill,
   },
-  chipTxt: { fontFamily: font.medium, fontSize: type.chip, color: colors.ink },
-  ribbon: {
-    backgroundColor: '#EAF2FB',
-    borderRadius: 8,
-    paddingVertical: space.sm,
+  tagTxt: { fontFamily: font.te, fontSize: type.chip, color: colors.ink },
+  coinRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: space.sm,
+    backgroundColor: colors.bg,
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: radius.chip,
+    padding: space.sm,
   },
-  ribbonTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.primary },
+  coin: {
+    width: 30,
+    height: 30,
+    borderRadius: radius.pill,
+    backgroundColor: colors.ink,
+    borderWidth: 1.5,
+    borderColor: colors.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coinTxt: { fontFamily: font.bold, fontSize: 11, color: colors.gold },
+  coinLabel: { flex: 1, fontFamily: font.te, fontSize: type.chip, color: colors.ink2, lineHeight: 15 },
 });

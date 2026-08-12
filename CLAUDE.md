@@ -17,11 +17,13 @@ Full spec: [services-app-master-plan.md](services-app-master-plan.md) — read i
 - **Zustand** (client state) + **React Query** (server state) — add when P2+ needs them.
 - **Supabase** only: Auth (phone OTP), Postgres + RLS on every table, Realtime, Storage, Edge Functions. No Firebase.
 
-## Design tokens — from master-plan §5, live in `theme/tokens.ts`
-- Primary trust-blue `#1B4B8F` · Accent saffron `#FF7A1A` (**CTAs only**) · Success `#1E9E5A` · Bg bone `#FAF7F2` · Ink `#17181C`
-- 12px card radius · 48px min tap target · bottom tabs: Home · Bookings · Chat · Profile
-- Type: Inter (Latin) + Noto Sans Telugu + Noto Sans Devanagari. **Test Telugu first — strings run ~30% longer.**
-- Signature element: ₹0-commission ribbon on every provider card + Home city-earnings counter.
+## Design tokens — approved 2026-08-13, live in `theme/tokens.ts` (supersedes §5 blue palette)
+- Direction: **"Proof on paper, one saffron move."** Ink structure, paper ground, ₹0 as a black-gold coin.
+- `ink #0B0D12` (type/structure/dark surfaces) · `accent #FF7A1A` saffron (**the ONE action per screen**) · `gold #EDC24A` (₹0 coin/value) · `success #12A150` (proof only — KYC/verified/paid) · `bg #F4F5F7` paper · `surface #FFFFFF`
+- City-earnings shown as a **mono number on an ink card** (transparency). ₹0 coin (ink + gold ring) on every provider card + a dark coin stage on the profile.
+- 14px card radius · 48px min tap · bottom tabs: Home · Bookings · Chat · Profile (active = saffron)
+- Type: Inter + Noto Sans Telugu + Noto Sans Devanagari + platform mono for numbers. **Test Telugu first — ~30% longer.**
+- **Re-theme the whole app = change `theme/tokens.ts` values only.** Screens reference token names, never raw hex.
 
 ## Do NOT
 - No `localStorage` (use AsyncStorage / SecureStore).
