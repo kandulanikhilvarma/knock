@@ -1,0 +1,112 @@
+import { useEffect, useState } from 'react';
+import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { useRouter, Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { colors, space, radius, font, type, tap } from './../theme/tokens';
+import { getCategories, categoryName } from '../lib/queries';
+import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
+import { useSession } from '../lib/session';
+import { Loading } from '../components/StateView';
+
+export default function ProviderSetup() {
+  const { t, i18n } = useTranslation();
+  const router = useRouter();
+  const { session, loading } = useSession();
+
+  const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
+  const mine = useQuery({ queryKey: ['my-provider'], queryFn: getMyProviderProfile, enabled: !!session });
+
+  const [services, setServices] = useState<string[]>([]);
+  const [upiId, setUpiId] = useState('');
+  const [city, setCity] = useState('Vijayawada');
+  const [charge, setCharge] = useState('');
+  const [bio, setBio] = useState('');
+
+  useEffect(() => {
+    const p = mine.data;
+    if (p) {
+      setServices(p.services ?? []);
+      setUpiId(p.upi_id ?? '');
+      setCity(p.city ?? 'Vijayawada');
+      setCharge(p.visiting_charge != null ? String(p.visiting_charge) : '');
+      setBio(p.bio ?? '');
+    }
+  }, [mine.data]);
+
+  const save = useMutation({
+    mutationFn: () =>
+      saveProviderProfile({
+        services,
+        upiId: upiId.trim(),
+        city: city.trim(),
+        visitingCharge: charge ? parseInt(charge, 10) : null,
+        bio: bio.trim(),
+      }),
+    onSuccess: () => router.back(),
+  });
+
+  if (loading || cats.isLoading) return <Loading />;
+
+  const toggle = (slug: string) =>
+    setServices((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
+
+  const valid = services.length > 0 && upiId.includes('@');
+
+  return (
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <Stack.Screen options={{ title: t('providerSetup.title') }} />
+      <Text style={styles.lead}>{t('providerSetup.lead')}</Text>
+
+      <Text style={styles.label}>{t('providerSetup.services')}</Text>
+      <View style={styles.chips}>
+        {(cats.data ?? []).map((c) => {
+          const on = services.includes(c.slug);
+          return (
+            <Pressable key={c.id} style={[styles.chip, on && styles.chipOn]} onPress={() => toggle(c.slug)}>
+              <Text style={[styles.chipTxt, on && styles.chipTxtOn]}>{categoryName(c, i18n.language)}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <Text style={styles.label}>{t('providerSetup.upi')}</Text>
+      <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
+
+      <Text style={styles.label}>{t('providerSetup.city')}</Text>
+      <TextInput style={styles.input} value={city} onChangeText={setCity} placeholderTextColor={colors.inkMuted} />
+
+      <Text style={styles.label}>{t('providerSetup.charge')}</Text>
+      <TextInput style={styles.input} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
+
+      <Text style={styles.label}>{t('providerSetup.bio')}</Text>
+      <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} multiline placeholderTextColor={colors.inkMuted} />
+
+      <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
+        <Text style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</Text>
+      </Pressable>
+      {save.isError && <Text style={styles.err}>{(save.error as Error).message}</Text>}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.bg },
+  content: { padding: space.lg, gap: space.sm },
+  lead: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted, marginBottom: space.sm },
+  label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
+  chip: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, paddingVertical: space.xs, paddingHorizontal: space.md, backgroundColor: colors.surface },
+  chipOn: { backgroundColor: colors.ink, borderColor: colors.ink },
+  chipTxt: { fontFamily: font.te, fontSize: type.small, color: colors.ink },
+  chipTxtOn: { color: colors.onDark },
+  input: {
+    minHeight: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface,
+    paddingHorizontal: space.md, paddingVertical: space.sm, fontFamily: font.te, fontSize: type.body, color: colors.ink,
+  },
+  multi: { minHeight: 80, textAlignVertical: 'top' },
+  cta: { height: tap.min, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', marginTop: space.lg },
+  ctaOff: { opacity: 0.4 },
+  ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  err: { fontFamily: font.te, fontSize: type.small, color: colors.danger },
+});

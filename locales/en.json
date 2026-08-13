@@ -78,6 +78,23 @@
     "signOut": "Sign out",
     "myJobs": "Job requests"
   },
+  "providerSetup": {
+    "title": "Provider profile",
+    "lead": "Set up your work profile. You keep 100% of what customers pay.",
+    "services": "What work do you do?",
+    "upi": "Your UPI ID (for direct payment)",
+    "city": "City",
+    "charge": "Visiting charge (optional)",
+    "bio": "About you",
+    "save": "Save profile",
+    "saving": "Saving…",
+    "become": "Become a provider",
+    "edit": "Edit provider profile",
+    "availability": "Availability",
+    "status_available": "Available",
+    "status_busy": "Busy",
+    "status_paused": "Paused"
+  },
   "booking": {
     "newTitle": "Request a pro",
     "signInFirst": "Sign in to request a pro.",
