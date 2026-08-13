@@ -100,6 +100,20 @@ customer@test.app · providers: sureshbabu@ / naveenr@ (plumber, naveenr=newcome
 · kiranm@ (electrician/ac) · ravikumar@ (electrician) · anilteja@ / praveenk@ (ac).
 Or "Continue as guest" for an anonymous customer.
 
+## Design overhaul — done this session (2026-08-14)
+- [x] Dropped stock-photo category tiles (read cheap) → crafted icon-chip tiles on
+      the ink/paper system (`components/CategoryGlyph`). Grounded in ui-ux-pro-max:
+      Marketplace + Trust & Authority → restraint, not lifestyle photography.
+- [x] Elevation scale (`shadow.card`/`shadow.soft`) + press feedback in tokens;
+      applied to tiles, provider/trust cards, list rows, job + booking cards.
+- [x] **Font fix:** every screen hardcoded the Telugu face, so English rendered in
+      Noto Telugu. `components/AppText` remaps fontFamily to the active language at
+      render (en→Inter, te→Noto Telugu, hi→Devanagari), weight preserved, mono kept.
+      Swapped Text→AppText across all 22 screens/components. Verified: en = Inter.
+- [x] Trust pillars on Home; booking-detail progress stepper; complete
+      bookings/chat/profile tabs; icon-tile heroes on booking-new + coming-soon.
+- [ ] Real-device Telugu render pass (non-fakeable, needs your eyes).
+
 ## P7 Harden · P8 Ship — remaining, mostly blocked on user
 - [ ] Telugu layout audit on a real device (screenshot-verify — not headless).
 - [ ] Push notifications (Expo tokens) · WhatsApp offer alerts · wave-2 escalation.

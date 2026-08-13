@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import {
   getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
   submitReview, getBookingReview, type Booking, type BookingStatus,
@@ -392,6 +392,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row', alignItems: 'center', gap: space.md,
     backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.sm,
+    ...shadow.soft,
   },
   headerThumb: { width: 52, height: 52, borderRadius: radius.chip },
   headerCat: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },

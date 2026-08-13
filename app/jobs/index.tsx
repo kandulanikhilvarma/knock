@@ -4,7 +4,7 @@ import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { getMyOffers, respondOffer, type OfferWithBooking } from '../../lib/bookings';
 import { getCategories, categoryName } from '../../lib/queries';
 import CategoryGlyph from '../../components/CategoryGlyph';
@@ -105,7 +105,7 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   list: { padding: space.lg, gap: space.md },
-  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm },
+  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm, ...shadow.card },
   top: { flexDirection: 'row', gap: space.sm, alignItems: 'center' },
   thumb: { width: 40, height: 40, borderRadius: radius.chip },
   cat: { flex: 1, fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },

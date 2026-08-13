@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useSession } from '../../lib/session';
 import { getMyThreads } from '../../lib/chat';
 import { getCategories, categoryName } from '../../lib/queries';
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
+    ...shadow.soft,
   },
   thumb: { width: 54, height: 54, borderRadius: radius.chip },
   mid: { flex: 1, gap: 6 },
