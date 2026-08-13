@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
   },
   coinTxt: { fontFamily: font.bold, fontSize: 18, color: colors.gold },
   tagline: { fontFamily: font.teBold, fontSize: type.small, color: colors.inkMuted, letterSpacing: 0.3 },
-  title: { fontFamily: font.teBold, fontSize: type.h1, color: colors.ink },
-  sub: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted },
+  title: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink },
+  sub: { fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted },
   input: {
     height: tap.min,
     borderRadius: radius.card,
@@ -108,14 +108,14 @@ const styles = StyleSheet.create({
   },
   cta: {
     height: tap.min,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: space.sm,
   },
   ctaOff: { opacity: 0.4 },
-  ctaTxt: { fontFamily: font.bold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger },
   divider: { height: 1, backgroundColor: colors.line, marginVertical: space.sm },
   guest: {

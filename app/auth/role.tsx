@@ -54,7 +54,7 @@ export default function RoleScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: space.xl, gap: space.lg, justifyContent: 'center' },
-  title: { fontFamily: font.bold, fontSize: type.h1, color: colors.ink, marginBottom: space.sm },
+  title: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink, marginBottom: space.sm },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     padding: space.xl,
     gap: space.xs,
   },
-  cardTitle: { fontFamily: font.bold, fontSize: type.h3, color: colors.ink, marginTop: space.sm },
+  cardTitle: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink, marginTop: space.sm },
   cardSub: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger, textAlign: 'center' },
 });

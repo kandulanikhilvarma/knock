@@ -17,13 +17,13 @@ Full spec: [services-app-master-plan.md](services-app-master-plan.md) — read i
 - **Zustand** (client state) + **React Query** (server state) — add when P2+ needs them.
 - **Supabase** only: Auth (phone OTP), Postgres + RLS on every table, Realtime, Storage, Edge Functions. No Firebase.
 
-## Design tokens — approved 2026-08-13, live in `theme/tokens.ts` (supersedes §5 blue palette)
-- Direction: **"Proof on paper, one saffron move."** Ink structure, paper ground, ₹0 as a black-gold coin.
-- `ink #0B0D12` (type/structure/dark surfaces) · `accent #FF7A1A` saffron (**the ONE action per screen**) · `gold #EDC24A` (₹0 coin/value) · `success #12A150` (proof only — KYC/verified/paid) · `bg #F4F5F7` paper · `surface #FFFFFF`
-- City-earnings shown as a **mono number on an ink card** (transparency). ₹0 coin (ink + gold ring) on every provider card + a dark coin stage on the profile.
-- 14px card radius · 48px min tap · bottom tabs: Home · Bookings · Chat · Profile (active = saffron)
-- Type: Inter + Noto Sans Telugu + Noto Sans Devanagari + platform mono for numbers. **Test Telugu first — ~30% longer.**
-- **Re-theme the whole app = change `theme/tokens.ts` values only.** Screens reference token names, never raw hex.
+## Design tokens — "Shifud" approved 2026-08-14, live in `theme/tokens.ts` (supersedes the 2026-08-13 "Proof on paper" ink/saffron system, which supersedes §5 blue)
+- Direction: **warm editorial** — cream paper ground, **deep forest-green as the ONE action** (pill CTAs), big serif display type, soft pastel blocks behind category items, peach price tags, organic single-stroke line motifs. Ref: Shifud Dine-In dribbble shot.
+- `primary/accent #1B3A2B` forest (dark surfaces + the one CTA, pill-shaped) · `success #3E7A54` (proof only — verified/available/paid) · `gold #C87A46` terracotta (₹0 coin ring / value) · pastels `pink #F0C9C4 · blue #BFD6DF · sage #C8D9B7 · peach #F1C6A6` (category blocks) · `bg #EAE5D9` cream · `surface #F6F2E9` · `ink #191811` warm-black type
+- Type: **Fraunces** serif for all display/titles/big numbers (Latin) · Inter for body/labels · Noto Sans Telugu/Devanagari for those scripts. `components/AppText` swaps family by active language at render (en→Inter/Fraunces, te→Noto Telugu, hi→Devanagari) — **author styles with `font.*`, never a raw family; wrap text in `AppText`, not `Text`.**
+- City-earnings = big serif ₹ number on a **forest-green block**. Category tiles = pastel glyph chip (`categoryTint(slug)`) + serif name. Organic motif = `components/OrganicLines`.
+- 22px card radius · **pill CTAs** · 48px min tap · bottom tabs Home · Bookings · Chat · Profile (active = forest).
+- **Re-theme the whole app = change `theme/tokens.ts` values only.** Screens reference token names, never raw hex. Test Telugu first — ~30% longer.
 
 ## Do NOT
 - No `localStorage` (use AsyncStorage / SecureStore).

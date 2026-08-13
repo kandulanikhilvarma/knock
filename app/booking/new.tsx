@@ -118,14 +118,14 @@ const styles = StyleSheet.create({
   gateIcon: { width: 56, height: 56, borderRadius: radius.pill, backgroundColor: colors.line2, alignItems: 'center', justifyContent: 'center', marginBottom: space.xs },
   gateTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
   gateSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
-  gateCta: { marginTop: space.md, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  gateCta: { marginTop: space.md, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   hero: {
     flexDirection: 'row', alignItems: 'center', gap: space.md,
     backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, marginBottom: space.sm,
   },
   heroLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted, letterSpacing: 0.3 },
-  heroTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.onDark, marginTop: 2 },
-  cat: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink, marginBottom: space.sm },
+  heroTitle: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.onDark, marginTop: 2 },
+  cat: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink, marginBottom: space.sm },
   label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
   input: {
     borderRadius: radius.card,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   coinNote: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, lineHeight: 18 },
   cta: {
     height: tap.min,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',

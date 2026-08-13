@@ -67,7 +67,7 @@ export default function PhoneScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: space.xl, gap: space.md },
-  title: { fontFamily: font.bold, fontSize: type.h1, color: colors.ink },
+  title: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink },
   sub: { fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted, marginBottom: space.sm },
   inputRow: {
     flexDirection: 'row',
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
   cta: {
     marginTop: space.sm,
     height: tap.min,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   ctaOff: { opacity: 0.4 },
-  ctaTxt: { fontFamily: font.bold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
 });

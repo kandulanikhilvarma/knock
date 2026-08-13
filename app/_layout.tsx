@@ -56,7 +56,16 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            headerStyle: { backgroundColor: '#EAE5D9' },
+            headerShadowVisible: false,
+            headerTintColor: '#191811',
+            headerTitleStyle: { fontFamily: 'Fraunces_600SemiBold', color: '#191811' },
+            contentStyle: { backgroundColor: '#EAE5D9' },
+          }}
+        >
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="category/[slug]" options={{ headerShown: true, title: '' }} />
           <Stack.Screen name="provider/[id]" options={{ headerShown: true, title: '' }} />

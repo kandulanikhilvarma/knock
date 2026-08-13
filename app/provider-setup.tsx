@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.md, paddingVertical: space.sm, fontFamily: font.te, fontSize: type.body, color: colors.ink,
   },
   multi: { minHeight: 80, textAlignVertical: 'top' },
-  cta: { height: tap.min, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', marginTop: space.lg },
+  cta: { height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', marginTop: space.lg },
   ctaOff: { opacity: 0.4 },
-  ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger },
 });

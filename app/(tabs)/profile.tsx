@@ -146,7 +146,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   body: { padding: space.lg, gap: space.lg, paddingBottom: space.xxl },
-  title: { fontFamily: font.teBold, fontSize: type.h1, color: colors.ink, paddingTop: space.sm },
+  title: { fontFamily: font.displayBold, fontSize: type.display, color: colors.ink, paddingTop: space.sm },
 
   idCard: {
     flexDirection: 'row',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
   avatar: { width: 52, height: 52, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   avatarTxt: { fontFamily: font.bold, fontSize: 22, color: colors.surface },
-  idName: { fontFamily: font.teBold, fontSize: type.body, color: colors.onDark },
+  idName: { fontFamily: font.displayBold, fontSize: type.h3, color: colors.onDark },
   idSub: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, marginTop: 2 },
   typeChip: { alignSelf: 'flex-start', marginTop: 5, backgroundColor: 'rgba(255,255,255,0.10)', paddingHorizontal: 8, paddingVertical: 2, borderRadius: radius.pill },
   typeChipTxt: { fontFamily: font.teBold, fontSize: 10, color: colors.gold, letterSpacing: 0.3 },
@@ -195,12 +195,12 @@ const styles = StyleSheet.create({
   editTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.accent },
   cta: {
     height: tap.min,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   signout: {
     height: tap.min,
     borderRadius: radius.card,

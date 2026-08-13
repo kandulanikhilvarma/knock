@@ -87,8 +87,8 @@ function SignedOut({ cta }: { cta: () => void }) {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   head: { paddingHorizontal: space.lg, paddingTop: space.sm, paddingBottom: space.md, gap: 2 },
-  title: { fontFamily: font.teBold, fontSize: type.h1, color: colors.ink },
-  subtitle: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
+  title: { fontFamily: font.displayBold, fontSize: type.display, color: colors.ink },
+  subtitle: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
   list: { paddingHorizontal: space.lg, paddingBottom: space.xxl, gap: space.sm, flexGrow: 1 },
   card: {
     backgroundColor: colors.surface,
@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
 
   signedOut: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
   soIcon: { width: 56, height: 56, borderRadius: radius.pill, backgroundColor: colors.line2, alignItems: 'center', justifyContent: 'center', marginBottom: space.xs },
-  soTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
-  soSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
-  soCta: { marginTop: space.sm, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
-  soCtaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  soTitle: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink, textAlign: 'center' },
+  soSub: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
+  soCta: { marginTop: space.sm, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  soCtaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
 });

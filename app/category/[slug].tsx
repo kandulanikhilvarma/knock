@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   heroBadgeTxt: { fontFamily: font.teBold, fontSize: 10, color: colors.ink, letterSpacing: 0.4 },
-  heroTitle: { fontFamily: font.teBold, fontSize: type.h1, color: colors.onDark },
-  wTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink },
-  wSub: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted, lineHeight: 22 },
+  heroTitle: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.onDark },
+  wTitle: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink },
+  wSub: { fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted, lineHeight: 22 },
   notifyBox: {
     marginTop: space.sm,
     flexDirection: 'row',
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
   },
   cta: {
     height: tap.min,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   ctaOff: { opacity: 0.4 },
-  ctaTxt: { fontFamily: font.bold, fontSize: type.body, color: colors.surface },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger },
 });

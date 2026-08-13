@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
     ...shadow.soft,
   },
   headerThumb: { width: 52, height: 52, borderRadius: radius.chip },
-  headerCat: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
+  headerCat: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink },
   headerPill: { alignSelf: 'flex-start', marginTop: 5, backgroundColor: colors.line2, paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill },
   headerPillProof: { backgroundColor: 'rgba(18,161,80,0.12)' },
   headerPillTxt: { fontFamily: font.teBold, fontSize: 11, color: colors.inkMuted, letterSpacing: 0.2 },
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
 
   finding: { alignItems: 'center', paddingVertical: space.xxl, gap: space.xs },
   liveDot: { width: 10, height: 10, borderRadius: radius.pill, backgroundColor: colors.accent },
-  findTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink, textAlign: 'center' },
+  findTitle: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink, textAlign: 'center' },
   findSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
 
   matched: { backgroundColor: colors.success, borderRadius: radius.chip, paddingVertical: space.sm, paddingHorizontal: space.md, alignSelf: 'flex-start' },
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
 
   payCard: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, alignItems: 'center', gap: space.sm },
   upiTxt: { fontFamily: font.mono, fontSize: type.body, color: colors.ink },
-  amount: { fontFamily: font.mono, fontSize: type.h1, color: colors.ink, fontWeight: '700' },
+  amount: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink },
 
   review: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.md },
   stars: { flexDirection: 'row', gap: space.xs, justifyContent: 'center' },
@@ -466,12 +466,12 @@ const styles = StyleSheet.create({
   fbTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink },
   fbSub: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted },
 
-  cta: { height: tap.min, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
+  cta: { height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
   ctaOff: { opacity: 0.4 },
-  ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
-  ghostCta: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
-  ghostTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
-  chatBtn: { flexDirection: 'row', gap: space.sm, height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.ink, alignItems: 'center', justifyContent: 'center' },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
+  ghostCta: { height: tap.min, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
+  ghostTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.ink },
+  chatBtn: { flexDirection: 'row', gap: space.sm, height: tap.min, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.ink, alignItems: 'center', justifyContent: 'center' },
   chatTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger, textAlign: 'center' },
 });

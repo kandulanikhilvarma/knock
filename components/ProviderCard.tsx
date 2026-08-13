@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   top: { flexDirection: 'row', gap: space.md },
   info: { flex: 1, gap: 4, justifyContent: 'center' },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  name: { flexShrink: 1, fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
+  name: { flexShrink: 1, fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
