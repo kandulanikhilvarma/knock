@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -14,10 +14,12 @@ import {
   categoryName,
   type Category,
 } from '../../lib/queries';
+import { categoryTint } from '../../lib/categoryTint';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProviderCard from '../../components/ProviderCard';
 import CategoryGlyph from '../../components/CategoryGlyph';
 import TrustPillars from '../../components/TrustPillars';
+import OrganicLines from '../../components/OrganicLines';
 import { Loading, ErrorState } from '../../components/StateView';
 
 export default function Home() {
@@ -37,31 +39,31 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={{ flex: 1 }}>
-            <AppText style={styles.hi}>{t('home.greeting')}</AppText>
+        {/* Hero — organic motif behind an editorial serif headline */}
+        <View style={styles.hero}>
+          <OrganicLines color={colors.primary} opacity={0.1} />
+          <View style={styles.heroTop}>
             <View style={styles.loc}>
               <Ionicons name="location-outline" size={13} color={colors.inkMuted} />
               <AppText style={styles.locTxt}>Vijayawada</AppText>
             </View>
+            <LanguageSwitcher />
           </View>
-          <LanguageSwitcher />
+          <AppText style={styles.headline}>{t('home.greeting')}</AppText>
         </View>
 
-        <View style={styles.search}>
+        <Pressable style={styles.search}>
           <Ionicons name="search" size={18} color={colors.inkMuted} />
           <AppText style={styles.searchPh}>{t('home.searchPlaceholder')}</AppText>
           <View style={styles.mic}>
-            <Ionicons name="mic" size={16} color={colors.surface} />
+            <Ionicons name="mic" size={16} color={colors.onDark} />
           </View>
-        </View>
+        </Pressable>
 
-        {/* City earnings — the number, stated plainly on an ink card */}
+        {/* City earnings — forest block, big serif number */}
         <View style={styles.earn}>
           <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
-          <AppText style={styles.earnNum}>
-            ₹<AppText style={styles.earnGold}>{formatINR(earnings.data ?? 0)}</AppText>
-          </AppText>
+          <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
           <View style={styles.earnSub}>
             <View style={styles.live}>
               <View style={styles.liveDot} />
@@ -127,7 +129,7 @@ function Grid({
           onPress={() => onPick(c)}
         >
           <View style={styles.tileTop}>
-            <CategoryGlyph icon={c.icon} size={46} tone={soon ? 'muted' : 'paper'} />
+            <CategoryGlyph icon={c.icon} size={52} bg={soon ? colors.line2 : categoryTint(c.slug)} />
             {soon && (
               <View style={styles.soonTag}>
                 <AppText style={styles.soonTagTxt}>{t('home.soonTag')}</AppText>
@@ -154,10 +156,19 @@ function Grid({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxl },
-  header: { flexDirection: 'row', alignItems: 'flex-start', gap: space.md, paddingTop: space.sm },
-  hi: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink },
-  loc: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 },
+
+  hero: { paddingTop: space.sm, paddingBottom: space.xs, overflow: 'hidden' },
+  heroTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  loc: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   locTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
+  headline: {
+    fontFamily: font.displayBold,
+    fontSize: type.display,
+    lineHeight: type.display + 4,
+    color: colors.ink,
+    marginTop: space.md,
+    maxWidth: '90%',
+  },
 
   search: {
     flexDirection: 'row',
@@ -166,38 +177,44 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.line,
-    borderRadius: radius.card,
-    padding: space.md,
+    borderRadius: radius.pill,
+    paddingVertical: space.sm,
+    paddingHorizontal: space.lg,
   },
-  searchPh: { flex: 1, fontFamily: font.te, fontSize: type.body, color: colors.inkMuted },
+  searchPh: { flex: 1, fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted },
   mic: {
-    width: 32,
-    height: 32,
-    borderRadius: radius.chip,
+    width: 34,
+    height: 34,
+    borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  earn: { backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg },
-  earnLbl: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted },
-  earnNum: { fontFamily: font.mono, fontSize: 28, color: colors.onDark, marginTop: 2, fontWeight: '700' },
-  earnGold: { color: colors.gold, fontFamily: font.mono, fontWeight: '700' },
-  earnSub: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: 4 },
+  earn: { backgroundColor: colors.primary, borderRadius: radius.card, padding: space.xl, ...shadow.card },
+  earnLbl: { fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
+  earnNum: {
+    fontFamily: font.displayBold,
+    fontSize: 46,
+    lineHeight: 52,
+    color: colors.onDark,
+    marginTop: 2,
+  },
+  earnSub: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.xs },
   live: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#5BE08C' },
-  liveTxt: { fontFamily: font.bold, fontSize: 10, color: '#5BE08C' },
-  earnSubTxt: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted },
+  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#8FE3AB' },
+  liveTxt: { fontFamily: font.bold, fontSize: 10, color: '#8FE3AB', letterSpacing: 0.5 },
+  earnSubTxt: { flex: 1, fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
 
   section: { gap: space.md },
-  sectionTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
+  sectionTitle: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md },
   tile: {
     width: '47%',
     flexGrow: 0,
     minWidth: 150,
-    minHeight: 128,
+    minHeight: 138,
     borderRadius: radius.card,
     backgroundColor: colors.surface,
     borderWidth: 1,
@@ -208,17 +225,17 @@ const styles = StyleSheet.create({
     ...shadow.card,
   },
   tileTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  tileTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, lineHeight: 22 },
+  tileTxt: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink, lineHeight: type.h2 + 2 },
   tileTxtSoon: { color: colors.inkMuted },
   avail: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   availDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
-  availTxt: { fontFamily: font.teBold, fontSize: type.chip, color: colors.successInk, letterSpacing: 0.2 },
-  tileSoonHint: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted },
+  availTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.successInk, letterSpacing: 0.2 },
+  tileSoonHint: { fontFamily: font.regular, fontSize: type.chip, color: colors.inkMuted },
   soonTag: {
     backgroundColor: colors.line2,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: radius.pill,
   },
-  soonTagTxt: { fontFamily: font.teBold, fontSize: 9, color: colors.inkMuted, letterSpacing: 0.3 },
+  soonTagTxt: { fontFamily: font.semibold, fontSize: 9, color: colors.inkMuted, letterSpacing: 0.3 },
 });

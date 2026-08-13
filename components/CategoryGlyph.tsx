@@ -18,14 +18,18 @@ export default function CategoryGlyph({
   icon,
   size = 48,
   tone = 'paper',
+  bg,
   style,
 }: {
   icon?: string | null;
   size?: number;
   tone?: Tone;
+  bg?: string; // pastel override (Shifud category block)
   style?: StyleProp<ViewStyle>;
 }) {
   const t = TONES[tone];
+  const chipBg = bg ?? t.bg;
+  const fg = bg ? colors.ink : t.fg;
   return (
     <View
       style={[
@@ -33,15 +37,15 @@ export default function CategoryGlyph({
         {
           width: size,
           height: size,
-          borderRadius: Math.round(size * 0.3),
-          backgroundColor: t.bg,
-          borderColor: t.border ?? 'transparent',
-          borderWidth: t.border ? 1 : 0,
+          borderRadius: Math.round(size * 0.32),
+          backgroundColor: chipBg,
+          borderColor: bg ? 'transparent' : t.border ?? 'transparent',
+          borderWidth: bg || !t.border ? 0 : 1,
         },
         style,
       ]}
     >
-      <Ionicons name={(icon ?? 'construct') as any} size={Math.round(size * 0.46)} color={t.fg} />
+      <Ionicons name={(icon ?? 'construct') as any} size={Math.round(size * 0.46)} color={fg} />
     </View>
   );
 }

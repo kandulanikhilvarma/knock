@@ -19,6 +19,11 @@ import {
   NotoSansDevanagari_400Regular,
   NotoSansDevanagari_700Bold,
 } from '@expo-google-fonts/noto-sans-devanagari';
+import {
+  Fraunces_400Regular,
+  Fraunces_600SemiBold,
+  Fraunces_700Bold,
+} from '@expo-google-fonts/fraunces';
 
 import '../lib/i18n';
 
@@ -36,6 +41,9 @@ export default function RootLayout() {
     NotoSansTelugu_700Bold,
     NotoSansDevanagari_400Regular,
     NotoSansDevanagari_700Bold,
+    Fraunces_400Regular,
+    Fraunces_600SemiBold,
+    Fraunces_700Bold,
   });
 
   useEffect(() => {
