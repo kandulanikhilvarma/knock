@@ -35,7 +35,24 @@ Phases per master-plan §9. One phase per session. App must run after every phas
 - [ ] Production SMS: MSG91/2Factor account + Supabase SMS hook
 - [ ] Day 3: EAS Android build + Play closed test (needs Expo account)
 
-## P3 Dispatch · P4 Chat · P5 Verify+pay+reviews · P6 Onboarding+KYC · P7 Harden · P8 Ship
+## P3 — Dispatch + booking loop  ✅ (built + verified; live e2e blocked on auth)
+- [x] Engine `supabase/functions/_shared/dispatch.ts` — score (0.30 rating +0.25 dist
+      +0.20 accept +0.15 complete +0.10 recency), 20% newcomer quota, waves 3/5,
+      neutral priors, verified bonus. Unit test (20 providers) green: `npm run test:dispatch`
+- [x] migration 0002: bookings + dispatch_offers, RLS (offers server-write only)
+- [x] Edge Functions ACTIVE: `dispatch` (score/quota/wave-1), `respond`
+      (first-accept-wins, atomic claim), `swap` (one free re-dispatch)
+- [x] migration 0003: `sweep_dispatch()` on pg_cron 30s → expire offers, stuck
+      bookings → failed → browse fallback. Advisor-clean. Smoke-tested.
+- [x] UI: request form, live status (realtime) + swap, provider job inbox +
+      countdown, bookings tab list. booking/jobs strings en/te/hi.
+- [ ] **BLOCKED to test live:** needs a signed-in customer + a signed-in provider
+      (see auth blocker). Engine + sweep proven without auth.
+- [ ] Wave-2 escalation (next 5) — deferred; sweep does timeout→fallback only.
+      Add when wave-1 acceptance is thin. Marked `ponytail:` in dispatch fn.
+- [ ] Push + WhatsApp offer alerts — deferred until Expo push tokens exist.
+
+## P4 Chat · P5 Verify+pay+reviews · P6 Onboarding+KYC · P7 Harden · P8 Ship
 (see master-plan §9)
 
 ## Blocked on user (batched — I surface once)
