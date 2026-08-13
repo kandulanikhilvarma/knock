@@ -133,6 +133,14 @@
       "done": "Job done"
     }
   },
+  "chat": {
+    "title": "Chat",
+    "open": "Message the pro",
+    "empty": "No messages yet — say hi.",
+    "placeholder": "Type a message",
+    "noThreads": "No chats yet",
+    "noThreadsSub": "Chats open once a pro is assigned to your booking."
+  },
   "jobs": {
     "title": "Job requests",
     "empty": "No job requests right now",

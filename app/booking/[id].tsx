@@ -22,6 +22,7 @@ const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
 export default function BookingStatusScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
+  const router = useRouter();
   const { session } = useSession();
   const uid = session?.user?.id;
 
@@ -39,11 +40,20 @@ export default function BookingStatusScreen() {
   if (!booking) return <ErrorState message={t('booking.notFound')} />;
 
   const isProvider = !!uid && uid === booking.assigned_provider_id;
+  const canChat = !!booking.assigned_provider_id && ['assigned', 'in_progress', 'done'].includes(booking.status);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Stack.Screen options={{ title: t('booking.statusTitle') }} />
       {isProvider ? <ProviderPanel booking={booking} /> : <CustomerPanel booking={booking} />}
+      {canChat && (
+        <Pressable
+          style={styles.chatBtn}
+          onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: booking.id } })}
+        >
+          <Text style={styles.chatTxt}>{t('chat.open')}</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }
@@ -356,5 +366,7 @@ const styles = StyleSheet.create({
   ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
   ghostCta: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
   ghostTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
+  chatBtn: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.ink, alignItems: 'center', justifyContent: 'center' },
+  chatTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger, textAlign: 'center' },
 });
