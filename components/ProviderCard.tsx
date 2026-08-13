@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { colors, font, radius, space, type } from '../theme/tokens';
+import { colors, font, radius, space, type, shadow } from '../theme/tokens';
 import type { ProviderCard as Provider } from '../lib/queries';
 import Avatar from './Avatar';
 
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     gap: space.md,
     borderWidth: 1,
     borderColor: colors.line,
+    ...shadow.card,
   },
   top: { flexDirection: 'row', gap: space.md },
   info: { flex: 1, gap: 4, justifyContent: 'center' },

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { colors, space, radius, font, type } from '../../theme/tokens';
+import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {
   getCategories,
   getFeaturedProvider,
@@ -15,7 +15,7 @@ import {
 } from '../../lib/queries';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryImage from '../../components/CategoryImage';
+import CategoryGlyph from '../../components/CategoryGlyph';
 import TrustPillars from '../../components/TrustPillars';
 import { Loading, ErrorState } from '../../components/StateView';
 
@@ -120,21 +120,30 @@ function Grid({
   return (
     <View style={styles.grid}>
       {cats.map((c) => (
-        <Pressable key={c.id} style={styles.tile} onPress={() => onPick(c)}>
-          <CategoryImage slug={c.slug} icon={c.icon} dim={soon} width={520} style={styles.tileImg} />
-          {soon ? (
-            <View style={styles.soonTag}>
-              <Text style={styles.soonTagTxt}>{t('common.comingSoon')}</Text>
-            </View>
-          ) : (
-            <View style={styles.liveTag}>
-              <View style={styles.liveTagDot} />
-              <Text style={styles.liveTagTxt}>{t('home.availableNow')}</Text>
-            </View>
-          )}
-          <Text style={styles.tileTxt} numberOfLines={2}>
+        <Pressable
+          key={c.id}
+          style={({ pressed: p }) => [styles.tile, p && pressed]}
+          onPress={() => onPick(c)}
+        >
+          <View style={styles.tileTop}>
+            <CategoryGlyph icon={c.icon} size={46} tone={soon ? 'muted' : 'paper'} />
+            {soon && (
+              <View style={styles.soonTag}>
+                <Text style={styles.soonTagTxt}>{t('common.comingSoon')}</Text>
+              </View>
+            )}
+          </View>
+          <Text style={[styles.tileTxt, soon && styles.tileTxtSoon]} numberOfLines={2}>
             {categoryName(c, lang)}
           </Text>
+          {soon ? (
+            <Text style={styles.tileSoonHint}>{t('home.soonHint')}</Text>
+          ) : (
+            <View style={styles.avail}>
+              <View style={styles.availDot} />
+              <Text style={styles.availTxt}>{t('home.availableNow')}</Text>
+            </View>
+          )}
         </Pressable>
       ))}
     </View>
@@ -187,43 +196,28 @@ const styles = StyleSheet.create({
     width: '47%',
     flexGrow: 1,
     minWidth: 150,
-    height: 118,
+    minHeight: 128,
     borderRadius: radius.card,
-    overflow: 'hidden',
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.line,
-    justifyContent: 'flex-end',
+    padding: space.lg,
+    gap: space.sm,
+    justifyContent: 'space-between',
+    ...shadow.card,
   },
-  tileImg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  tileTxt: {
-    fontFamily: font.teBold,
-    fontSize: type.small,
-    color: colors.surface,
-    padding: space.md,
-    lineHeight: 18,
-  },
+  tileTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  tileTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, lineHeight: 22 },
+  tileTxtSoon: { color: colors.inkMuted },
+  avail: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  availDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
+  availTxt: { fontFamily: font.teBold, fontSize: type.chip, color: colors.successInk, letterSpacing: 0.2 },
+  tileSoonHint: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted },
   soonTag: {
-    position: 'absolute',
-    top: space.sm,
-    right: space.sm,
-    backgroundColor: colors.gold,
+    backgroundColor: colors.line2,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: radius.pill,
   },
-  soonTagTxt: { fontFamily: font.teBold, fontSize: 9, color: colors.ink, letterSpacing: 0.3 },
-  liveTag: {
-    position: 'absolute',
-    top: space.sm,
-    left: space.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(11,13,18,0.55)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: radius.pill,
-  },
-  liveTagDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#5BE08C' },
-  liveTagTxt: { fontFamily: font.bold, fontSize: 9, color: colors.onDark, letterSpacing: 0.3 },
+  soonTagTxt: { fontFamily: font.teBold, fontSize: 9, color: colors.inkMuted, letterSpacing: 0.3 },
 });

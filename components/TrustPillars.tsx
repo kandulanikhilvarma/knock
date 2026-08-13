@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { colors, space, radius, font, type } from '../theme/tokens';
+import { colors, space, radius, font, type, shadow } from '../theme/tokens';
 
 // The four promises that make this app trustworthy — surfaced on Home so a
 // first-time visitor sees them before booking. Icons + short lines, ink card.
@@ -35,7 +35,7 @@ export default function TrustPillars() {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.md },
+  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.md, ...shadow.card },
   title: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   grid: { gap: space.md },
   pillar: { flexDirection: 'row', gap: space.md, alignItems: 'center' },

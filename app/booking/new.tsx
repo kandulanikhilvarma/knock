@@ -8,7 +8,7 @@ import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { useSession } from '../../lib/session';
-import CategoryImage from '../../components/CategoryImage';
+import CategoryGlyph from '../../components/CategoryGlyph';
 import { Loading } from '../../components/StateView';
 
 export default function NewBookingScreen() {
@@ -61,8 +61,11 @@ export default function NewBookingScreen() {
 
       {slug ? (
         <View style={styles.hero}>
-          <CategoryImage slug={slug} icon={category?.icon} width={800} style={styles.heroImg} />
-          <Text style={styles.heroTitle}>{title}</Text>
+          <CategoryGlyph icon={category?.icon} size={48} tone="ink" />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.heroLbl}>{t('booking.newTitle')}</Text>
+            <Text style={styles.heroTitle}>{title}</Text>
+          </View>
         </View>
       ) : (
         <Text style={styles.cat}>{title}</Text>
@@ -115,9 +118,12 @@ const styles = StyleSheet.create({
   gateTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
   gateSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
   gateCta: { marginTop: space.md, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
-  hero: { height: 150, borderRadius: radius.card, overflow: 'hidden', justifyContent: 'flex-end', padding: space.lg, marginBottom: space.sm },
-  heroImg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  heroTitle: { fontFamily: font.teBold, fontSize: type.h1, color: colors.surface },
+  hero: {
+    flexDirection: 'row', alignItems: 'center', gap: space.md,
+    backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, marginBottom: space.sm,
+  },
+  heroLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted, letterSpacing: 0.3 },
+  heroTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.onDark, marginTop: 2 },
   cat: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink, marginBottom: space.sm },
   label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
   input: {

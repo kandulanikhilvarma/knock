@@ -38,6 +38,28 @@ export const radius = { card: 14, chip: 12, pill: 999 } as const;
 // 48px minimum tap target.
 export const tap = { min: 48 } as const;
 
+// Elevation — one soft, consistent lift for cards/tiles (premium restraint,
+// not hard drop-shadows). iOS reads shadow*, Android reads elevation.
+export const shadow = {
+  card: {
+    shadowColor: '#0B0D12',
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
+  },
+  soft: {
+    shadowColor: '#0B0D12',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+  },
+} as const;
+
+// Pressable feedback — subtle scale + dim, applied uniformly to tappable cards.
+export const pressed = { opacity: 0.9, transform: [{ scale: 0.985 }] } as const;
+
 export const font = {
   regular: 'Inter_400Regular',
   medium: 'Inter_500Medium',

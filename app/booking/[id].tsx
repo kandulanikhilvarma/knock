@@ -15,7 +15,7 @@ import {
 import { getProvider, getCategories, categoryName } from '../../lib/queries';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryImage from '../../components/CategoryImage';
+import CategoryGlyph from '../../components/CategoryGlyph';
 import { Loading, ErrorState } from '../../components/StateView';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
@@ -94,7 +94,7 @@ function BookingHeader({ booking }: { booking: Booking }) {
   const proof = paid || ['verified', 'in_progress', 'done'].includes(booking.status);
   return (
     <View style={styles.header}>
-      <CategoryImage slug={booking.category_slug} icon={cat?.icon} width={160} style={styles.headerThumb} />
+      <CategoryGlyph icon={cat?.icon} size={52} />
       <View style={{ flex: 1 }}>
         <Text style={styles.headerCat} numberOfLines={1}>{label}</Text>
         <View style={[styles.headerPill, proof && styles.headerPillProof]}>

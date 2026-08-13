@@ -11,7 +11,7 @@ import {
   joinWaitlist,
 } from '../../lib/queries';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryImage from '../../components/CategoryImage';
+import CategoryGlyph from '../../components/CategoryGlyph';
 import { Ionicons } from '@expo/vector-icons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -94,11 +94,13 @@ function Waitlist({
   return (
     <ScrollView contentContainerStyle={styles.waitlist} showsVerticalScrollIndicator={false}>
       <View style={styles.hero}>
-        <CategoryImage slug={slug} icon={icon} dim width={800} style={styles.heroImg} />
-        <View style={styles.heroBadge}>
-          <Text style={styles.heroBadgeTxt}>{t('common.comingSoon')}</Text>
+        <CategoryGlyph icon={icon} size={52} tone="ink" />
+        <View style={{ flex: 1 }}>
+          <View style={styles.heroBadge}>
+            <Text style={styles.heroBadgeTxt}>{t('common.comingSoon')}</Text>
+          </View>
+          <Text style={styles.heroTitle}>{title}</Text>
         </View>
-        <Text style={styles.heroTitle}>{title}</Text>
       </View>
 
       <Text style={styles.wTitle}>{t('category.comingSoonTitle', { category: title })}</Text>
@@ -133,24 +135,23 @@ const styles = StyleSheet.create({
   list: { padding: space.lg, gap: space.md },
   waitlist: { padding: space.lg, gap: space.md },
   hero: {
-    height: 170,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    backgroundColor: colors.ink,
     borderRadius: radius.card,
-    overflow: 'hidden',
-    justifyContent: 'flex-end',
     padding: space.lg,
   },
-  heroImg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
   heroBadge: {
-    position: 'absolute',
-    top: space.md,
-    left: space.md,
+    alignSelf: 'flex-start',
     backgroundColor: colors.gold,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     borderRadius: radius.pill,
+    marginBottom: 4,
   },
   heroBadgeTxt: { fontFamily: font.teBold, fontSize: 10, color: colors.ink, letterSpacing: 0.4 },
-  heroTitle: { fontFamily: font.teBold, fontSize: type.h1, color: colors.surface },
+  heroTitle: { fontFamily: font.teBold, fontSize: type.h1, color: colors.onDark },
   wTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink },
   wSub: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted, lineHeight: 22 },
   notifyBox: {

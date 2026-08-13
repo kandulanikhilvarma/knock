@@ -8,7 +8,7 @@ import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { useSession } from '../../lib/session';
 import { getMyThreads } from '../../lib/chat';
 import { getCategories, categoryName } from '../../lib/queries';
-import CategoryImage from '../../components/CategoryImage';
+import CategoryGlyph from '../../components/CategoryGlyph';
 import StatusPill from '../../components/StatusPill';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -59,7 +59,7 @@ export default function Chat() {
               style={styles.card}
               onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: item.id } })}
             >
-              <CategoryImage slug={item.category_slug} icon={iconFor(item.category_slug)} width={160} style={styles.thumb} />
+              <CategoryGlyph icon={iconFor(item.category_slug)} size={54} />
               <View style={styles.mid}>
                 <Text style={styles.cat} numberOfLines={1}>{label(item.category_slug)}</Text>
                 <StatusPill status={item.status} />
