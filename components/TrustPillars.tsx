@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { colors, space, radius, font, type, shadow } from '../theme/tokens';
@@ -16,7 +17,7 @@ export default function TrustPillars() {
   const { t } = useTranslation();
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{t('trust.title')}</Text>
+      <AppText style={styles.title}>{t('trust.title')}</AppText>
       <View style={styles.grid}>
         {PILLARS.map((p) => (
           <View key={p.key} style={styles.pillar}>
@@ -24,8 +25,8 @@ export default function TrustPillars() {
               <Ionicons name={p.icon as any} size={18} color={p.color} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.pTitle}>{t(`trust.${p.key}`)}</Text>
-              <Text style={styles.pSub}>{t(`trust.${p.key}Sub`)}</Text>
+              <AppText style={styles.pTitle}>{t(`trust.${p.key}`)}</AppText>
+              <AppText style={styles.pSub}>{t(`trust.${p.key}Sub`)}</AppText>
             </View>
           </View>
         ))}

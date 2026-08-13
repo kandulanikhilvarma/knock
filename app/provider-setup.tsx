@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -59,39 +60,39 @@ export default function ProviderSetup() {
 
       <View style={styles.banner}>
         <View style={styles.coin}>
-          <Text style={styles.coinTxt}>₹0</Text>
+          <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
-        <Text style={styles.bannerTxt}>{t('providerSetup.lead')}</Text>
+        <AppText style={styles.bannerTxt}>{t('providerSetup.lead')}</AppText>
       </View>
 
-      <Text style={styles.label}>{t('providerSetup.services')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.services')}</AppText>
       <View style={styles.chips}>
         {(cats.data ?? []).map((c) => {
           const on = services.includes(c.slug);
           return (
             <Pressable key={c.id} style={[styles.chip, on && styles.chipOn]} onPress={() => toggle(c.slug)}>
-              <Text style={[styles.chipTxt, on && styles.chipTxtOn]}>{categoryName(c, i18n.language)}</Text>
+              <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{categoryName(c, i18n.language)}</AppText>
             </Pressable>
           );
         })}
       </View>
 
-      <Text style={styles.label}>{t('providerSetup.upi')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.upi')}</AppText>
       <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
 
-      <Text style={styles.label}>{t('providerSetup.city')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.city')}</AppText>
       <TextInput style={styles.input} value={city} onChangeText={setCity} placeholderTextColor={colors.inkMuted} />
 
-      <Text style={styles.label}>{t('providerSetup.charge')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.charge')}</AppText>
       <TextInput style={styles.input} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
 
-      <Text style={styles.label}>{t('providerSetup.bio')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.bio')}</AppText>
       <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} multiline placeholderTextColor={colors.inkMuted} />
 
       <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
-        <Text style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</Text>
+        <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
-      {save.isError && <Text style={styles.err}>{(save.error as Error).message}</Text>}
+      {save.isError && <AppText style={styles.err}>{(save.error as Error).message}</AppText>}
     </ScrollView>
   );
 }

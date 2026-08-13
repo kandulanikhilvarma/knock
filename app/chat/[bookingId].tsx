@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   View, Text, TextInput, Pressable, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
 } from 'react-native';
+import AppText from '../../components/AppText';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -60,11 +61,11 @@ export default function ChatThread() {
           const mine = item.sender_id === uid;
           return (
             <View style={[styles.bubble, mine ? styles.mine : styles.theirs]}>
-              <Text style={[styles.msgTxt, mine && styles.msgTxtMine]}>{item.body}</Text>
+              <AppText style={[styles.msgTxt, mine && styles.msgTxtMine]}>{item.body}</AppText>
             </View>
           );
         }}
-        ListEmptyComponent={<Text style={styles.empty}>{t('chat.empty')}</Text>}
+        ListEmptyComponent={<AppText style={styles.empty}>{t('chat.empty')}</AppText>}
       />
       <View style={styles.inputRow}>
         <TextInput

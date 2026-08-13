@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   View, Text, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
 } from 'react-native';
+import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -77,7 +78,7 @@ export default function BookingStatusScreen() {
           onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: booking.id } })}
         >
           <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.ink} />
-          <Text style={styles.chatTxt}>{t('chat.open')}</Text>
+          <AppText style={styles.chatTxt}>{t('chat.open')}</AppText>
         </Pressable>
       )}
     </ScrollView>
@@ -96,11 +97,11 @@ function BookingHeader({ booking }: { booking: Booking }) {
     <View style={styles.header}>
       <CategoryGlyph icon={cat?.icon} size={52} />
       <View style={{ flex: 1 }}>
-        <Text style={styles.headerCat} numberOfLines={1}>{label}</Text>
+        <AppText style={styles.headerCat} numberOfLines={1}>{label}</AppText>
         <View style={[styles.headerPill, proof && styles.headerPillProof]}>
-          <Text style={[styles.headerPillTxt, proof && styles.headerPillTxtProof]}>
+          <AppText style={[styles.headerPillTxt, proof && styles.headerPillTxtProof]}>
             {t(`booking.state.${stateKey}`, stateKey)}
-          </Text>
+          </AppText>
         </View>
       </View>
     </View>
@@ -126,9 +127,9 @@ function Steps({ current }: { current: number }) {
               </View>
               <View style={[styles.line, i === STEPS.length - 1 && styles.lineHidden, i < current && styles.lineOn]} />
             </View>
-            <Text style={[styles.stepTxt, state !== 'future' && styles.stepTxtOn]} numberOfLines={1}>
+            <AppText style={[styles.stepTxt, state !== 'future' && styles.stepTxtOn]} numberOfLines={1}>
               {t(`booking.step_${s}`)}
-            </Text>
+            </AppText>
           </View>
         );
       })}
@@ -148,15 +149,15 @@ function ProviderPanel({ booking }: { booking: Booking }) {
   return (
     <View style={{ gap: space.md }}>
       <View style={styles.addr}>
-        <Text style={styles.addrLbl}>{t('booking.jobAddress')}</Text>
-        <Text style={styles.addrTxt}>{booking.address ?? '—'}</Text>
-        {booking.description ? <Text style={styles.addrDesc}>{booking.description}</Text> : null}
+        <AppText style={styles.addrLbl}>{t('booking.jobAddress')}</AppText>
+        <AppText style={styles.addrTxt}>{booking.address ?? '—'}</AppText>
+        {booking.description ? <AppText style={styles.addrDesc}>{booking.description}</AppText> : null}
       </View>
 
       {booking.status === 'assigned' && (
         <View style={styles.codeCard}>
-          <Text style={styles.codeTitle}>{t('booking.showCodeTitle')}</Text>
-          <Text style={styles.codeSub}>{t('booking.showCodeSub')}</Text>
+          <AppText style={styles.codeTitle}>{t('booking.showCodeTitle')}</AppText>
+          <AppText style={styles.codeSub}>{t('booking.showCodeSub')}</AppText>
           {tok.data?.token ? (
             <View style={styles.qrBox}>
               <QRCode value={tok.data.token} size={150} />
@@ -164,8 +165,8 @@ function ProviderPanel({ booking }: { booking: Booking }) {
           ) : (
             <ActivityIndicator color={colors.accent} />
           )}
-          <Text style={styles.pinLbl}>{t('booking.pinLabel')}</Text>
-          <Text style={styles.pin}>{tok.data?.pin ?? '····'}</Text>
+          <AppText style={styles.pinLbl}>{t('booking.pinLabel')}</AppText>
+          <AppText style={styles.pin}>{tok.data?.pin ?? '····'}</AppText>
         </View>
       )}
 
@@ -173,16 +174,16 @@ function ProviderPanel({ booking }: { booking: Booking }) {
         <View style={{ gap: space.md }}>
           <Proof text={t('booking.verifiedAtDoor')} />
           <Pressable style={styles.cta} disabled={done.isPending} onPress={() => done.mutate()}>
-            <Text style={styles.ctaTxt}>{done.isPending ? '…' : t('booking.markDone')}</Text>
+            <AppText style={styles.ctaTxt}>{done.isPending ? '…' : t('booking.markDone')}</AppText>
           </Pressable>
         </View>
       )}
 
       {booking.status === 'done' && !booking.paid_at && (
         <View style={styles.payCard}>
-          <Text style={styles.codeTitle}>{t('booking.receivePayTitle')}</Text>
+          <AppText style={styles.codeTitle}>{t('booking.receivePayTitle')}</AppText>
           <Pressable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
-            <Text style={styles.ctaTxt}>{t('booking.markReceived')}</Text>
+            <AppText style={styles.ctaTxt}>{t('booking.markReceived')}</AppText>
           </Pressable>
         </View>
       )}
@@ -206,8 +207,8 @@ function CustomerPanel({ booking }: { booking: Booking }) {
         <View style={styles.finding}>
           <View style={styles.liveDot} />
           <ActivityIndicator color={colors.accent} style={{ marginVertical: space.md }} />
-          <Text style={styles.findTitle}>{t('booking.findingPro')}</Text>
-          <Text style={styles.findSub}>{t('booking.findingSub')}</Text>
+          <AppText style={styles.findTitle}>{t('booking.findingPro')}</AppText>
+          <AppText style={styles.findSub}>{t('booking.findingSub')}</AppText>
         </View>
       )}
 
@@ -216,7 +217,7 @@ function CustomerPanel({ booking }: { booking: Booking }) {
           <AssignedPro providerId={booking.assigned_provider_id} />
           {!booking.swap_used && (
             <Pressable style={styles.swap} disabled={swap.isPending} onPress={() => swap.mutate()}>
-              <Text style={styles.swapTxt}>{swap.isPending ? t('booking.swapping') : t('booking.swap')}</Text>
+              <AppText style={styles.swapTxt}>{swap.isPending ? t('booking.swapping') : t('booking.swap')}</AppText>
             </Pressable>
           )}
           <VerifyPanel bookingId={booking.id} />
@@ -233,13 +234,13 @@ function CustomerPanel({ booking }: { booking: Booking }) {
 
       {status === 'failed' && (
         <View style={styles.fallback}>
-          <Text style={styles.fbTitle}>{t('booking.noProviders')}</Text>
-          <Text style={styles.fbSub}>{t('booking.noProvidersSub')}</Text>
+          <AppText style={styles.fbTitle}>{t('booking.noProviders')}</AppText>
+          <AppText style={styles.fbSub}>{t('booking.noProvidersSub')}</AppText>
           <Pressable
             style={styles.cta}
             onPress={() => router.replace({ pathname: '/category/[slug]', params: { slug: booking.category_slug } })}
           >
-            <Text style={styles.ctaTxt}>{t('booking.browseCta')}</Text>
+            <AppText style={styles.ctaTxt}>{t('booking.browseCta')}</AppText>
           </Pressable>
         </View>
       )}
@@ -254,7 +255,7 @@ function AssignedPro({ providerId }: { providerId: string }) {
   return (
     <View style={{ gap: space.sm }}>
       <View style={styles.matched}>
-        <Text style={styles.matchedTxt}>{t('booking.matched')}</Text>
+        <AppText style={styles.matchedTxt}>{t('booking.matched')}</AppText>
       </View>
       {p.isLoading && <Loading />}
       {p.data && (
@@ -275,8 +276,8 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
 
   return (
     <View style={styles.verify}>
-      <Text style={styles.codeTitle}>{t('booking.verifyTitle')}</Text>
-      <Text style={styles.codeSub}>{t('booking.verifySub')}</Text>
+      <AppText style={styles.codeTitle}>{t('booking.verifyTitle')}</AppText>
+      <AppText style={styles.codeSub}>{t('booking.verifySub')}</AppText>
       <TextInput
         style={styles.pinInput}
         value={pin}
@@ -291,9 +292,9 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
         disabled={pin.length < 4 || m.isPending}
         onPress={() => m.mutate()}
       >
-        <Text style={styles.ctaTxt}>{t('booking.verifyBtn')}</Text>
+        <AppText style={styles.ctaTxt}>{t('booking.verifyBtn')}</AppText>
       </Pressable>
-      {wrong && <Text style={styles.err}>{t('booking.verifyWrong')}</Text>}
+      {wrong && <AppText style={styles.err}>{t('booking.verifyWrong')}</AppText>}
     </View>
   );
 }
@@ -312,26 +313,26 @@ function PaymentPanel({ booking }: { booking: Booking }) {
 
   return (
     <View style={styles.payCard}>
-      <Text style={styles.codeTitle}>{t('booking.payTitle')}</Text>
-      <Text style={styles.codeSub}>{t('booking.paySub')}</Text>
+      <AppText style={styles.codeTitle}>{t('booking.payTitle')}</AppText>
+      <AppText style={styles.codeSub}>{t('booking.paySub')}</AppText>
       {link && (
         <View style={styles.qrBox}>
           <QRCode value={link} size={150} />
         </View>
       )}
-      {upi ? <Text style={styles.upiTxt}>{upi}</Text> : null}
-      {amount ? <Text style={styles.amount}>₹{amount}</Text> : null}
+      {upi ? <AppText style={styles.upiTxt}>{upi}</AppText> : null}
+      {amount ? <AppText style={styles.amount}>₹{amount}</AppText> : null}
 
       {link && (
         <Pressable style={styles.cta} onPress={() => Linking.openURL(link)}>
-          <Text style={styles.ctaTxt}>{t('booking.payInApp')}</Text>
+          <AppText style={styles.ctaTxt}>{t('booking.payInApp')}</AppText>
         </Pressable>
       )}
       <Pressable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('upi')}>
-        <Text style={styles.ghostTxt}>{t('booking.markPaidUpi')}</Text>
+        <AppText style={styles.ghostTxt}>{t('booking.markPaidUpi')}</AppText>
       </Pressable>
       <Pressable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('cash')}>
-        <Text style={styles.ghostTxt}>{t('booking.markPaidCash')}</Text>
+        <AppText style={styles.ghostTxt}>{t('booking.markPaidCash')}</AppText>
       </Pressable>
     </View>
   );
@@ -352,25 +353,25 @@ function ReviewPanel({ booking }: { booking: Booking }) {
   return (
     <View style={styles.review}>
       <Proof text={t('booking.paidDone')} />
-      <Text style={styles.codeTitle}>{t('booking.reviewTitle')}</Text>
+      <AppText style={styles.codeTitle}>{t('booking.reviewTitle')}</AppText>
       <View style={styles.stars}>
         {[1, 2, 3, 4, 5].map((n) => (
           <Pressable key={n} onPress={() => setRating(n)}>
-            <Text style={[styles.star, n <= rating && styles.starOn]}>★</Text>
+            <AppText style={[styles.star, n <= rating && styles.starOn]}>★</AppText>
           </Pressable>
         ))}
       </View>
       <View style={styles.tags}>
         {REVIEW_TAGS.map((tag) => (
           <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)}>
-            <Text style={[styles.tagTxt, tags.includes(tag) && styles.tagTxtOn]}>{t(`booking.tag_${tag}`)}</Text>
+            <AppText style={[styles.tagTxt, tags.includes(tag) && styles.tagTxtOn]}>{t(`booking.tag_${tag}`)}</AppText>
           </Pressable>
         ))}
       </View>
       <Pressable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
-        <Text style={styles.ctaTxt}>{t('booking.reviewSubmit')}</Text>
+        <AppText style={styles.ctaTxt}>{t('booking.reviewSubmit')}</AppText>
       </Pressable>
-      {m.isError && <Text style={styles.err}>{(m.error as Error).message}</Text>}
+      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </View>
   );
 }
@@ -378,8 +379,8 @@ function ReviewPanel({ booking }: { booking: Booking }) {
 function Proof({ text, sub }: { text: string; sub?: string }) {
   return (
     <View style={styles.proof}>
-      <Text style={styles.proofTxt}>✓ {text}</Text>
-      {sub ? <Text style={styles.proofSub}>{sub}</Text> : null}
+      <AppText style={styles.proofTxt}>✓ {text}</AppText>
+      {sub ? <AppText style={styles.proofSub}>{sub}</AppText> : null}
     </View>
   );
 }

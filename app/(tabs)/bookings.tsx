@@ -1,4 +1,5 @@
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -30,8 +31,8 @@ export default function Bookings() {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.head}>
-        <Text style={styles.title}>{t('tabs.bookings')}</Text>
-        <Text style={styles.subtitle}>{t('bookingsTab.subtitle')}</Text>
+        <AppText style={styles.title}>{t('tabs.bookings')}</AppText>
+        <AppText style={styles.subtitle}>{t('bookingsTab.subtitle')}</AppText>
       </View>
 
       {!session && (
@@ -52,7 +53,7 @@ export default function Bookings() {
             >
               <CategoryGlyph icon={iconFor(item.category_slug)} size={54} />
               <View style={styles.mid}>
-                <Text style={styles.cat} numberOfLines={1}>{label(item.category_slug)}</Text>
+                <AppText style={styles.cat} numberOfLines={1}>{label(item.category_slug)}</AppText>
                 <StatusPill status={item.status} />
               </View>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
@@ -74,10 +75,10 @@ function SignedOut({ cta }: { cta: () => void }) {
       <View style={styles.soIcon}>
         <Ionicons name="lock-closed-outline" size={26} color={colors.inkMuted} />
       </View>
-      <Text style={styles.soTitle}>{t('booking.signInFirst')}</Text>
-      <Text style={styles.soSub}>{t('bookingsTab.signInSub')}</Text>
+      <AppText style={styles.soTitle}>{t('booking.signInFirst')}</AppText>
+      <AppText style={styles.soSub}>{t('bookingsTab.signInSub')}</AppText>
       <Pressable style={styles.soCta} onPress={cta}>
-        <Text style={styles.soCtaTxt}>{t('profileTab.signIn')}</Text>
+        <AppText style={styles.soCtaTxt}>{t('profileTab.signIn')}</AppText>
       </Pressable>
     </View>
   );

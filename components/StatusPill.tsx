@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { useTranslation } from 'react-i18next';
 import { colors, radius, font } from '../theme/tokens';
 
@@ -21,7 +22,7 @@ export default function StatusPill({ status }: { status: string }) {
   const m = META[status] ?? META.requested;
   return (
     <View style={[styles.pill, { backgroundColor: m.bg }]}>
-      <Text style={[styles.txt, { color: m.fg }]}>{t(`booking.state.${status}`, status)}</Text>
+      <AppText style={[styles.txt, { color: m.fg }]}>{t(`booking.state.${status}`, status)}</AppText>
     </View>
   );
 }

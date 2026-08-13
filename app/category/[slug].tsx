@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -97,14 +98,14 @@ function Waitlist({
         <CategoryGlyph icon={icon} size={52} tone="ink" />
         <View style={{ flex: 1 }}>
           <View style={styles.heroBadge}>
-            <Text style={styles.heroBadgeTxt}>{t('common.comingSoon')}</Text>
+            <AppText style={styles.heroBadgeTxt}>{t('common.comingSoon')}</AppText>
           </View>
-          <Text style={styles.heroTitle}>{title}</Text>
+          <AppText style={styles.heroTitle}>{title}</AppText>
         </View>
       </View>
 
-      <Text style={styles.wTitle}>{t('category.comingSoonTitle', { category: title })}</Text>
-      <Text style={styles.wSub}>{t('category.comingSoonSub')}</Text>
+      <AppText style={styles.wTitle}>{t('category.comingSoonTitle', { category: title })}</AppText>
+      <AppText style={styles.wSub}>{t('category.comingSoonSub')}</AppText>
 
       <View style={styles.notifyBox}>
         <Ionicons name="notifications-outline" size={18} color={colors.accent} />
@@ -123,9 +124,9 @@ function Waitlist({
         disabled={!valid || m.isPending}
         onPress={() => m.mutate()}
       >
-        <Text style={styles.ctaTxt}>{t('category.notifyMe')}</Text>
+        <AppText style={styles.ctaTxt}>{t('category.notifyMe')}</AppText>
       </Pressable>
-      {m.isError && <Text style={styles.err}>{(m.error as Error).message}</Text>}
+      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </ScrollView>
   );
 }

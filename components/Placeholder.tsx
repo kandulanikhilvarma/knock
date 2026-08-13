@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { colors, font, type } from '../theme/tokens';
@@ -8,8 +9,8 @@ export default function Placeholder({ titleKey }: { titleKey: string }) {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.center}>
-        <Text style={styles.title}>{t(titleKey)}</Text>
-        <Text style={styles.sub}>{t('common.comingSoon')}</Text>
+        <AppText style={styles.title}>{t(titleKey)}</AppText>
+        <AppText style={styles.sub}>{t('common.comingSoon')}</AppText>
       </View>
     </SafeAreaView>
   );

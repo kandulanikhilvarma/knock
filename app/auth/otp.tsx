@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -42,8 +43,8 @@ export default function OtpScreen() {
     <SafeAreaView style={styles.screen}>
       <Stack.Screen options={{ title: '' }} />
       <View style={styles.body}>
-        <Text style={styles.title}>{t('auth.otpTitle')}</Text>
-        <Text style={styles.sub}>{t('auth.otpSub', { phone })}</Text>
+        <AppText style={styles.title}>{t('auth.otpTitle')}</AppText>
+        <AppText style={styles.sub}>{t('auth.otpSub', { phone })}</AppText>
 
         <TextInput
           style={styles.input}
@@ -55,14 +56,14 @@ export default function OtpScreen() {
           maxLength={8}
           autoFocus
         />
-        {err && <Text style={styles.err}>{err}</Text>}
+        {err && <AppText style={styles.err}>{err}</AppText>}
 
         <Pressable
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}
         >
-          <Text style={styles.ctaTxt}>{busy ? t('auth.verifying') : t('auth.verify')}</Text>
+          <AppText style={styles.ctaTxt}>{busy ? t('auth.verifying') : t('auth.verify')}</AppText>
         </Pressable>
       </View>
     </SafeAreaView>

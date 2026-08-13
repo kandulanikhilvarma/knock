@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -44,14 +45,14 @@ export default function ProviderScreen() {
               )}
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{name}</Text>
-              <Text style={styles.role}>{t('provider.roleLine')}</Text>
+              <AppText style={styles.name}>{name}</AppText>
+              <AppText style={styles.role}>{t('provider.roleLine')}</AppText>
               <View style={styles.rr}>
-                <Text style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
-                <Text style={styles.rrMut}>
+                <AppText style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</AppText>
+                <AppText style={styles.rrMut}>
                   · {t('provider.jobsDone', { count: stats?.jobs_done ?? 0 })}
                   {data.years_exp ? ` · ${t('provider.yearsExp', { count: data.years_exp })}` : ''}
-                </Text>
+                </AppText>
               </View>
             </View>
           </View>
@@ -60,7 +61,7 @@ export default function ProviderScreen() {
             <View style={styles.voicePlay}>
               <Ionicons name="play" size={13} color={colors.surface} />
             </View>
-            <Text style={styles.voiceTxt}>{t('provider.voiceIntro')}</Text>
+            <AppText style={styles.voiceTxt}>{t('provider.voiceIntro')}</AppText>
           </View>
         </SafeAreaView>
 
@@ -74,25 +75,25 @@ export default function ProviderScreen() {
           {/* ₹0 coin on its ink stage */}
           <View style={styles.seal}>
             <View style={styles.coin}>
-              <Text style={styles.coinTxt}>₹0</Text>
+              <AppText style={styles.coinTxt}>₹0</AppText>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.sealTitle}>{t('provider.sealTitle')}</Text>
-              <Text style={styles.sealSub}>{t('provider.sealSub')}</Text>
+              <AppText style={styles.sealTitle}>{t('provider.sealTitle')}</AppText>
+              <AppText style={styles.sealSub}>{t('provider.sealSub')}</AppText>
             </View>
           </View>
 
           <View style={styles.price}>
-            <Text style={styles.priceLbl}>{t('provider.priceLabel')}</Text>
+            <AppText style={styles.priceLbl}>{t('provider.priceLabel')}</AppText>
             <View style={styles.priceRow}>
-              <Text style={styles.priceK}>{t('provider.visitCharge')}</Text>
-              <Text style={styles.priceV}>₹{data.visiting_charge ?? '—'}</Text>
+              <AppText style={styles.priceK}>{t('provider.visitCharge')}</AppText>
+              <AppText style={styles.priceV}>₹{data.visiting_charge ?? '—'}</AppText>
             </View>
           </View>
 
           <View style={styles.verifyNote}>
             <Ionicons name="qr-code-outline" size={19} color={colors.accent} />
-            <Text style={styles.verifyTxt}>{t('provider.qrNote')}</Text>
+            <AppText style={styles.verifyTxt}>{t('provider.qrNote')}</AppText>
           </View>
 
           <Reviews providerId={id!} />
@@ -107,7 +108,7 @@ export default function ProviderScreen() {
             router.push({ pathname: '/booking/new', params: { slug: data.services?.[0] ?? '' } })
           }
         >
-          <Text style={styles.ctaTxt}>{t('provider.request')}</Text>
+          <AppText style={styles.ctaTxt}>{t('provider.request')}</AppText>
         </Pressable>
         <Pressable style={styles.ghost}>
           <Ionicons name="call-outline" size={19} color={colors.ink} />
@@ -121,7 +122,7 @@ function Fact({ icon, color, label }: { icon: any; color: string; label: string 
   return (
     <View style={styles.fact}>
       <Ionicons name={icon} size={19} color={color} />
-      <Text style={styles.factTxt}>{label}</Text>
+      <AppText style={styles.factTxt}>{label}</AppText>
     </View>
   );
 }
@@ -132,14 +133,14 @@ function Reviews({ providerId }: { providerId: string }) {
   if (!q.data || q.data.length === 0) return null;
   return (
     <View style={styles.reviews}>
-      <Text style={styles.reviewsTitle}>{t('provider.reviewsTitle')}</Text>
+      <AppText style={styles.reviewsTitle}>{t('provider.reviewsTitle')}</AppText>
       {q.data.slice(0, 10).map((r) => (
         <View key={r.id} style={styles.reviewRow}>
-          <Text style={styles.reviewStars}>{'★'.repeat(r.rating)}</Text>
+          <AppText style={styles.reviewStars}>{'★'.repeat(r.rating)}</AppText>
           {r.tags.length > 0 && (
-            <Text style={styles.reviewTags}>{r.tags.map((tag) => t(`booking.tag_${tag}`)).join(' · ')}</Text>
+            <AppText style={styles.reviewTags}>{r.tags.map((tag) => t(`booking.tag_${tag}`)).join(' · ')}</AppText>
           )}
-          {r.body ? <Text style={styles.reviewBody}>{r.body}</Text> : null}
+          {r.body ? <AppText style={styles.reviewBody}>{r.body}</AppText> : null}
         </View>
       ))}
     </View>

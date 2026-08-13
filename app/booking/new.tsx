@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -44,10 +45,10 @@ export default function NewBookingScreen() {
         <View style={styles.gateIcon}>
           <Ionicons name="lock-closed-outline" size={26} color={colors.inkMuted} />
         </View>
-        <Text style={styles.gateTitle}>{t('booking.signInFirst')}</Text>
-        <Text style={styles.gateSub}>{t('bookingsTab.signInSub')}</Text>
+        <AppText style={styles.gateTitle}>{t('booking.signInFirst')}</AppText>
+        <AppText style={styles.gateSub}>{t('bookingsTab.signInSub')}</AppText>
         <Pressable style={styles.gateCta} onPress={() => router.push('/auth/email')}>
-          <Text style={styles.ctaTxt}>{t('booking.signInCta')}</Text>
+          <AppText style={styles.ctaTxt}>{t('booking.signInCta')}</AppText>
         </Pressable>
       </View>
     );
@@ -63,15 +64,15 @@ export default function NewBookingScreen() {
         <View style={styles.hero}>
           <CategoryGlyph icon={category?.icon} size={48} tone="ink" />
           <View style={{ flex: 1 }}>
-            <Text style={styles.heroLbl}>{t('booking.newTitle')}</Text>
-            <Text style={styles.heroTitle}>{title}</Text>
+            <AppText style={styles.heroLbl}>{t('booking.newTitle')}</AppText>
+            <AppText style={styles.heroTitle}>{title}</AppText>
           </View>
         </View>
       ) : (
-        <Text style={styles.cat}>{title}</Text>
+        <AppText style={styles.cat}>{title}</AppText>
       )}
 
-      <Text style={styles.label}>{t('booking.descLabel')}</Text>
+      <AppText style={styles.label}>{t('booking.descLabel')}</AppText>
       <TextInput
         style={[styles.input, styles.multiline]}
         value={description}
@@ -81,7 +82,7 @@ export default function NewBookingScreen() {
         multiline
       />
 
-      <Text style={styles.label}>{t('booking.addressLabel')}</Text>
+      <AppText style={styles.label}>{t('booking.addressLabel')}</AppText>
       <TextInput
         style={[styles.input, styles.multiline]}
         value={address}
@@ -93,9 +94,9 @@ export default function NewBookingScreen() {
 
       <View style={styles.coinRow}>
         <View style={styles.coin}>
-          <Text style={styles.coinTxt}>₹0</Text>
+          <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
-        <Text style={styles.coinNote}>{t('booking.zeroNote')}</Text>
+        <AppText style={styles.coinNote}>{t('booking.zeroNote')}</AppText>
       </View>
 
       <Pressable
@@ -103,9 +104,9 @@ export default function NewBookingScreen() {
         disabled={!valid || m.isPending}
         onPress={() => m.mutate()}
       >
-        <Text style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</Text>
+        <AppText style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</AppText>
       </Pressable>
-      {m.isError && <Text style={styles.err}>{(m.error as Error).message}</Text>}
+      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </ScrollView>
   );
 }

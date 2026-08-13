@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +25,9 @@ function DeleteAccount() {
       disabled={m.isPending}
       onPress={() => (armed ? m.mutate() : setArmed(true))}
     >
-      <Text style={styles.deleteTxt}>
+      <AppText style={styles.deleteTxt}>
         {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
-      </Text>
+      </AppText>
     </Pressable>
   );
 }
@@ -46,7 +47,7 @@ function ProviderSection() {
         <View style={[styles.linkIcon, { backgroundColor: 'rgba(255,122,26,0.10)' }]}>
           <Ionicons name="briefcase-outline" size={18} color={colors.accent} />
         </View>
-        <Text style={styles.linkTxt}>{t('providerSetup.become')}</Text>
+        <AppText style={styles.linkTxt}>{t('providerSetup.become')}</AppText>
         <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
       </Pressable>
     );
@@ -55,16 +56,16 @@ function ProviderSection() {
   const current = q.data.availability_status as Availability;
   return (
     <View style={styles.card}>
-      <Text style={styles.label}>{t('providerSetup.availability')}</Text>
+      <AppText style={styles.label}>{t('providerSetup.availability')}</AppText>
       <View style={styles.seg}>
         {STATES.map((s) => (
           <Pressable key={s} style={[styles.segBtn, current === s && styles.segOn]} disabled={m.isPending} onPress={() => m.mutate(s)}>
-            <Text style={[styles.segTxt, current === s && styles.segTxtOn]}>{t(`providerSetup.status_${s}`)}</Text>
+            <AppText style={[styles.segTxt, current === s && styles.segTxtOn]}>{t(`providerSetup.status_${s}`)}</AppText>
           </Pressable>
         ))}
       </View>
       <Pressable style={styles.editLink} onPress={() => router.push('/provider-setup')}>
-        <Text style={styles.editTxt}>{t('providerSetup.edit')}</Text>
+        <AppText style={styles.editTxt}>{t('providerSetup.edit')}</AppText>
       </Pressable>
     </View>
   );
@@ -86,17 +87,17 @@ export default function Profile() {
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>{t('tabs.profile')}</Text>
+        <AppText style={styles.title}>{t('tabs.profile')}</AppText>
 
         {session ? (
           <View style={styles.idCard}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarTxt}>{initial}</Text>
+              <AppText style={styles.avatarTxt}>{initial}</AppText>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.idName} numberOfLines={1}>{identity}</Text>
+              <AppText style={styles.idName} numberOfLines={1}>{identity}</AppText>
               <View style={styles.typeChip}>
-                <Text style={styles.typeChipTxt}>{accountType}</Text>
+                <AppText style={styles.typeChipTxt}>{accountType}</AppText>
               </View>
             </View>
           </View>
@@ -106,14 +107,14 @@ export default function Profile() {
               <Ionicons name="person-outline" size={22} color={colors.inkMuted} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.idName}>{t('profileTab.guestName')}</Text>
-              <Text style={styles.idSub}>{t('profileTab.signInSub')}</Text>
+              <AppText style={styles.idName}>{t('profileTab.guestName')}</AppText>
+              <AppText style={styles.idSub}>{t('profileTab.signInSub')}</AppText>
             </View>
           </View>
         )}
 
         <View style={styles.row}>
-          <Text style={styles.label}>{t('profileTab.language')}</Text>
+          <AppText style={styles.label}>{t('profileTab.language')}</AppText>
           <LanguageSwitcher />
         </View>
 
@@ -124,17 +125,17 @@ export default function Profile() {
               <View style={styles.linkIcon}>
                 <Ionicons name="albums-outline" size={18} color={colors.ink} />
               </View>
-              <Text style={styles.linkTxt}>{t('profileTab.myJobs')}</Text>
+              <AppText style={styles.linkTxt}>{t('profileTab.myJobs')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
             <Pressable style={styles.signout} onPress={() => signOut()}>
-              <Text style={styles.signoutTxt}>{t('profileTab.signOut')}</Text>
+              <AppText style={styles.signoutTxt}>{t('profileTab.signOut')}</AppText>
             </Pressable>
             <DeleteAccount />
           </>
         ) : (
           <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
-            <Text style={styles.ctaTxt}>{t('profileTab.signIn')}</Text>
+            <AppText style={styles.ctaTxt}>{t('profileTab.signIn')}</AppText>
           </Pressable>
         )}
       </ScrollView>

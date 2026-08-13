@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type, shadow } from '../theme/tokens';
@@ -23,34 +24,34 @@ export default function ProviderCard({
         <Avatar name={name} photoUrl={provider.photo_url} />
         <View style={styles.info}>
           <View style={styles.nameRow}>
-            <Text style={styles.name} numberOfLines={1}>
+            <AppText style={styles.name} numberOfLines={1}>
               {name}
-            </Text>
+            </AppText>
             {verified && (
               <View style={styles.badge}>
                 <Ionicons name="checkmark" size={11} color={colors.ink} />
-                <Text style={styles.badgeTxt}>VERIFIED</Text>
+                <AppText style={styles.badgeTxt}>VERIFIED</AppText>
               </View>
             )}
           </View>
           <View style={styles.metaRow}>
-            <Text style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
-            <Text style={styles.dot}>·</Text>
-            <Text style={styles.meta}>{t('provider.jobsShort', { count: stats?.jobs_done ?? 0 })}</Text>
+            <AppText style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</AppText>
+            <AppText style={styles.dot}>·</AppText>
+            <AppText style={styles.meta}>{t('provider.jobsShort', { count: stats?.jobs_done ?? 0 })}</AppText>
             {provider.years_exp ? (
               <>
-                <Text style={styles.dot}>·</Text>
-                <Text style={styles.meta}>{t('provider.yearsShort', { count: provider.years_exp })}</Text>
+                <AppText style={styles.dot}>·</AppText>
+                <AppText style={styles.meta}>{t('provider.yearsShort', { count: provider.years_exp })}</AppText>
               </>
             ) : null}
           </View>
           <View style={styles.tags}>
             <View style={styles.tag}>
-              <Text style={styles.tagTxt}>{t('provider.speaksTelugu')}</Text>
+              <AppText style={styles.tagTxt}>{t('provider.speaksTelugu')}</AppText>
             </View>
             {provider.visiting_charge != null && (
               <View style={styles.tag}>
-                <Text style={styles.tagTxt}>{t('provider.visit', { amount: provider.visiting_charge })}</Text>
+                <AppText style={styles.tagTxt}>{t('provider.visit', { amount: provider.visiting_charge })}</AppText>
               </View>
             )}
           </View>
@@ -60,9 +61,9 @@ export default function ProviderCard({
       {/* ₹0 minted coin — the signature, on every provider card */}
       <View style={styles.coinRow}>
         <View style={styles.coin}>
-          <Text style={styles.coinTxt}>₹0</Text>
+          <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
-        <Text style={styles.coinLabel}>{t('provider.coinLine')}</Text>
+        <AppText style={styles.coinLabel}>{t('provider.coinLine')}</AppText>
       </View>
     </Pressable>
   );

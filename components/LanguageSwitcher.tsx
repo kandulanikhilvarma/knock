@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type } from '../theme/tokens';
@@ -31,7 +32,7 @@ export default function LanguageSwitcher() {
             style={[styles.chip, on && styles.chipOn]}
             hitSlop={8}
           >
-            <Text style={[styles.txt, on && styles.txtOn]}>{l.label}</Text>
+            <AppText style={[styles.txt, on && styles.txtOn]}>{l.label}</AppText>
           </Pressable>
         );
       })}

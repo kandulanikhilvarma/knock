@@ -1,4 +1,5 @@
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, font, radius, space, type } from '../theme/tokens';
 
@@ -14,8 +15,8 @@ export function Loading() {
 export function ErrorState({ message }: { message?: string }) {
   return (
     <View style={styles.center}>
-      <Text style={styles.title}>Something went wrong</Text>
-      {message ? <Text style={styles.sub}>{message}</Text> : null}
+      <AppText style={styles.title}>Something went wrong</AppText>
+      {message ? <AppText style={styles.sub}>{message}</AppText> : null}
     </View>
   );
 }
@@ -28,8 +29,8 @@ export function Empty({ title, sub, icon }: { title: string; sub?: string; icon?
           <Ionicons name={icon as any} size={26} color={colors.inkMuted} />
         </View>
       ) : null}
-      <Text style={styles.title}>{title}</Text>
-      {sub ? <Text style={styles.sub}>{sub}</Text> : null}
+      <AppText style={styles.title}>{title}</AppText>
+      {sub ? <AppText style={styles.sub}>{sub}</AppText> : null}
     </View>
   );
 }

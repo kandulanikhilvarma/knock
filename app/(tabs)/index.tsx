@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -38,10 +39,10 @@ export default function Home() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.hi}>{t('home.greeting')}</Text>
+            <AppText style={styles.hi}>{t('home.greeting')}</AppText>
             <View style={styles.loc}>
               <Ionicons name="location-outline" size={13} color={colors.inkMuted} />
-              <Text style={styles.locTxt}>Vijayawada</Text>
+              <AppText style={styles.locTxt}>Vijayawada</AppText>
             </View>
           </View>
           <LanguageSwitcher />
@@ -49,7 +50,7 @@ export default function Home() {
 
         <View style={styles.search}>
           <Ionicons name="search" size={18} color={colors.inkMuted} />
-          <Text style={styles.searchPh}>{t('home.searchPlaceholder')}</Text>
+          <AppText style={styles.searchPh}>{t('home.searchPlaceholder')}</AppText>
           <View style={styles.mic}>
             <Ionicons name="mic" size={16} color={colors.surface} />
           </View>
@@ -57,16 +58,16 @@ export default function Home() {
 
         {/* City earnings — the number, stated plainly on an ink card */}
         <View style={styles.earn}>
-          <Text style={styles.earnLbl}>{t('home.earnLabel')}</Text>
-          <Text style={styles.earnNum}>
-            ₹<Text style={styles.earnGold}>{formatINR(earnings.data ?? 0)}</Text>
-          </Text>
+          <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
+          <AppText style={styles.earnNum}>
+            ₹<AppText style={styles.earnGold}>{formatINR(earnings.data ?? 0)}</AppText>
+          </AppText>
           <View style={styles.earnSub}>
             <View style={styles.live}>
               <View style={styles.liveDot} />
-              <Text style={styles.liveTxt}>LIVE</Text>
+              <AppText style={styles.liveTxt}>LIVE</AppText>
             </View>
-            <Text style={styles.earnSubTxt}>{t('home.earnSub')}</Text>
+            <AppText style={styles.earnSubTxt}>{t('home.earnSub')}</AppText>
           </View>
         </View>
 
@@ -75,14 +76,14 @@ export default function Home() {
 
         {live.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('home.available')}</Text>
+            <AppText style={styles.sectionTitle}>{t('home.available')}</AppText>
             <Grid cats={live} lang={i18n.language} onPick={open} />
           </View>
         )}
 
         {featured.data && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('home.nearYou')}</Text>
+            <AppText style={styles.sectionTitle}>{t('home.nearYou')}</AppText>
             <ProviderCard
               provider={featured.data}
               onPress={() =>
@@ -96,7 +97,7 @@ export default function Home() {
 
         {soon.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('home.comingSoon')}</Text>
+            <AppText style={styles.sectionTitle}>{t('home.comingSoon')}</AppText>
             <Grid cats={soon} lang={i18n.language} onPick={open} soon />
           </View>
         )}
@@ -129,19 +130,19 @@ function Grid({
             <CategoryGlyph icon={c.icon} size={46} tone={soon ? 'muted' : 'paper'} />
             {soon && (
               <View style={styles.soonTag}>
-                <Text style={styles.soonTagTxt}>{t('home.soonTag')}</Text>
+                <AppText style={styles.soonTagTxt}>{t('home.soonTag')}</AppText>
               </View>
             )}
           </View>
-          <Text style={[styles.tileTxt, soon && styles.tileTxtSoon]} numberOfLines={2}>
+          <AppText style={[styles.tileTxt, soon && styles.tileTxtSoon]} numberOfLines={2}>
             {categoryName(c, lang)}
-          </Text>
+          </AppText>
           {soon ? (
-            <Text style={styles.tileSoonHint}>{t('home.soonHint')}</Text>
+            <AppText style={styles.tileSoonHint}>{t('home.soonHint')}</AppText>
           ) : (
             <View style={styles.avail}>
               <View style={styles.availDot} />
-              <Text style={styles.availTxt}>{t('home.availableNow')}</Text>
+              <AppText style={styles.availTxt}>{t('home.availableNow')}</AppText>
             </View>
           )}
         </Pressable>
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md },
   tile: {
     width: '47%',
-    flexGrow: 1,
+    flexGrow: 0,
     minWidth: 150,
     minHeight: 128,
     borderRadius: radius.card,

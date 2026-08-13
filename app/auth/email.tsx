@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
@@ -38,13 +39,13 @@ export default function EmailAuthScreen() {
 
       <View style={styles.brand}>
         <View style={styles.coin}>
-          <Text style={styles.coinTxt}>₹0</Text>
+          <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
-        <Text style={styles.tagline}>{t('app.tagline')}</Text>
+        <AppText style={styles.tagline}>{t('app.tagline')}</AppText>
       </View>
 
-      <Text style={styles.title}>{t('auth.emailTitle')}</Text>
-      <Text style={styles.sub}>{t('auth.emailSub')}</Text>
+      <AppText style={styles.title}>{t('auth.emailTitle')}</AppText>
+      <AppText style={styles.sub}>{t('auth.emailSub')}</AppText>
 
       <TextInput
         style={styles.input}
@@ -70,15 +71,15 @@ export default function EmailAuthScreen() {
         disabled={!valid || m.isPending}
         onPress={() => m.mutate()}
       >
-        <Text style={styles.ctaTxt}>{m.isPending ? t('auth.verifying') : t('auth.signInBtn')}</Text>
+        <AppText style={styles.ctaTxt}>{m.isPending ? t('auth.verifying') : t('auth.signInBtn')}</AppText>
       </Pressable>
-      {m.isError && <Text style={styles.err}>{(m.error as Error).message}</Text>}
+      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
 
       <View style={styles.divider} />
       <Pressable style={styles.guest} disabled={guest.isPending} onPress={() => guest.mutate()}>
-        <Text style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</Text>
+        <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
       </Pressable>
-      {guest.isError && <Text style={styles.err}>{(guest.error as Error).message}</Text>}
+      {guest.isError && <AppText style={styles.err}>{(guest.error as Error).message}</AppText>}
     </View>
   );
 }

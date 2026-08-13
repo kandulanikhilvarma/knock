@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -30,21 +31,21 @@ export default function RoleScreen() {
     <SafeAreaView style={styles.screen}>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.body}>
-        <Text style={styles.title}>{t('auth.roleTitle')}</Text>
+        <AppText style={styles.title}>{t('auth.roleTitle')}</AppText>
 
         <Pressable style={styles.card} onPress={() => pick('customer')} disabled={busy}>
           <Ionicons name="search" size={28} color={colors.primary} />
-          <Text style={styles.cardTitle}>{t('auth.roleCustomer')}</Text>
-          <Text style={styles.cardSub}>{t('auth.roleCustomerSub')}</Text>
+          <AppText style={styles.cardTitle}>{t('auth.roleCustomer')}</AppText>
+          <AppText style={styles.cardSub}>{t('auth.roleCustomerSub')}</AppText>
         </Pressable>
 
         <Pressable style={styles.card} onPress={() => pick('provider')} disabled={busy}>
           <Ionicons name="construct" size={28} color={colors.primary} />
-          <Text style={styles.cardTitle}>{t('auth.roleProvider')}</Text>
-          <Text style={styles.cardSub}>{t('auth.roleProviderSub')}</Text>
+          <AppText style={styles.cardTitle}>{t('auth.roleProvider')}</AppText>
+          <AppText style={styles.cardSub}>{t('auth.roleProviderSub')}</AppText>
         </Pressable>
 
-        {err && <Text style={styles.err}>{err}</Text>}
+        {err && <AppText style={styles.err}>{err}</AppText>}
       </View>
     </SafeAreaView>
   );

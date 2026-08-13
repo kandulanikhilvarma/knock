@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -33,11 +34,11 @@ export default function PhoneScreen() {
     <SafeAreaView style={styles.screen}>
       <Stack.Screen options={{ title: '' }} />
       <View style={styles.body}>
-        <Text style={styles.title}>{t('auth.phoneTitle')}</Text>
-        <Text style={styles.sub}>{t('auth.phoneSub')}</Text>
+        <AppText style={styles.title}>{t('auth.phoneTitle')}</AppText>
+        <AppText style={styles.sub}>{t('auth.phoneSub')}</AppText>
 
         <View style={styles.inputRow}>
-          <Text style={styles.prefix}>+91</Text>
+          <AppText style={styles.prefix}>+91</AppText>
           <TextInput
             style={styles.input}
             value={phone}
@@ -49,14 +50,14 @@ export default function PhoneScreen() {
             autoFocus
           />
         </View>
-        {err && <Text style={styles.err}>{err}</Text>}
+        {err && <AppText style={styles.err}>{err}</AppText>}
 
         <Pressable
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}
         >
-          <Text style={styles.ctaTxt}>{busy ? t('auth.sending') : t('auth.sendCode')}</Text>
+          <AppText style={styles.ctaTxt}>{busy ? t('auth.sending') : t('auth.sendCode')}</AppText>
         </Pressable>
       </View>
     </SafeAreaView>

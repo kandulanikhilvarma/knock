@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -63,19 +64,19 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
     <View style={styles.card}>
       <View style={styles.top}>
         <CategoryGlyph icon={cat?.icon} size={40} />
-        <Text style={styles.cat} numberOfLines={1}>{catLabel}</Text>
-        <Text style={[styles.timer, expired && styles.timerOff]}>
+        <AppText style={styles.cat} numberOfLines={1}>{catLabel}</AppText>
+        <AppText style={[styles.timer, expired && styles.timerOff]}>
           {expired ? t('jobs.expired') : t('jobs.secLeft', { sec: left })}
-        </Text>
+        </AppText>
       </View>
-      {b?.description ? <Text style={styles.desc}>{b.description}</Text> : null}
-      {b?.address ? <Text style={styles.addr}>{b.address}</Text> : null}
+      {b?.description ? <AppText style={styles.desc}>{b.description}</AppText> : null}
+      {b?.address ? <AppText style={styles.addr}>{b.address}</AppText> : null}
 
       <View style={styles.coinRow}>
         <View style={styles.coin}>
-          <Text style={styles.coinTxt}>₹0</Text>
+          <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
-        <Text style={styles.coinNote}>{t('jobs.zeroNote')}</Text>
+        <AppText style={styles.coinNote}>{t('jobs.zeroNote')}</AppText>
       </View>
 
       <View style={styles.actions}>
@@ -84,18 +85,18 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
           disabled={m.isPending || expired}
           onPress={() => m.mutate('decline')}
         >
-          <Text style={styles.declineTxt}>{t('jobs.decline')}</Text>
+          <AppText style={styles.declineTxt}>{t('jobs.decline')}</AppText>
         </Pressable>
         <Pressable
           style={[styles.accept, (m.isPending || expired) && styles.off]}
           disabled={m.isPending || expired}
           onPress={() => m.mutate('accept')}
         >
-          <Text style={styles.acceptTxt}>{t('jobs.accept')}</Text>
+          <AppText style={styles.acceptTxt}>{t('jobs.accept')}</AppText>
         </Pressable>
       </View>
       {m.data && !m.data.accepted && (
-        <Text style={styles.lost}>{m.data.taken ? t('jobs.taken') : t('jobs.expired')}</Text>
+        <AppText style={styles.lost}>{m.data.taken ? t('jobs.taken') : t('jobs.expired')}</AppText>
       )}
     </View>
   );

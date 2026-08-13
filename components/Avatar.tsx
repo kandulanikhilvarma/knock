@@ -1,4 +1,5 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
+import AppText from './AppText';
 import { colors, font } from '../theme/tokens';
 
 function initials(name: string | null): string {
@@ -25,7 +26,7 @@ export default function Avatar({
   }
   return (
     <View style={[styles.fallback, { width: size, height: size, borderRadius: size / 2 }]}>
-      <Text style={[styles.txt, { fontSize: size * 0.36 }]}>{initials(name)}</Text>
+      <AppText style={[styles.txt, { fontSize: size * 0.36 }]}>{initials(name)}</AppText>
     </View>
   );
 }
