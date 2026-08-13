@@ -177,6 +177,11 @@
     "tag_on_time": "समय पर",
     "tag_fair_price": "उचित दाम",
     "tag_clean_work": "साफ़ काम",
+    "step_requested": "अनुरोध",
+    "step_matched": "मैच",
+    "step_atdoor": "दरवाज़े पर",
+    "step_done": "पूरा",
+    "step_paid": "भुगतान",
     "state": {
       "requested": "अनुरोध किया",
       "finding_pro": "प्रो ढूँढ रहे हैं…",

@@ -177,6 +177,11 @@
     "tag_on_time": "On time",
     "tag_fair_price": "Fair price",
     "tag_clean_work": "Clean work",
+    "step_requested": "Requested",
+    "step_matched": "Matched",
+    "step_atdoor": "At door",
+    "step_done": "Done",
+    "step_paid": "Paid",
     "state": {
       "requested": "Requested",
       "finding_pro": "Finding a pro…",

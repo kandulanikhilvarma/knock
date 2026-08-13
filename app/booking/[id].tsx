@@ -6,18 +6,40 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import QRCode from 'react-native-qrcode-svg';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import {
   getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
-import { getProvider } from '../../lib/queries';
+import { getProvider, getCategories, categoryName } from '../../lib/queries';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
+import CategoryImage from '../../components/CategoryImage';
 import { Loading, ErrorState } from '../../components/StateView';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
+
+// The customer-facing journey. `failed` has no place on the line — it shows the
+// browse fallback instead.
+const STEPS = ['requested', 'matched', 'atdoor', 'done', 'paid'] as const;
+function stepIndex(b: Booking): number {
+  if (b.paid_at) return 4;
+  switch (b.status) {
+    case 'requested':
+    case 'finding_pro':
+      return 0;
+    case 'assigned':
+      return 1;
+    case 'in_progress':
+      return 2;
+    case 'done':
+      return 3;
+    default:
+      return 0;
+  }
+}
 
 export default function BookingStatusScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -41,20 +63,76 @@ export default function BookingStatusScreen() {
 
   const isProvider = !!uid && uid === booking.assigned_provider_id;
   const canChat = !!booking.assigned_provider_id && ['assigned', 'in_progress', 'done'].includes(booking.status);
+  const showSteps = !isProvider && booking.status !== 'failed';
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Stack.Screen options={{ title: t('booking.statusTitle') }} />
+      <BookingHeader booking={booking} />
+      {showSteps && <Steps current={stepIndex(booking)} />}
       {isProvider ? <ProviderPanel booking={booking} /> : <CustomerPanel booking={booking} />}
       {canChat && (
         <Pressable
           style={styles.chatBtn}
           onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: booking.id } })}
         >
+          <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.ink} />
           <Text style={styles.chatTxt}>{t('chat.open')}</Text>
         </Pressable>
       )}
     </ScrollView>
+  );
+}
+
+function BookingHeader({ booking }: { booking: Booking }) {
+  const { t, i18n } = useTranslation();
+  const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
+  const cat = (cats.data ?? []).find((c) => c.slug === booking.category_slug);
+  const label = cat ? categoryName(cat, i18n.language) : booking.category_slug;
+  const paid = !!booking.paid_at;
+  const stateKey = paid ? 'paid' : booking.status;
+  const proof = paid || ['verified', 'in_progress', 'done'].includes(booking.status);
+  return (
+    <View style={styles.header}>
+      <CategoryImage slug={booking.category_slug} icon={cat?.icon} width={160} style={styles.headerThumb} />
+      <View style={{ flex: 1 }}>
+        <Text style={styles.headerCat} numberOfLines={1}>{label}</Text>
+        <View style={[styles.headerPill, proof && styles.headerPillProof]}>
+          <Text style={[styles.headerPillTxt, proof && styles.headerPillTxtProof]}>
+            {t(`booking.state.${stateKey}`, stateKey)}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function Steps({ current }: { current: number }) {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.steps}>
+      {STEPS.map((s, i) => {
+        const state = i < current ? 'past' : i === current ? 'now' : 'future';
+        return (
+          <View key={s} style={styles.step}>
+            <View style={styles.stepTop}>
+              <View style={[styles.line, i === 0 && styles.lineHidden, i <= current && styles.lineOn]} />
+              <View style={[styles.dot, state === 'past' && styles.dotPast, state === 'now' && styles.dotNow]}>
+                {state === 'past' ? (
+                  <Ionicons name="checkmark" size={11} color={colors.surface} />
+                ) : (
+                  <View style={[styles.dotInner, state === 'now' && styles.dotInnerNow]} />
+                )}
+              </View>
+              <View style={[styles.line, i === STEPS.length - 1 && styles.lineHidden, i < current && styles.lineOn]} />
+            </View>
+            <Text style={[styles.stepTxt, state !== 'future' && styles.stepTxtOn]} numberOfLines={1}>
+              {t(`booking.step_${s}`)}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
   );
 }
 
@@ -310,6 +388,31 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: space.lg, gap: space.md },
 
+  header: {
+    flexDirection: 'row', alignItems: 'center', gap: space.md,
+    backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.sm,
+  },
+  headerThumb: { width: 52, height: 52, borderRadius: radius.chip },
+  headerCat: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
+  headerPill: { alignSelf: 'flex-start', marginTop: 5, backgroundColor: colors.line2, paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill },
+  headerPillProof: { backgroundColor: 'rgba(18,161,80,0.12)' },
+  headerPillTxt: { fontFamily: font.teBold, fontSize: 11, color: colors.inkMuted, letterSpacing: 0.2 },
+  headerPillTxtProof: { color: colors.successInk },
+
+  steps: { flexDirection: 'row', paddingVertical: space.sm },
+  step: { flex: 1, alignItems: 'center', gap: 6 },
+  stepTop: { flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'center' },
+  line: { flex: 1, height: 2, backgroundColor: colors.line },
+  lineOn: { backgroundColor: colors.success },
+  lineHidden: { backgroundColor: 'transparent' },
+  dot: { width: 22, height: 22, borderRadius: radius.pill, backgroundColor: colors.line2, alignItems: 'center', justifyContent: 'center' },
+  dotPast: { backgroundColor: colors.success },
+  dotNow: { backgroundColor: colors.ink },
+  dotInner: { width: 7, height: 7, borderRadius: radius.pill, backgroundColor: colors.inkMuted },
+  dotInnerNow: { backgroundColor: colors.gold },
+  stepTxt: { fontFamily: font.te, fontSize: 9, color: colors.inkMuted, textAlign: 'center' },
+  stepTxtOn: { color: colors.ink, fontFamily: font.teBold },
+
   finding: { alignItems: 'center', paddingVertical: space.xxl, gap: space.xs },
   liveDot: { width: 10, height: 10, borderRadius: radius.pill, backgroundColor: colors.accent },
   findTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink, textAlign: 'center' },
@@ -366,7 +469,7 @@ const styles = StyleSheet.create({
   ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
   ghostCta: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
   ghostTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
-  chatBtn: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.ink, alignItems: 'center', justifyContent: 'center' },
+  chatBtn: { flexDirection: 'row', gap: space.sm, height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.ink, alignItems: 'center', justifyContent: 'center' },
   chatTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger, textAlign: 'center' },
 });

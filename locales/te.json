@@ -177,6 +177,11 @@
     "tag_on_time": "సమయానికి",
     "tag_fair_price": "సరైన ధర",
     "tag_clean_work": "శుభ్రమైన పని",
+    "step_requested": "అభ్యర్థన",
+    "step_matched": "మ్యాచ్",
+    "step_atdoor": "ద్వారం వద్ద",
+    "step_done": "పూర్తి",
+    "step_paid": "చెల్లింపు",
     "state": {
       "requested": "అభ్యర్థించారు",
       "finding_pro": "ప్రొను వెతుకుతోంది…",
