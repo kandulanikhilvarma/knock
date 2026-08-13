@@ -59,10 +59,10 @@ export async function getProvider(id: string): Promise<ProviderCard | null> {
   return (data as unknown as ProviderCard) ?? null;
 }
 
-// Real total paid to workers — the Home counter (public aggregate view).
+// Real total paid to workers — the Home counter (public single-row cache).
 export async function getCityEarnings(): Promise<number> {
   const { data, error } = await supabase
-    .from('earnings_public' as never)
+    .from('city_stats' as never)
     .select('total_paid')
     .single();
   if (error) throw error;
