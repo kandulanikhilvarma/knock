@@ -31,6 +31,9 @@ export default function Profile() {
               <Text style={styles.label}>{t('profileTab.phone')}</Text>
               <Text style={styles.value}>{session.user.phone ?? '—'}</Text>
             </View>
+            <Pressable style={styles.link} onPress={() => router.push('/jobs')}>
+              <Text style={styles.linkTxt}>{t('profileTab.myJobs')}</Text>
+            </Pressable>
             <Pressable style={styles.signout} onPress={() => signOut()}>
               <Text style={styles.signoutTxt}>{t('profileTab.signOut')}</Text>
             </Pressable>
@@ -60,6 +63,16 @@ const styles = StyleSheet.create({
     gap: space.xs,
   },
   value: { fontFamily: font.semibold, fontSize: type.body, color: colors.ink },
+  link: {
+    height: tap.min,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.ink },
   cta: {
     height: tap.min,
     borderRadius: radius.card,

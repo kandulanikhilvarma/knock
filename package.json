@@ -41,7 +41,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test:dispatch": "node --experimental-strip-types lib/dispatch.test.ts",
+    "test:dispatch": "node --experimental-strip-types supabase/functions/_shared/dispatch.test.ts",
     "check": "tsc --noEmit && npm run test:dispatch"
   },
   "private": true

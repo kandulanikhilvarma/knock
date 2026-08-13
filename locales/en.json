@@ -68,7 +68,47 @@
     "language": "Language",
     "phone": "Mobile number",
     "signIn": "Sign in",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "myJobs": "Job requests"
+  },
+  "booking": {
+    "newTitle": "Request a pro",
+    "signInFirst": "Sign in to request a pro.",
+    "signInCta": "Sign in",
+    "descLabel": "What's the problem?",
+    "descPlaceholder": "e.g. AC not cooling, water leaking under the sink…",
+    "addressLabel": "Where should they come?",
+    "addressPlaceholder": "House / flat, street, area, landmark",
+    "zeroNote": "You pay the pro directly by UPI. The app takes ₹0 — ever.",
+    "submit": "Find me a pro",
+    "submitting": "Sending…",
+    "statusTitle": "Your booking",
+    "findingPro": "Finding your pro…",
+    "findingSub": "We're pinging the best-matched pros near you.",
+    "matched": "Matched",
+    "swap": "Not this one — swap (free, once)",
+    "swapping": "Finding another…",
+    "swapUsed": "Free swap used.",
+    "noProviders": "No pros free right now",
+    "noProvidersSub": "Browse the list and call one directly.",
+    "browseCta": "Browse pros",
+    "notFound": "Booking not found",
+    "state": {
+      "verified": "Verified at your door",
+      "in_progress": "Work in progress",
+      "done": "Job done"
+    }
+  },
+  "jobs": {
+    "title": "Job requests",
+    "empty": "No job requests right now",
+    "emptySub": "New jobs near you show up here — accept to grab them.",
+    "secLeft": "{{sec}}s left",
+    "expired": "Expired",
+    "accept": "Accept",
+    "decline": "Decline",
+    "taken": "Another pro took it",
+    "zeroNote": "Keep 100%. The app takes no commission."
   },
   "common": {
     "comingSoon": "Coming soon"

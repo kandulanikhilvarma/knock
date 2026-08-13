@@ -1,0 +1,118 @@
+import { useEffect, useState } from 'react';
+import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { useRouter, Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { getMyOffers, respondOffer, type OfferWithBooking } from '../../lib/bookings';
+import { Loading, ErrorState, Empty } from '../../components/StateView';
+
+export default function JobsScreen() {
+  const { t } = useTranslation();
+  const q = useQuery({ queryKey: ['offers'], queryFn: getMyOffers, refetchInterval: 5000 });
+
+  return (
+    <View style={styles.screen}>
+      <Stack.Screen options={{ title: t('jobs.title') }} />
+      {q.isLoading && <Loading />}
+      {q.isError && <ErrorState message={(q.error as Error)?.message} />}
+      {q.data && (
+        <FlatList
+          data={q.data}
+          keyExtractor={(o) => o.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => <OfferCard offer={item} onDone={() => q.refetch()} />}
+          ListEmptyComponent={<Empty title={t('jobs.empty')} sub={t('jobs.emptySub')} />}
+        />
+      )}
+    </View>
+  );
+}
+
+function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => void }) {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const deadline = new Date(offer.sent_at).getTime() + offer.window_sec * 1000;
+  const [left, setLeft] = useState(Math.max(0, Math.round((deadline - Date.now()) / 1000)));
+
+  useEffect(() => {
+    const id = setInterval(() => setLeft(Math.max(0, Math.round((deadline - Date.now()) / 1000))), 1000);
+    return () => clearInterval(id);
+  }, [deadline]);
+
+  const m = useMutation({
+    mutationFn: (action: 'accept' | 'decline') => respondOffer(offer.id, action),
+    onSuccess: (res) => {
+      if (res.accepted && offer.bookings) {
+        router.push({ pathname: '/booking/[id]', params: { id: offer.bookings.id } });
+      }
+      onDone();
+    },
+  });
+
+  const expired = left <= 0;
+  const b = offer.bookings;
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.top}>
+        <Text style={styles.cat}>{b?.category_slug ?? '—'}</Text>
+        <Text style={[styles.timer, expired && styles.timerOff]}>
+          {expired ? t('jobs.expired') : t('jobs.secLeft', { sec: left })}
+        </Text>
+      </View>
+      {b?.description ? <Text style={styles.desc}>{b.description}</Text> : null}
+      {b?.address ? <Text style={styles.addr}>{b.address}</Text> : null}
+
+      <View style={styles.coinRow}>
+        <View style={styles.coin}>
+          <Text style={styles.coinTxt}>₹0</Text>
+        </View>
+        <Text style={styles.coinNote}>{t('jobs.zeroNote')}</Text>
+      </View>
+
+      <View style={styles.actions}>
+        <Pressable
+          style={[styles.decline, m.isPending && styles.off]}
+          disabled={m.isPending || expired}
+          onPress={() => m.mutate('decline')}
+        >
+          <Text style={styles.declineTxt}>{t('jobs.decline')}</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.accept, (m.isPending || expired) && styles.off]}
+          disabled={m.isPending || expired}
+          onPress={() => m.mutate('accept')}
+        >
+          <Text style={styles.acceptTxt}>{t('jobs.accept')}</Text>
+        </Pressable>
+      </View>
+      {m.data && !m.data.accepted && (
+        <Text style={styles.lost}>{m.data.taken ? t('jobs.taken') : t('jobs.expired')}</Text>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.bg },
+  list: { padding: space.lg, gap: space.md },
+  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm },
+  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  cat: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textTransform: 'capitalize' },
+  timer: { fontFamily: font.mono, fontSize: type.small, color: colors.accent, fontWeight: '700' },
+  timerOff: { color: colors.inkMuted },
+  desc: { fontFamily: font.te, fontSize: type.body, color: colors.ink2 },
+  addr: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
+  coinRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm, backgroundColor: colors.ink, borderRadius: radius.chip, padding: space.sm },
+  coin: { width: 34, height: 34, borderRadius: radius.pill, backgroundColor: colors.ink, borderWidth: 2, borderColor: colors.gold, alignItems: 'center', justifyContent: 'center' },
+  coinTxt: { fontFamily: font.bold, fontSize: 11, color: colors.gold },
+  coinNote: { flex: 1, fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted },
+  actions: { flexDirection: 'row', gap: space.sm, marginTop: space.xs },
+  decline: { flex: 1, height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
+  declineTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
+  accept: { flex: 2, height: tap.min, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  acceptTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
+  off: { opacity: 0.4 },
+  lost: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
+});

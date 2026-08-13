@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import { Loading, ErrorState, Empty } from '../../components/StateView';
 export default function ProviderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
+  const router = useRouter();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['provider', id],
     queryFn: () => getProvider(id!),
@@ -97,7 +98,12 @@ export default function ProviderScreen() {
 
       {/* Saffron request bar — the one action */}
       <SafeAreaView edges={['bottom']} style={styles.footer}>
-        <Pressable style={styles.cta} onPress={() => Alert.alert(t('provider.ctaSoon'))}>
+        <Pressable
+          style={styles.cta}
+          onPress={() =>
+            router.push({ pathname: '/booking/new', params: { slug: data.services?.[0] ?? '' } })
+          }
+        >
           <Text style={styles.ctaTxt}>{t('provider.request')}</Text>
         </Pressable>
         <Pressable style={styles.ghost}>
