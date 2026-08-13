@@ -24,6 +24,13 @@ export async function signOut() {
   await supabase.auth.signOut();
 }
 
+// App Store 5.1.1(v): delete the account from inside the app, then sign out.
+export async function deleteAccount() {
+  const { error } = await supabase.functions.invoke('delete-account');
+  if (error) throw error;
+  await supabase.auth.signOut();
+}
+
 // Fetch the caller's own profile row (RLS: owner-only).
 export async function getMyProfile() {
   const { data: auth } = await supabase.auth.getUser();

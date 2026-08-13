@@ -4,13 +4,31 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { useState } from 'react';
 import { useSession } from '../../lib/session';
-import { signOut } from '../../lib/auth';
+import { signOut, deleteAccount } from '../../lib/auth';
 import { getMyProviderProfile, setAvailability, type Availability } from '../../lib/provider';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import { Loading } from '../../components/StateView';
 
 const STATES: Availability[] = ['available', 'busy', 'paused'];
+
+function DeleteAccount() {
+  const { t } = useTranslation();
+  const [armed, setArmed] = useState(false);
+  const m = useMutation({ mutationFn: deleteAccount });
+  return (
+    <Pressable
+      style={styles.delete}
+      disabled={m.isPending}
+      onPress={() => (armed ? m.mutate() : setArmed(true))}
+    >
+      <Text style={styles.deleteTxt}>
+        {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
+      </Text>
+    </Pressable>
+  );
+}
 
 function ProviderSection() {
   const { t } = useTranslation();
@@ -77,6 +95,7 @@ export default function Profile() {
             <Pressable style={styles.signout} onPress={() => signOut()}>
               <Text style={styles.signoutTxt}>{t('profileTab.signOut')}</Text>
             </Pressable>
+            <DeleteAccount />
           </>
         ) : (
           <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
@@ -137,4 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signoutTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.danger },
+  delete: { height: tap.min, alignItems: 'center', justifyContent: 'center', marginTop: space.sm },
+  deleteTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.danger },
 });

@@ -76,7 +76,9 @@
     "phone": "Mobile number",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "myJobs": "Job requests"
+    "myJobs": "Job requests",
+    "delete": "Delete account",
+    "deleteConfirm": "Tap again to permanently delete"
   },
   "providerSetup": {
     "title": "Provider profile",
