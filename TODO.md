@@ -75,8 +75,37 @@ on every RLS policy the `authenticated` role can hit. By design here: anonymous
 = guest customer, own-row access only. P7: explicitly block anon from becoming a
 provider (pp_insert_own) and audit which tables should exclude `is_anonymous`.
 
-## P4 Chat · P6 Onboarding+KYC · P7 Harden · P8 Ship
-(see master-plan §9)
+## P4 — Realtime chat  ✅ (built + verified live)
+- [x] 0008: messages + participant helper (private schema). RLS: only the two
+      participants read/write; outsiders blocked (verified). bookings + messages
+      added to the realtime publication (status machine + chat both live).
+- [x] UI: Chat tab lists active threads; thread screen (bubbles + send);
+      entry from the booking screen. Strings en/te/hi.
+
+## P6-lite — Provider onboarding + availability  ✅
+- [x] provider-setup screen (services/UPI/city/charge/bio → upsert + role).
+- [x] Availability toggle (available/busy/paused) on profile — feeds dispatch.
+- [x] 0009: anonymous users blocked from provider registration (verified).
+- [ ] KYC upload + vendor verification (P6-full) — needs a KYC vendor; manual
+      review for now. Verified badge stays gated on a real check.
+
+## Ship-readiness bits done this session
+- [x] In-app account deletion (Apple 5.1.1(v)) — delete-account fn + profile.
+- [x] Real Home earnings counter (0011 city_stats cache + trigger) — replaced a
+      hardcoded figure; honest ₹0 pre-launch. Advisor ERROR-free.
+- [x] Guest (anonymous) sign-in wired; anonymous now enabled on the project.
+
+## Test accounts (password Testpro123!)
+customer@test.app · providers: sureshbabu@ / naveenr@ (plumber, naveenr=newcomer)
+· kiranm@ (electrician/ac) · ravikumar@ (electrician) · anilteja@ / praveenk@ (ac).
+Or "Continue as guest" for an anonymous customer.
+
+## P7 Harden · P8 Ship — remaining, mostly blocked on user
+- [ ] Telugu layout audit on a real device (screenshot-verify — not headless).
+- [ ] Push notifications (Expo tokens) · WhatsApp offer alerts · wave-2 escalation.
+- [ ] Expose customer name/phone to the assigned provider (RLS).
+- Blocked on user: SMS provider (phone OTP) · Expo+Apple/Play accounts (builds) ·
+  KYC vendor · Sentry DSN · app name (locks bundle id).
 
 ## Blocked on user (batched — I surface once)
 - [ ] **SMS provider** (MSG91/2Factor account + key) + enable Supabase Phone auth → unblocks P1 login
