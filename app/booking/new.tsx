@@ -3,10 +3,12 @@ import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { useSession } from '../../lib/session';
+import CategoryImage from '../../components/CategoryImage';
 import { Loading } from '../../components/StateView';
 
 export default function NewBookingScreen() {
@@ -39,8 +41,12 @@ export default function NewBookingScreen() {
     return (
       <View style={styles.gate}>
         <Stack.Screen options={{ title }} />
+        <View style={styles.gateIcon}>
+          <Ionicons name="lock-closed-outline" size={26} color={colors.inkMuted} />
+        </View>
         <Text style={styles.gateTitle}>{t('booking.signInFirst')}</Text>
-        <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
+        <Text style={styles.gateSub}>{t('bookingsTab.signInSub')}</Text>
+        <Pressable style={styles.gateCta} onPress={() => router.push('/auth/email')}>
           <Text style={styles.ctaTxt}>{t('booking.signInCta')}</Text>
         </Pressable>
       </View>
@@ -53,7 +59,14 @@ export default function NewBookingScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Stack.Screen options={{ title: t('booking.newTitle') }} />
 
-      <Text style={styles.cat}>{title}</Text>
+      {slug ? (
+        <View style={styles.hero}>
+          <CategoryImage slug={slug} icon={category?.icon} width={800} style={styles.heroImg} />
+          <Text style={styles.heroTitle}>{title}</Text>
+        </View>
+      ) : (
+        <Text style={styles.cat}>{title}</Text>
+      )}
 
       <Text style={styles.label}>{t('booking.descLabel')}</Text>
       <TextInput
@@ -97,8 +110,14 @@ export default function NewBookingScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: space.lg, gap: space.sm },
-  gate: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.lg },
-  gateTitle: { fontFamily: font.te, fontSize: type.body, color: colors.ink, textAlign: 'center' },
+  gate: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
+  gateIcon: { width: 56, height: 56, borderRadius: radius.pill, backgroundColor: colors.line2, alignItems: 'center', justifyContent: 'center', marginBottom: space.xs },
+  gateTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
+  gateSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
+  gateCta: { marginTop: space.md, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.card, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  hero: { height: 150, borderRadius: radius.card, overflow: 'hidden', justifyContent: 'flex-end', padding: space.lg, marginBottom: space.sm },
+  heroImg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+  heroTitle: { fontFamily: font.teBold, fontSize: type.h1, color: colors.surface },
   cat: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink, marginBottom: space.sm },
   label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
   input: {

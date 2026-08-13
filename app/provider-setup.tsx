@@ -56,7 +56,13 @@ export default function ProviderSetup() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Stack.Screen options={{ title: t('providerSetup.title') }} />
-      <Text style={styles.lead}>{t('providerSetup.lead')}</Text>
+
+      <View style={styles.banner}>
+        <View style={styles.coin}>
+          <Text style={styles.coinTxt}>₹0</Text>
+        </View>
+        <Text style={styles.bannerTxt}>{t('providerSetup.lead')}</Text>
+      </View>
 
       <Text style={styles.label}>{t('providerSetup.services')}</Text>
       <View style={styles.chips}>
@@ -93,7 +99,16 @@ export default function ProviderSetup() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: space.lg, gap: space.sm },
-  lead: { fontFamily: font.te, fontSize: type.body, color: colors.inkMuted, marginBottom: space.sm },
+  banner: {
+    flexDirection: 'row', alignItems: 'center', gap: space.md,
+    backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, marginBottom: space.sm,
+  },
+  coin: {
+    width: 44, height: 44, borderRadius: radius.pill, backgroundColor: colors.ink,
+    borderWidth: 2, borderColor: colors.gold, alignItems: 'center', justifyContent: 'center',
+  },
+  coinTxt: { fontFamily: font.bold, fontSize: 14, color: colors.gold },
+  bannerTxt: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.onDark, lineHeight: 19 },
   label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
   chip: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, paddingVertical: space.xs, paddingHorizontal: space.md, backgroundColor: colors.surface },

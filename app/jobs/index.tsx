@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getMyOffers, respondOffer, type OfferWithBooking } from '../../lib/bookings';
+import { getCategories, categoryName } from '../../lib/queries';
+import CategoryImage from '../../components/CategoryImage';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function JobsScreen() {
@@ -22,7 +24,7 @@ export default function JobsScreen() {
           keyExtractor={(o) => o.id}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => <OfferCard offer={item} onDone={() => q.refetch()} />}
-          ListEmptyComponent={<Empty title={t('jobs.empty')} sub={t('jobs.emptySub')} />}
+          ListEmptyComponent={<Empty icon="briefcase-outline" title={t('jobs.empty')} sub={t('jobs.emptySub')} />}
         />
       )}
     </View>
@@ -30,8 +32,12 @@ export default function JobsScreen() {
 }
 
 function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => void }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
+  const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
+  const slug = offer.bookings?.category_slug ?? '';
+  const cat = (cats.data ?? []).find((c) => c.slug === slug);
+  const catLabel = cat ? categoryName(cat, i18n.language) : slug;
   const deadline = new Date(offer.sent_at).getTime() + offer.window_sec * 1000;
   const [left, setLeft] = useState(Math.max(0, Math.round((deadline - Date.now()) / 1000)));
 
@@ -56,7 +62,8 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
   return (
     <View style={styles.card}>
       <View style={styles.top}>
-        <Text style={styles.cat}>{b?.category_slug ?? '—'}</Text>
+        <CategoryImage slug={slug} icon={cat?.icon} width={120} style={styles.thumb} />
+        <Text style={styles.cat} numberOfLines={1}>{catLabel}</Text>
         <Text style={[styles.timer, expired && styles.timerOff]}>
           {expired ? t('jobs.expired') : t('jobs.secLeft', { sec: left })}
         </Text>
@@ -98,8 +105,9 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   list: { padding: space.lg, gap: space.md },
   card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm },
-  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  cat: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textTransform: 'capitalize' },
+  top: { flexDirection: 'row', gap: space.sm, alignItems: 'center' },
+  thumb: { width: 40, height: 40, borderRadius: radius.chip },
+  cat: { flex: 1, fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   timer: { fontFamily: font.mono, fontSize: type.small, color: colors.accent, fontWeight: '700' },
   timerOff: { color: colors.inkMuted },
   desc: { fontFamily: font.te, fontSize: type.body, color: colors.ink2 },
