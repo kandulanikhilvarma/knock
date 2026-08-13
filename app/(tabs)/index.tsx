@@ -129,7 +129,7 @@ function Grid({
             <CategoryGlyph icon={c.icon} size={46} tone={soon ? 'muted' : 'paper'} />
             {soon && (
               <View style={styles.soonTag}>
-                <Text style={styles.soonTagTxt}>{t('common.comingSoon')}</Text>
+                <Text style={styles.soonTagTxt}>{t('home.soonTag')}</Text>
               </View>
             )}
           </View>
