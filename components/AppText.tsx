@@ -34,7 +34,7 @@ export default function AppText({ style, ...rest }: TextProps) {
   const fam = flat?.fontFamily;
   let swap: { fontFamily: string } | null = null;
   if (fam && fam !== 'monospace') {
-    if (/Fraunces/.test(fam)) {
+    if (/PlayfairDisplay|Fraunces/.test(fam)) {
       if (DISPLAY[lang]) swap = { fontFamily: DISPLAY[lang] }; // en keeps Fraunces
     } else {
       swap = { fontFamily: FAM[lang][weightOf(fam)] };

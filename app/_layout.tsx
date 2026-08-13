@@ -20,10 +20,10 @@ import {
   NotoSansDevanagari_700Bold,
 } from '@expo-google-fonts/noto-sans-devanagari';
 import {
-  Fraunces_400Regular,
-  Fraunces_600SemiBold,
-  Fraunces_700Bold,
-} from '@expo-google-fonts/fraunces';
+  PlayfairDisplay_500Medium,
+  PlayfairDisplay_600SemiBold,
+  PlayfairDisplay_700Bold,
+} from '@expo-google-fonts/playfair-display';
 
 import '../lib/i18n';
 
@@ -41,9 +41,9 @@ export default function RootLayout() {
     NotoSansTelugu_700Bold,
     NotoSansDevanagari_400Regular,
     NotoSansDevanagari_700Bold,
-    Fraunces_400Regular,
-    Fraunces_600SemiBold,
-    Fraunces_700Bold,
+    PlayfairDisplay_500Medium,
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_700Bold,
   });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function RootLayout() {
             headerStyle: { backgroundColor: '#EAE5D9' },
             headerShadowVisible: false,
             headerTintColor: '#191811',
-            headerTitleStyle: { fontFamily: 'Fraunces_600SemiBold', color: '#191811' },
+            headerTitleStyle: { fontFamily: 'PlayfairDisplay_600SemiBold', color: '#191811' },
             contentStyle: { backgroundColor: '#EAE5D9' },
           }}
         >

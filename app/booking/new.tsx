@@ -9,7 +9,8 @@ import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { useSession } from '../../lib/session';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import CategoryArt from '../../components/CategoryArt';
+import { categoryTint } from '../../lib/categoryTint';
 import { Loading } from '../../components/StateView';
 
 export default function NewBookingScreen() {
@@ -62,7 +63,7 @@ export default function NewBookingScreen() {
 
       {slug ? (
         <View style={styles.hero}>
-          <CategoryGlyph icon={category?.icon} size={48} tone="ink" />
+          <CategoryArt slug={slug} size={44} bg={categoryTint(slug)} />
           <View style={{ flex: 1 }}>
             <AppText style={styles.heroLbl}>{t('booking.newTitle')}</AppText>
             <AppText style={styles.heroTitle}>{title}</AppText>

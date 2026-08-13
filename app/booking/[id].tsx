@@ -14,9 +14,10 @@ import {
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
 import { getProvider, getCategories, categoryName } from '../../lib/queries';
+import { categoryTint } from '../../lib/categoryTint';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import CategoryArt from '../../components/CategoryArt';
 import { Loading, ErrorState } from '../../components/StateView';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
@@ -95,7 +96,7 @@ function BookingHeader({ booking }: { booking: Booking }) {
   const proof = paid || ['verified', 'in_progress', 'done'].includes(booking.status);
   return (
     <View style={styles.header}>
-      <CategoryGlyph icon={cat?.icon} size={52} />
+      <CategoryArt slug={booking.category_slug} size={40} bg={categoryTint(booking.category_slug)} />
       <View style={{ flex: 1 }}>
         <AppText style={styles.headerCat} numberOfLines={1}>{label}</AppText>
         <View style={[styles.headerPill, proof && styles.headerPillProof]}>

@@ -17,7 +17,7 @@ import {
 import { categoryTint } from '../../lib/categoryTint';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
 import OrganicLines from '../../components/OrganicLines';
 import { Loading, ErrorState } from '../../components/StateView';
@@ -129,7 +129,7 @@ function Grid({
           onPress={() => onPick(c)}
         >
           <View style={styles.tileTop}>
-            <CategoryGlyph icon={c.icon} size={52} bg={soon ? colors.line2 : categoryTint(c.slug)} />
+            <CategoryArt slug={c.slug} size={42} bg={categoryTint(c.slug)} muted={soon} />
             {soon && (
               <View style={styles.soonTag}>
                 <AppText style={styles.soonTagTxt}>{t('home.soonTag')}</AppText>

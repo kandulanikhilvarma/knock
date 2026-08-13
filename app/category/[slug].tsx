@@ -12,7 +12,8 @@ import {
   joinWaitlist,
 } from '../../lib/queries';
 import ProviderCard from '../../components/ProviderCard';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import CategoryArt from '../../components/CategoryArt';
+import { categoryTint } from '../../lib/categoryTint';
 import { Ionicons } from '@expo/vector-icons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -95,7 +96,7 @@ function Waitlist({
   return (
     <ScrollView contentContainerStyle={styles.waitlist} showsVerticalScrollIndicator={false}>
       <View style={styles.hero}>
-        <CategoryGlyph icon={icon} size={52} tone="ink" />
+        <CategoryArt slug={slug} size={48} bg={categoryTint(slug)} />
         <View style={{ flex: 1 }}>
           <View style={styles.heroBadge}>
             <AppText style={styles.heroBadgeTxt}>{t('common.comingSoon')}</AppText>

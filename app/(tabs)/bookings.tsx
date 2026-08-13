@@ -9,7 +9,8 @@ import { colors, space, radius, font, type, tap, shadow } from '../../theme/toke
 import { useSession } from '../../lib/session';
 import { getMyBookings } from '../../lib/bookings';
 import { getCategories, categoryName } from '../../lib/queries';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import { categoryTint } from '../../lib/categoryTint';
+import CategoryArt from '../../components/CategoryArt';
 import StatusPill from '../../components/StatusPill';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -51,7 +52,7 @@ export default function Bookings() {
               style={styles.card}
               onPress={() => router.push({ pathname: '/booking/[id]', params: { id: item.id } })}
             >
-              <CategoryGlyph icon={iconFor(item.category_slug)} size={54} />
+              <CategoryArt slug={item.category_slug} size={38} bg={categoryTint(item.category_slug)} />
               <View style={styles.mid}>
                 <AppText style={styles.cat} numberOfLines={1}>{label(item.category_slug)}</AppText>
                 <StatusPill status={item.status} />

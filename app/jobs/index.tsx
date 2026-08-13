@@ -7,7 +7,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { getMyOffers, respondOffer, type OfferWithBooking } from '../../lib/bookings';
 import { getCategories, categoryName } from '../../lib/queries';
-import CategoryGlyph from '../../components/CategoryGlyph';
+import { categoryTint } from '../../lib/categoryTint';
+import CategoryArt from '../../components/CategoryArt';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function JobsScreen() {
@@ -63,7 +64,7 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
   return (
     <View style={styles.card}>
       <View style={styles.top}>
-        <CategoryGlyph icon={cat?.icon} size={40} />
+        <CategoryArt slug={slug} size={34} bg={categoryTint(slug)} />
         <AppText style={styles.cat} numberOfLines={1}>{catLabel}</AppText>
         <AppText style={[styles.timer, expired && styles.timerOff]}>
           {expired ? t('jobs.expired') : t('jobs.secLeft', { sec: left })}

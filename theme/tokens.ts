@@ -71,11 +71,11 @@ export const font = {
   medium: 'Inter_500Medium',
   semibold: 'Inter_600SemiBold',
   bold: 'Inter_700Bold',
-  // editorial serif display — the Shifud voice (Latin). AppText falls Telugu/
-  // Hindi display back to their Noto bold since Noto serif isn't bundled.
-  display: 'Fraunces_600SemiBold',
-  displayBold: 'Fraunces_700Bold',
-  displayLight: 'Fraunces_400Regular',
+  // editorial high-contrast serif display — the Shifud voice (Latin). AppText
+  // falls Telugu/Hindi display back to their Noto bold (no serif bundled).
+  display: 'PlayfairDisplay_600SemiBold',
+  displayBold: 'PlayfairDisplay_700Bold',
+  displayLight: 'PlayfairDisplay_500Medium',
   // Telugu — test first; strings run ~30% longer.
   te: 'NotoSansTelugu_400Regular',
   teBold: 'NotoSansTelugu_700Bold',
