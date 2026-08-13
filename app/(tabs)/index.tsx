@@ -8,6 +8,8 @@ import { colors, space, radius, font, type } from '../../theme/tokens';
 import {
   getCategories,
   getFeaturedProvider,
+  getCityEarnings,
+  formatINR,
   categoryName,
   type Category,
 } from '../../lib/queries';
@@ -20,6 +22,7 @@ export default function Home() {
   const router = useRouter();
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const featured = useQuery({ queryKey: ['featured'], queryFn: getFeaturedProvider });
+  const earnings = useQuery({ queryKey: ['earnings'], queryFn: getCityEarnings });
 
   const live = (cats.data ?? []).filter((c) => c.is_live);
   const soon = (cats.data ?? []).filter((c) => !c.is_live);
@@ -54,7 +57,7 @@ export default function Home() {
         <View style={styles.earn}>
           <Text style={styles.earnLbl}>{t('home.earnLabel')}</Text>
           <Text style={styles.earnNum}>
-            ₹<Text style={styles.earnGold}>4,20,000</Text>
+            ₹<Text style={styles.earnGold}>{formatINR(earnings.data ?? 0)}</Text>
           </Text>
           <View style={styles.earnSub}>
             <View style={styles.live}>
