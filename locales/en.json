@@ -16,7 +16,28 @@
     "searchPlaceholder": "What needs fixing?",
     "earnLabel": "Vijayawada workers earned this week",
     "earnSub": "100% kept by them — the app takes no commission.",
-    "nearYou": "Available near you"
+    "nearYou": "Available near you",
+    "availableNow": "Available"
+  },
+  "trust": {
+    "title": "Why people trust us",
+    "idChecked": "ID-checked pros",
+    "idCheckedSub": "Aadhaar + PAN verified before they take a job.",
+    "qrDoor": "QR check at your door",
+    "qrDoorSub": "Scan their code to confirm who's arrived.",
+    "directPay": "You pay them directly",
+    "directPaySub": "Straight by UPI — no middleman holds your money.",
+    "zeroComm": "Zero commission, ever",
+    "zeroCommSub": "The app takes ₹0. Workers keep 100%."
+  },
+  "bookingsTab": {
+    "subtitle": "Track every pro you've requested.",
+    "empty": "No bookings yet",
+    "emptySub": "Request a pro from Home and it'll show up here.",
+    "signInSub": "Sign in to see and track your bookings."
+  },
+  "chatTab": {
+    "subtitle": "Message the pro on your active jobs."
   },
   "category": {
     "noProviders": "No pros here yet",
@@ -47,7 +68,12 @@
     "sealSub": "Direct by UPI. The app takes no commission — ever.",
     "priceLabel": "Prices — clear upfront",
     "qrNote": "They show a QR on arrival — scan it to confirm identity before you open the door.",
-    "reviewsTitle": "Reviews"
+    "reviewsTitle": "Reviews",
+    "speaksTelugu": "Speaks Telugu",
+    "jobsShort": "{{count}} jobs",
+    "yearsShort": "{{count}} yrs",
+    "visit": "Visit ₹{{amount}}",
+    "coinLine": "Every rupee you pay is 100% theirs — no commission."
   },
   "auth": {
     "phoneTitle": "Enter your mobile number",
@@ -78,7 +104,12 @@
     "signOut": "Sign out",
     "myJobs": "Job requests",
     "delete": "Delete account",
-    "deleteConfirm": "Tap again to permanently delete"
+    "deleteConfirm": "Tap again to permanently delete",
+    "guestName": "Guest",
+    "signInSub": "Sign in to save your bookings and chats.",
+    "typeGuest": "GUEST",
+    "typeEmail": "EMAIL",
+    "typePhone": "PHONE"
   },
   "providerSetup": {
     "title": "Provider profile",
@@ -147,9 +178,14 @@
     "tag_fair_price": "Fair price",
     "tag_clean_work": "Clean work",
     "state": {
-      "verified": "Verified at your door",
+      "requested": "Requested",
+      "finding_pro": "Finding a pro…",
+      "assigned": "Pro assigned",
+      "verified": "Verified at door",
       "in_progress": "Work in progress",
-      "done": "Job done"
+      "done": "Completed",
+      "cancelled": "Cancelled",
+      "failed": "No pro found"
     }
   },
   "chat": {

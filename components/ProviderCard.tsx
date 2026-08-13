@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type } from '../theme/tokens';
 import type { ProviderCard as Provider } from '../lib/queries';
 import Avatar from './Avatar';
@@ -11,6 +12,7 @@ export default function ProviderCard({
   provider: Provider;
   onPress?: () => void;
 }) {
+  const { t } = useTranslation();
   const name = provider.profiles?.full_name ?? 'Provider';
   const stats = provider.provider_stats;
   const verified = provider.verify_tier === 'verified';
@@ -34,21 +36,21 @@ export default function ProviderCard({
           <View style={styles.metaRow}>
             <Text style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</Text>
             <Text style={styles.dot}>·</Text>
-            <Text style={styles.meta}>{stats?.jobs_done ?? 0} జాబ్‌లు</Text>
+            <Text style={styles.meta}>{t('provider.jobsShort', { count: stats?.jobs_done ?? 0 })}</Text>
             {provider.years_exp ? (
               <>
                 <Text style={styles.dot}>·</Text>
-                <Text style={styles.meta}>{provider.years_exp} ఏళ్లు</Text>
+                <Text style={styles.meta}>{t('provider.yearsShort', { count: provider.years_exp })}</Text>
               </>
             ) : null}
           </View>
           <View style={styles.tags}>
             <View style={styles.tag}>
-              <Text style={styles.tagTxt}>తెలుగు మాట్లాడతారు</Text>
+              <Text style={styles.tagTxt}>{t('provider.speaksTelugu')}</Text>
             </View>
             {provider.visiting_charge != null && (
               <View style={styles.tag}>
-                <Text style={styles.tagTxt}>విజిట్ ₹{provider.visiting_charge}</Text>
+                <Text style={styles.tagTxt}>{t('provider.visit', { amount: provider.visiting_charge })}</Text>
               </View>
             )}
           </View>
@@ -60,7 +62,7 @@ export default function ProviderCard({
         <View style={styles.coin}>
           <Text style={styles.coinTxt}>₹0</Text>
         </View>
-        <Text style={styles.coinLabel}>మీరు చెల్లించే ప్రతి రూపాయి 100% వారికే — కమిషన్ లేదు.</Text>
+        <Text style={styles.coinLabel}>{t('provider.coinLine')}</Text>
       </View>
     </Pressable>
   );
