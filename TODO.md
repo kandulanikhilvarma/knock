@@ -52,7 +52,30 @@ Phases per master-plan §9. One phase per session. App must run after every phas
       Add when wave-1 acceptance is thin. Marked `ponytail:` in dispatch fn.
 - [ ] Push + WhatsApp offer alerts — deferred until Expo push tokens exist.
 
-## P4 Chat · P5 Verify+pay+reviews · P6 Onboarding+KYC · P7 Harden · P8 Ship
+## P5 — Doorstep verify + UPI-direct pay + reviews  ✅ (built + verified live)
+- [x] 0007: job_tokens (QR token + 4-digit PIN), reviews, provider upi_id,
+      booking paid_at/pay_method. RLS: token readable only by assigned pro,
+      reviews public, all writes server-only.
+- [x] Edge Functions: verify-arrival (token/PIN check + GPS stamp, assigned→
+      in_progress), job-action (done +jobs_done, paid), submit-review (gated
+      after done, recomputes rating_avg). respond issues the token on accept.
+- [x] UI: role-aware booking screen — provider QR+PIN + mark done/paid;
+      customer verify→pay (UPI deep-link/QR)→review. Reviews on profile.
+- [x] Guest (anonymous) sign-in wired; test accounts + customer@test.app.
+- [x] E2E verified live: token issued, customer can't read token, wrong PIN
+      rejected, verify→done→paid→review, double-review blocked, stats update.
+- [ ] Camera QR scan (expo-camera) — deferred; PIN path is the tested one and
+      works on web preview. Add scan for device builds.
+- [ ] Expose customer name/phone to the assigned provider (§6-2b) — deferred;
+      provider sees address now. Add an RLS policy at P6/P7.
+
+## Advisor note (expected, not a regression)
+Enabling anonymous sign-in makes the linter flag `auth_allow_anonymous_sign_ins`
+on every RLS policy the `authenticated` role can hit. By design here: anonymous
+= guest customer, own-row access only. P7: explicitly block anon from becoming a
+provider (pp_insert_own) and audit which tables should exclude `is_anonymous`.
+
+## P4 Chat · P6 Onboarding+KYC · P7 Harden · P8 Ship
 (see master-plan §9)
 
 ## Blocked on user (batched — I surface once)
