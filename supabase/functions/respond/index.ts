@@ -69,6 +69,16 @@ Deno.serve(async (req) => {
       .eq('booking_id', offer.booking_id)
       .eq('response', 'pending');
 
+    // issue the doorstep token (QR = token, 4-digit PIN fallback). Reset on
+    // re-accept after a swap so an old code can't verify a new assignment.
+    const pin = String(Math.floor(1000 + Math.random() * 9000));
+    await db
+      .from('job_tokens')
+      .upsert(
+        { booking_id: offer.booking_id, pin, token: crypto.randomUUID(), verified_at: null, gps_lat: null, gps_lng: null },
+        { onConflict: 'booking_id' },
+      );
+
     return json({ accepted: true, booking_id: offer.booking_id });
   } catch (e) {
     return json({ error: String(e) }, 500);

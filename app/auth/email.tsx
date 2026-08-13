@@ -22,6 +22,14 @@ export default function EmailAuthScreen() {
     onSuccess: () => router.back(),
   });
 
+  const guest = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.auth.signInAnonymously();
+      if (error) throw error;
+    },
+    onSuccess: () => router.back(),
+  });
+
   const valid = email.includes('@') && password.length >= 6;
 
   return (
@@ -57,6 +65,12 @@ export default function EmailAuthScreen() {
         <Text style={styles.ctaTxt}>{m.isPending ? t('auth.verifying') : t('auth.signInBtn')}</Text>
       </Pressable>
       {m.isError && <Text style={styles.err}>{(m.error as Error).message}</Text>}
+
+      <View style={styles.divider} />
+      <Pressable style={styles.guest} disabled={guest.isPending} onPress={() => guest.mutate()}>
+        <Text style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</Text>
+      </Pressable>
+      {guest.isError && <Text style={styles.err}>{(guest.error as Error).message}</Text>}
     </View>
   );
 }
@@ -87,4 +101,15 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.bold, fontSize: type.body, color: colors.surface },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger },
+  divider: { height: 1, backgroundColor: colors.line, marginVertical: space.sm },
+  guest: {
+    height: tap.min,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  guestTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.ink },
 });

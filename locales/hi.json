@@ -46,7 +46,8 @@
     "sealTitle": "आप जो भी देते हैं, 100% उन्हीं को।",
     "sealSub": "UPI से सीधे. ऐप कोई कमीशन नहीं लेता — कभी नहीं.",
     "priceLabel": "दाम — पहले से साफ़",
-    "qrNote": "आने पर QR दिखाते हैं — दरवाज़ा खोलने से पहले स्कैन कर पहचान पक्की करें."
+    "qrNote": "आने पर QR दिखाते हैं — दरवाज़ा खोलने से पहले स्कैन कर पहचान पक्की करें.",
+    "reviewsTitle": "रिव्यू"
   },
   "auth": {
     "phoneTitle": "अपना मोबाइल नंबर डालें",
@@ -67,7 +68,8 @@
     "emailSub": "प्रो और टेस्ट खातों के लिए.",
     "emailPlaceholder": "ईमेल",
     "passwordPlaceholder": "पासवर्ड",
-    "signInBtn": "साइन इन"
+    "signInBtn": "साइन इन",
+    "guest": "मेहमान के रूप में जारी रखें"
   },
   "profileTab": {
     "language": "भाषा",
@@ -98,6 +100,33 @@
     "noProvidersSub": "सूची देखें और सीधे कॉल करें.",
     "browseCta": "प्रो देखें",
     "notFound": "बुकिंग नहीं मिली",
+    "jobAddress": "काम का पता",
+    "showCodeTitle": "दरवाज़े पर यह दिखाएँ",
+    "showCodeSub": "ग्राहक इसे स्कैन करेगा या PIN टाइप करके आपकी पुष्टि करेगा.",
+    "pinLabel": "या PIN",
+    "verifiedAtDoor": "दरवाज़े पर वेरिफ़ाइड",
+    "workInProgress": "काम चल रहा है.",
+    "markDone": "काम पूरा हुआ चिह्नित करें",
+    "receivePayTitle": "पैसे मिले?",
+    "markReceived": "भुगतान मिला चिह्नित करें",
+    "providerPaid": "भुगतान हुआ — 100% आपका.",
+    "verifyTitle": "अपने दरवाज़े पर प्रो को वेरिफ़ाई करें",
+    "verifySub": "उनका QR स्कैन करें या दिखाया गया 4-अंकों का PIN टाइप करें.",
+    "verifyPlaceholder": "PIN",
+    "verifyBtn": "आगमन वेरिफ़ाई करें",
+    "verifyWrong": "गलत कोड — प्रो से जाँचें.",
+    "payTitle": "प्रो को सीधे भुगतान करें",
+    "paySub": "किसी भी UPI ऐप से स्कैन करें. ऐप ₹0 लेता है.",
+    "payInApp": "UPI ऐप खोलें",
+    "markPaidUpi": "मैंने UPI से भुगतान किया",
+    "markPaidCash": "मैंने नकद भुगतान किया",
+    "paidDone": "भुगतान हुआ — 100% उन्हें गया.",
+    "reviewTitle": "काम कैसा रहा?",
+    "reviewSubmit": "रिव्यू भेजें",
+    "reviewThanks": "रिव्यू के लिए धन्यवाद.",
+    "tag_on_time": "समय पर",
+    "tag_fair_price": "उचित दाम",
+    "tag_clean_work": "साफ़ काम",
     "state": {
       "verified": "आपके दरवाज़े पर वेरिफ़ाइड",
       "in_progress": "काम चल रहा है",

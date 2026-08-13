@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getProvider } from '../../lib/queries';
+import { getProviderReviews } from '../../lib/bookings';
 import Avatar from '../../components/Avatar';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -93,6 +94,8 @@ export default function ProviderScreen() {
             <Ionicons name="qr-code-outline" size={19} color={colors.accent} />
             <Text style={styles.verifyTxt}>{t('provider.qrNote')}</Text>
           </View>
+
+          <Reviews providerId={id!} />
         </View>
       </ScrollView>
 
@@ -119,6 +122,26 @@ function Fact({ icon, color, label }: { icon: any; color: string; label: string 
     <View style={styles.fact}>
       <Ionicons name={icon} size={19} color={color} />
       <Text style={styles.factTxt}>{label}</Text>
+    </View>
+  );
+}
+
+function Reviews({ providerId }: { providerId: string }) {
+  const { t } = useTranslation();
+  const q = useQuery({ queryKey: ['reviews', providerId], queryFn: () => getProviderReviews(providerId) });
+  if (!q.data || q.data.length === 0) return null;
+  return (
+    <View style={styles.reviews}>
+      <Text style={styles.reviewsTitle}>{t('provider.reviewsTitle')}</Text>
+      {q.data.slice(0, 10).map((r) => (
+        <View key={r.id} style={styles.reviewRow}>
+          <Text style={styles.reviewStars}>{'★'.repeat(r.rating)}</Text>
+          {r.tags.length > 0 && (
+            <Text style={styles.reviewTags}>{r.tags.map((tag) => t(`booking.tag_${tag}`)).join(' · ')}</Text>
+          )}
+          {r.body ? <Text style={styles.reviewBody}>{r.body}</Text> : null}
+        </View>
+      ))}
     </View>
   );
 }
@@ -228,6 +251,13 @@ const styles = StyleSheet.create({
     padding: space.md,
   },
   verifyTxt: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.ink2, lineHeight: 18 },
+
+  reviews: { gap: space.sm, marginTop: space.xs },
+  reviewsTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
+  reviewRow: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, borderRadius: radius.chip, padding: space.md, gap: 3 },
+  reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.gold },
+  reviewTags: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
+  reviewBody: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
 
   footer: {
     position: 'absolute',

@@ -28,6 +28,8 @@ export type Database = {
           description: string | null
           excluded_provider_ids: string[]
           id: string
+          paid_at: string | null
+          pay_method: string | null
           photos: string[]
           price_agreed: number | null
           status: Database["public"]["Enums"]["booking_status"]
@@ -48,6 +50,8 @@ export type Database = {
           description?: string | null
           excluded_provider_ids?: string[]
           id?: string
+          paid_at?: string | null
+          pay_method?: string | null
           photos?: string[]
           price_agreed?: number | null
           status?: Database["public"]["Enums"]["booking_status"]
@@ -68,6 +72,8 @@ export type Database = {
           description?: string | null
           excluded_provider_ids?: string[]
           id?: string
+          paid_at?: string | null
+          pay_method?: string | null
           photos?: string[]
           price_agreed?: number | null
           status?: Database["public"]["Enums"]["booking_status"]
@@ -189,6 +195,47 @@ export type Database = {
           },
         ]
       }
+      job_tokens: {
+        Row: {
+          booking_id: string
+          created_at: string
+          gps_lat: number | null
+          gps_lng: number | null
+          id: string
+          pin: string
+          token: string
+          verified_at: string | null
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          pin: string
+          token?: string
+          verified_at?: string | null
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          pin?: string
+          token?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_tokens_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -225,6 +272,7 @@ export type Database = {
           created_at: string
           photo_url: string | null
           services: string[]
+          upi_id: string | null
           user_id: string
           verify_tier: string
           visiting_charge: number | null
@@ -239,6 +287,7 @@ export type Database = {
           created_at?: string
           photo_url?: string | null
           services?: string[]
+          upi_id?: string | null
           user_id: string
           verify_tier?: string
           visiting_charge?: number | null
@@ -253,6 +302,7 @@ export type Database = {
           created_at?: string
           photo_url?: string | null
           services?: string[]
+          upi_id?: string | null
           user_id?: string
           verify_tier?: string
           visiting_charge?: number | null
@@ -304,6 +354,61 @@ export type Database = {
           },
         ]
       }
+      reviews: {
+        Row: {
+          body: string | null
+          booking_id: string
+          created_at: string
+          customer_id: string
+          id: string
+          provider_id: string
+          rating: number
+          tags: string[]
+        }
+        Insert: {
+          body?: string | null
+          booking_id: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          provider_id: string
+          rating: number
+          tags?: string[]
+        }
+        Update: {
+          body?: string | null
+          booking_id?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          provider_id?: string
+          rating?: number
+          tags?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "provider_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       waitlist_signups: {
         Row: {
           category_id: string | null
@@ -341,7 +446,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      sweep_dispatch: { Args: never; Returns: undefined }
     }
     Enums: {
       booking_status:

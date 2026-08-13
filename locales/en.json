@@ -46,7 +46,8 @@
     "sealTitle": "Every rupee you pay goes 100% to them.",
     "sealSub": "Direct by UPI. The app takes no commission — ever.",
     "priceLabel": "Prices — clear upfront",
-    "qrNote": "They show a QR on arrival — scan it to confirm identity before you open the door."
+    "qrNote": "They show a QR on arrival — scan it to confirm identity before you open the door.",
+    "reviewsTitle": "Reviews"
   },
   "auth": {
     "phoneTitle": "Enter your mobile number",
@@ -67,7 +68,8 @@
     "emailSub": "For pros and test accounts.",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
-    "signInBtn": "Sign in"
+    "signInBtn": "Sign in",
+    "guest": "Continue as guest"
   },
   "profileTab": {
     "language": "Language",
@@ -98,6 +100,33 @@
     "noProvidersSub": "Browse the list and call one directly.",
     "browseCta": "Browse pros",
     "notFound": "Booking not found",
+    "jobAddress": "Job address",
+    "showCodeTitle": "Show this at the door",
+    "showCodeSub": "The customer scans this or types the PIN to confirm you.",
+    "pinLabel": "or PIN",
+    "verifiedAtDoor": "Verified at the door",
+    "workInProgress": "Work in progress.",
+    "markDone": "Mark job done",
+    "receivePayTitle": "Got paid?",
+    "markReceived": "Mark payment received",
+    "providerPaid": "Paid — 100% yours.",
+    "verifyTitle": "Verify the pro at your door",
+    "verifySub": "Scan their QR or type the 4-digit PIN they show.",
+    "verifyPlaceholder": "PIN",
+    "verifyBtn": "Verify arrival",
+    "verifyWrong": "Wrong code — check with the pro.",
+    "payTitle": "Pay the pro directly",
+    "paySub": "Scan with any UPI app. The app takes ₹0.",
+    "payInApp": "Open UPI app",
+    "markPaidUpi": "I paid by UPI",
+    "markPaidCash": "I paid by cash",
+    "paidDone": "Paid — 100% went to them.",
+    "reviewTitle": "How was the job?",
+    "reviewSubmit": "Submit review",
+    "reviewThanks": "Thanks for the review.",
+    "tag_on_time": "On time",
+    "tag_fair_price": "Fair price",
+    "tag_clean_work": "Clean work",
     "state": {
       "verified": "Verified at your door",
       "in_progress": "Work in progress",

@@ -105,3 +105,70 @@ export async function respondOffer(offerId: string, action: 'accept' | 'decline'
   if (error) throw error;
   return data as { accepted: boolean; taken?: boolean; expired?: boolean };
 }
+
+// --- P5: doorstep verify, payment, reviews ---
+
+export type JobToken = Database['public']['Tables']['job_tokens']['Row'];
+export type Review = Database['public']['Tables']['reviews']['Row'];
+
+// The assigned provider reads their job's QR token + PIN to show at the door.
+export async function getJobToken(bookingId: string): Promise<JobToken | null> {
+  const { data, error } = await supabase
+    .from('job_tokens')
+    .select('*')
+    .eq('booking_id', bookingId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+// Customer confirms the pro at the door via scanned token or typed PIN.
+export async function verifyArrival(bookingId: string, code: string, lat?: number, lng?: number) {
+  const { data, error } = await supabase.functions.invoke('verify-arrival', {
+    body: { booking_id: bookingId, code, lat, lng },
+  });
+  if (error) throw error;
+  return data as { verified: boolean; error?: string };
+}
+
+export async function markDone(bookingId: string) {
+  const { error } = await supabase.functions.invoke('job-action', {
+    body: { booking_id: bookingId, action: 'done' },
+  });
+  if (error) throw error;
+}
+
+export async function markPaid(bookingId: string, method: 'upi' | 'cash') {
+  const { error } = await supabase.functions.invoke('job-action', {
+    body: { booking_id: bookingId, action: 'paid', pay_method: method },
+  });
+  if (error) throw error;
+}
+
+export async function submitReview(bookingId: string, rating: number, tags: string[], body: string) {
+  const { error } = await supabase.functions.invoke('submit-review', {
+    body: { booking_id: bookingId, rating, tags, body },
+  });
+  if (error) throw error;
+}
+
+export async function getProviderReviews(providerId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('provider_id', providerId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+// Has this booking already been reviewed? (reviews are public-readable)
+export async function getBookingReview(bookingId: string): Promise<Review | null> {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('booking_id', bookingId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
