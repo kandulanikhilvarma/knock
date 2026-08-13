@@ -62,7 +62,12 @@
     "roleCustomer": "నాకు సర్వీస్ కావాలి",
     "roleCustomerSub": "స్థానిక ప్రొలను వెతికి బుక్ చేయండి.",
     "roleProvider": "నేను ప్రొఫెషనల్‌ని",
-    "roleProviderSub": "దగ్గర్లో పనులు పొందండి. 100% మీరే ఉంచుకోండి."
+    "roleProviderSub": "దగ్గర్లో పనులు పొందండి. 100% మీరే ఉంచుకోండి.",
+    "emailTitle": "ఇమెయిల్‌తో సైన్ ఇన్",
+    "emailSub": "ప్రొలు మరియు టెస్ట్ ఖాతాల కోసం.",
+    "emailPlaceholder": "ఇమెయిల్",
+    "passwordPlaceholder": "పాస్‌వర్డ్",
+    "signInBtn": "సైన్ ఇన్"
   },
   "profileTab": {
     "language": "భాష",

@@ -40,7 +40,7 @@ export default function NewBookingScreen() {
       <View style={styles.gate}>
         <Stack.Screen options={{ title }} />
         <Text style={styles.gateTitle}>{t('booking.signInFirst')}</Text>
-        <Pressable style={styles.cta} onPress={() => router.push('/auth/phone')}>
+        <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
           <Text style={styles.ctaTxt}>{t('booking.signInCta')}</Text>
         </Pressable>
       </View>

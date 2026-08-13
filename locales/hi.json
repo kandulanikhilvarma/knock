@@ -62,7 +62,12 @@
     "roleCustomer": "मुझे सर्विस चाहिए",
     "roleCustomerSub": "स्थानीय प्रो ढूँढें और बुक करें.",
     "roleProvider": "मैं प्रोफ़ेशनल हूँ",
-    "roleProviderSub": "आस-पास काम पाएँ. 100% अपने पास रखें."
+    "roleProviderSub": "आस-पास काम पाएँ. 100% अपने पास रखें.",
+    "emailTitle": "ईमेल से साइन इन",
+    "emailSub": "प्रो और टेस्ट खातों के लिए.",
+    "emailPlaceholder": "ईमेल",
+    "passwordPlaceholder": "पासवर्ड",
+    "signInBtn": "साइन इन"
   },
   "profileTab": {
     "language": "भाषा",

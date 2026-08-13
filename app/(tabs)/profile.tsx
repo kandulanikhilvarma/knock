@@ -39,7 +39,7 @@ export default function Profile() {
             </Pressable>
           </>
         ) : (
-          <Pressable style={styles.cta} onPress={() => router.push('/auth/phone')}>
+          <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
             <Text style={styles.ctaTxt}>{t('profileTab.signIn')}</Text>
           </Pressable>
         )}

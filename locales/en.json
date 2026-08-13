@@ -62,7 +62,12 @@
     "roleCustomer": "I need a service",
     "roleCustomerSub": "Find and book local pros.",
     "roleProvider": "I'm a professional",
-    "roleProviderSub": "Get jobs near you. Keep 100%."
+    "roleProviderSub": "Get jobs near you. Keep 100%.",
+    "emailTitle": "Sign in with email",
+    "emailSub": "For pros and test accounts.",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "signInBtn": "Sign in"
   },
   "profileTab": {
     "language": "Language",
