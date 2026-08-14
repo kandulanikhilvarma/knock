@@ -23,7 +23,7 @@ import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
-import Testimonials from '../../components/Testimonials';
+import HowItWorks from '../../components/HowItWorks';
 import OrganicLines from '../../components/OrganicLines';
 import { Loading, ErrorState } from '../../components/StateView';
 
@@ -102,11 +102,15 @@ export default function Home() {
           <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
           <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
           <View style={styles.earnSub}>
-            <View style={styles.live}>
-              <View style={styles.liveDot} />
-              <AppText style={styles.liveTxt}>LIVE</AppText>
-            </View>
-            <AppText style={styles.earnSubTxt}>{t('home.earnSub')}</AppText>
+            {!!earnings.data && (
+              <View style={styles.live}>
+                <View style={styles.liveDot} />
+                <AppText style={styles.liveTxt}>LIVE</AppText>
+              </View>
+            )}
+            <AppText style={styles.earnSubTxt}>
+              {earnings.data ? t('home.earnSub') : t('home.earnSubZero')}
+            </AppText>
           </View>
         </View>
 
@@ -134,7 +138,7 @@ export default function Home() {
 
         <TrustPillars />
 
-        <Testimonials />
+        <HowItWorks />
 
         {soon.length > 0 && (
           <View style={styles.section}>

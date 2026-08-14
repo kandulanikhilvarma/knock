@@ -12,20 +12,17 @@
     "greeting": "What needs fixing?",
     "counter": "₹{{amount}} earned by workers in {{city}}, 100% kept by them",
     "available": "Available now",
-    "searchPlaceholder": "What needs fixing?",
-    "earnLabel": "Vijayawada workers earned this week",
+    "searchPlaceholder": "Fan, tap, AC, geyser…",
+    "earnLabel": "Paid to Vijayawada workers this week",
     "earnSub": "100% kept by them, the app takes no commission.",
     "nearYou": "Available near you",
     "availableNow": "Available",
     "demoCta": "See how it works",
     "demoRunning": "Matching a pro…",
-    "lovedTitle": "Loved across Vijayawada",
-    "tq1": "Electrician came in 10 minutes. Paid him directly, not a rupee extra.",
-    "tq2": "I checked his ID at the door before opening. Felt safe letting him in.",
-    "tq3": "AC fixed the same afternoon. The zero-commission promise is real.",
     "nextUp": "Next in Vijayawada",
     "onboarding": "Onboarding pros",
-    "nextUpSub": "Pros in these trades are signing up now. Get a message the day yours opens."
+    "nextUpSub": "Pros in these trades are signing up now. Get a message the day yours opens.",
+    "earnSubZero": "The counter starts at the first paid job. Every rupee of it is theirs."
   },
   "trust": {
     "title": "Why people trust us",
@@ -301,5 +298,14 @@
     "stillZero": "Commission stays ₹0 either way. Verified is a subscription, never a cut of your work.",
     "learnMore": "Learn more",
     "iosNote": "Verified Pro is managed outside the app. Your on-ground contact will walk you through it."
+  },
+  "how": {
+    "title": "How it works",
+    "s1": "Tell us what broke",
+    "s1sub": "One line is enough. No forms, no callbacks, no fifteen phone calls.",
+    "s2": "Check the QR at your door",
+    "s2sub": "Scan the code the pro shows before you let anyone in. The job cannot start without it.",
+    "s3": "Pay them, directly",
+    "s3sub": "UPI straight to the pro. No booking fee, no commission, nothing held in between."
   }
 }

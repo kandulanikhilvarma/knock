@@ -196,3 +196,55 @@ Or "Continue as guest" for an anonymous customer.
       React Native project in the Sentry UI and swap the DSN in `.env`.
 - [ ] Tiles: CARTO basemaps are fine for a prototype. Before launch traffic,
       move to a keyed tile provider (MapTiler/Mapbox) or self-host.
+
+## Full master-plan audit (2026-08-14) — read §6 spec, not just this file
+
+### Built this pass
+- [x] **Search** (§6 parity "Search + categories"). The Home search bar was a
+      dead Pressable with a fake mic. `app/search.tsx` searches categories by
+      name AND by the problem in all three scripts ("fan", "కరెంట్", "नल"), plus
+      pros by name. Verified: typing "fan" returns Electrician.
+- [x] **First-launch language picker** (§2-4). It was buried in settings; now it
+      is the first screen, each option written in its own script.
+- [x] **Safety rails** (§6-2b): SOS that dials 112 behind a confirm tap, and a
+      share-this-job link, both live from assignment until the job is done.
+- [x] **Canned localized quick replies** in chat (§6 parity).
+- [x] **Wave-2 escalation** (§6-2a). The engine ranks the whole pool at dispatch
+      and parks wave 2 (`scheduled`); `sweep_dispatch` releases it when wave 1
+      times out, and only fails to browse after wave 2 dies too. One scoring
+      implementation, full audit trail. Live-tested end to end in SQL.
+- [x] **Performance feedback loop** (§6-2a): under-4.0 rated pros lose 15% of
+      score (published rule, in the engine); under 3.5 across the last 20 jobs
+      auto-pauses dispatch (0017 trigger). Never a manual block.
+- [x] **Earnings log · My reviews · Verified Pro upsell** — the three provider
+      screens from the §6 screen map that did not exist. The upsell shows
+      benefits only on iOS with no price and no link (3.1.3, India storefront).
+- [x] **Product events** (§8) — own `analytics_events` table instead of PostHog:
+      insert-only RLS, all 13 event names typed. dispatch_wave_sent and
+      dispatch_failed both fire. Verified rows landing.
+- [x] **Removed fabricated proof.** The provider profile showed "~8 min avg" and
+      "4.9 · 58 reviews" as hardcoded strings, and Home carried three invented
+      customer testimonials. Same class of problem as showing "Verified" without
+      a check. Facts now derive from real stats; testimonials replaced with a
+      "How it works" strip that promises nothing untrue.
+- [x] Home copy: the headline and the search placeholder were the same sentence.
+      The ₹0 counter now reads as a starting line, not a broken number.
+
+### Spec items still open, and why
+- [ ] **Booking photos + job photo diary** (§6 parity, §6-7). Needs
+      expo-image-picker plus a Storage bucket with RLS. Next build session.
+- [ ] **Voice search** (§6 parity "text/voice search"). Needs a speech-to-text
+      dependency; the fake mic button is gone rather than left lying.
+- [ ] **Voice intro recording** (§6-3). The player is wired and shows only when
+      a URL exists; recording needs expo-audio and a bucket.
+- [ ] **AC/appliance sub-split** (§4: AC / fridge / washing machine / TV / geyser
+      / RO). Data change plus a sub-category picker.
+- [ ] **Saved addresses** in profile settings (§6 screen map).
+- [ ] **Work-photo gallery** on provider profiles (§6 parity).
+- [ ] **Camera QR scan** (expo-camera) — PIN path is the tested one.
+- [ ] Masked calls (plan marks v1.1) · push · WhatsApp alerts — blocked on
+      Exotel/Twilio, an Expo account, and Meta Cloud API respectively.
+- [ ] KYC vendor (§6-5, §7-3) · privacy + terms pages and grievance officer
+      (§7-1, §7-2) — blocked on a vendor, a domain and the entity.
+- [ ] Sentry project is `javascript-nextjs`; the org blocks project creation for
+      members. Create a `services-app` RN project and swap the DSN.
