@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { track } from './analytics';
 import type { Database } from './database.types';
 
 export type Category = Database['public']['Tables']['categories']['Row'];
@@ -115,4 +116,5 @@ export async function joinWaitlist(categoryId: string, phone: string, city: stri
     .from('waitlist_signups')
     .insert({ category_id: categoryId, phone, city });
   if (error) throw error;
+  track('waitlist_join', { category_id: categoryId, city });
 }

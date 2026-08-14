@@ -54,7 +54,9 @@ function ProviderSection() {
   }
 
   const current = q.data.availability_status as Availability;
+  const verified = q.data.verify_tier === 'verified';
   return (
+    <>
     <View style={styles.card}>
       <AppText style={styles.label}>{t('providerSetup.availability')}</AppText>
       <View style={styles.seg}>
@@ -68,6 +70,33 @@ function ProviderSection() {
         <AppText style={styles.editTxt}>{t('providerSetup.edit')}</AppText>
       </Pressable>
     </View>
+
+    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/earnings')}>
+      <View style={styles.linkIcon}>
+        <Ionicons name="wallet-outline" size={18} color={colors.ink} />
+      </View>
+      <AppText style={styles.linkTxt}>{t('earnings.title')}</AppText>
+      <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
+    </Pressable>
+
+    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/reviews')}>
+      <View style={styles.linkIcon}>
+        <Ionicons name="star-outline" size={18} color={colors.ink} />
+      </View>
+      <AppText style={styles.linkTxt}>{t('myReviews.title')}</AppText>
+      <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
+    </Pressable>
+
+    {!verified && (
+      <Pressable style={styles.linkRow} onPress={() => router.push('/verified')}>
+        <View style={[styles.linkIcon, { backgroundColor: colors.tintSuccess }]}>
+          <Ionicons name="shield-checkmark-outline" size={18} color={colors.successInk} />
+        </View>
+        <AppText style={styles.linkTxt}>{t('verified.title')}</AppText>
+        <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
+      </Pressable>
+    )}
+    </>
   );
 }
 

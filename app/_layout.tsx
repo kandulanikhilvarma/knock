@@ -91,6 +91,11 @@ function RootLayout() {
           <Stack.Screen name="booking/[id]" options={{ headerShown: true }} />
           <Stack.Screen name="chat/[bookingId]" options={{ headerShown: true }} />
           <Stack.Screen name="jobs/index" options={{ headerShown: true }} />
+          <Stack.Screen name="jobs/earnings" options={{ headerShown: true }} />
+          <Stack.Screen name="jobs/reviews" options={{ headerShown: true }} />
+          <Stack.Screen name="verified" options={{ headerShown: true }} />
+          <Stack.Screen name="search" options={{ headerShown: false }} />
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="provider-setup" options={{ headerShown: true }} />
           <Stack.Screen name="dispatch" options={{ headerShown: false }} />
         </Stack>

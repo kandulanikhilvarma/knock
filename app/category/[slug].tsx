@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -14,6 +14,7 @@ import {
 import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
 import { categoryTint } from '../../lib/categoryTint';
+import { track } from '../../lib/analytics';
 import { Ionicons } from '@expo/vector-icons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -26,6 +27,10 @@ export default function CategoryScreen() {
   const category = (cats.data ?? []).find((c) => c.slug === slug);
   const title = category ? categoryName(category, i18n.language) : '';
   const isLive = category?.is_live ?? false;
+
+  useEffect(() => {
+    if (slug) track('category_view', { slug });
+  }, [slug]);
 
   const providers = useQuery({
     queryKey: ['providers', slug],

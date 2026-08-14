@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import type { Database } from './database.types';
+import { track } from './analytics';
 
 export type Booking = Database['public']['Tables']['bookings']['Row'];
 export type BookingStatus = Database['public']['Enums']['booking_status'];
@@ -37,6 +38,7 @@ export async function createBooking(input: NewBooking): Promise<string> {
     .single();
   if (error) throw error;
 
+  track('booking_created', { booking_id: data.id, category: input.categorySlug });
   await runDispatch(data.id);
   return data.id;
 }
@@ -44,7 +46,11 @@ export async function createBooking(input: NewBooking): Promise<string> {
 export async function runDispatch(bookingId: string) {
   const { data, error } = await supabase.functions.invoke('dispatch', { body: { booking_id: bookingId } });
   if (error) throw error;
-  return data as { dispatched: boolean; fallback?: boolean; pinged?: number };
+  const res = data as { dispatched: boolean; fallback?: boolean; pinged?: number; wave?: number };
+  // The two numbers §8 says to watch: did a wave go out, or did we fall back?
+  if (res.dispatched) track('dispatch_wave_sent', { booking_id: bookingId, wave: res.wave ?? 1, pinged: res.pinged ?? 0 });
+  else track('dispatch_failed', { booking_id: bookingId });
+  return res;
 }
 
 // Solo-demo: auto-accept the first offered pro so the whole loop is visible
@@ -113,6 +119,7 @@ export function subscribeBooking(id: string, cb: (b: Booking) => void) {
 export async function swapProvider(bookingId: string) {
   const { error } = await supabase.functions.invoke('swap', { body: { booking_id: bookingId } });
   if (error) throw error;
+  track('swap_used', { booking_id: bookingId });
   await runDispatch(bookingId);
 }
 
@@ -137,7 +144,9 @@ export async function respondOffer(offerId: string, action: 'accept' | 'decline'
     body: { offer_id: offerId, action },
   });
   if (error) throw error;
-  return data as { accepted: boolean; taken?: boolean; expired?: boolean };
+  const res = data as { accepted: boolean; taken?: boolean; expired?: boolean };
+  track(action === 'accept' && res.accepted ? 'offer_accepted' : 'offer_declined', { offer_id: offerId });
+  return res;
 }
 
 // --- P5: doorstep verify, payment, reviews ---
@@ -162,7 +171,9 @@ export async function verifyArrival(bookingId: string, code: string, lat?: numbe
     body: { booking_id: bookingId, code, lat, lng },
   });
   if (error) throw error;
-  return data as { verified: boolean; error?: string };
+  const res = data as { verified: boolean; error?: string };
+  if (res.verified) track('arrival_verified', { booking_id: bookingId, method: code.length === 4 ? 'pin' : 'qr' });
+  return res;
 }
 
 export async function markDone(bookingId: string) {
@@ -170,6 +181,7 @@ export async function markDone(bookingId: string) {
     body: { booking_id: bookingId, action: 'done' },
   });
   if (error) throw error;
+  track('booking_done', { booking_id: bookingId });
 }
 
 export async function markPaid(bookingId: string, method: 'upi' | 'cash') {
@@ -177,6 +189,7 @@ export async function markPaid(bookingId: string, method: 'upi' | 'cash') {
     body: { booking_id: bookingId, action: 'paid', pay_method: method },
   });
   if (error) throw error;
+  track('payment_marked', { booking_id: bookingId, method });
 }
 
 export async function submitReview(bookingId: string, rating: number, tags: string[], body: string) {
@@ -184,6 +197,7 @@ export async function submitReview(bookingId: string, rating: number, tags: stri
     body: { booking_id: bookingId, rating, tags, body },
   });
   if (error) throw error;
+  track('review_left', { booking_id: bookingId, rating });
 }
 
 export async function getProviderReviews(providerId: string): Promise<Review[]> {

@@ -270,5 +270,36 @@
     "shareBody": "I have a job in progress. Follow it here: {{link}}",
     "sos": "Emergency",
     "sosConfirm": "Tap again to call 112"
+  },
+  "earnings": {
+    "title": "Earnings log",
+    "kept": "Kept by you, all of it",
+    "jobsLine": "{{count}} paid jobs · {{month}} this month",
+    "method_upi": "UPI",
+    "method_cash": "Cash",
+    "empty": "No paid jobs yet",
+    "emptySub": "Jobs you mark as paid show up here. The app takes ₹0 from any of it."
+  },
+  "myReviews": {
+    "title": "My reviews",
+    "count": "{{count}} reviews",
+    "empty": "No reviews yet",
+    "emptySub": "Customers can review you once a job is confirmed done."
+  },
+  "verified": {
+    "title": "Verified Pro",
+    "heroTitle": "The badge customers look for",
+    "heroSub": "Verified means Aadhaar and PAN checked, plus a record check. It is the difference between being listed and being chosen.",
+    "badge": "Verified badge on your profile",
+    "badgeSub": "Shown on every card and in search results.",
+    "priority": "Priority in dispatch",
+    "prioritySub": "A tie-break in your favour when scores are close. Never a way past safety rules.",
+    "filter": "Included in the Verified filter",
+    "filterSub": "Customers who filter for verified pros can find you.",
+    "support": "WhatsApp support",
+    "supportSub": "A direct line when something goes wrong on a job.",
+    "stillZero": "Commission stays ₹0 either way. Verified is a subscription, never a cut of your work.",
+    "learnMore": "Learn more",
+    "iosNote": "Verified Pro is managed outside the app. Your on-ground contact will walk you through it."
   }
 }
