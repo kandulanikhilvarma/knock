@@ -8,7 +8,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Used to find professionals near you and to show the one on the way to your door.",
+        "NSCameraUsageDescription": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +29,14 @@
     "plugins": [
       "expo-router",
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Used to find professionals near you and to show the one on the way to your door."
+        }
+      ],
+      "@sentry/react-native"
     ]
   }
 }

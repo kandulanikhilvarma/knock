@@ -170,3 +170,29 @@ Or "Continue as guest" for an anonymous customer.
       is live (§6-2b). Booking screen shows a customer card with a call button.
 - [x] Walked Home, dispatch, booking, bookings, chat, profile, jobs in Telugu.
       Overflow audit clean on every screen after the fixes.
+
+## Real map + real distance ranking + Sentry (2026-08-14)
+- [x] **Real map.** `components/LiveMap` renders OpenStreetMap raster tiles
+      (CARTO light basemap, key-free, attributed) positioned by Web-Mercator
+      projection in `lib/geo.ts` — no map SDK, so it renders identically on the
+      web preview and in a device build. Zoom 14 (neighbourhood scale, what a
+      rider app opens at); pros outside the frame clamp to the edge instead of
+      disappearing. Verified: 4 tiles loaded, pins at correct relative bearings.
+- [x] **Real location.** `expo-location` via `lib/useMyLocation` — device fix if
+      granted, Benz Circle if denied, never blocks the flow. The booking now
+      carries cust_lat/cust_lng, so the engine's 25% distance weight is live
+      instead of falling back to the neutral half-cap.
+- [x] **Real provider coordinates** seeded as geohashes: Benz Circle,
+      Governorpet, Patamata, Gunadala, Auto Nagar, Bhavanipuram. Every pro was
+      `area_geohash = null` before, which silently neutralised distance scoring.
+- [x] Dispatch screen shows measured distance: "N pros within 3 km · nearest
+      1.3 km", and the accepted step names the real km.
+- [x] **Sentry wired.** `lib/sentry.ts` inits from `EXPO_PUBLIC_SENTRY_DSN`
+      (no DSN = no-op), `sendDefaultPii: false` so phone numbers and addresses
+      never leave with an event. Root layout wrapped with `Sentry.wrap`.
+      Verified end to end: test event arrived in the kandula org, then resolved.
+- [ ] Sentry project is `javascript-nextjs` — the org blocks project creation
+      for members, so events land in the wrong project. Create a `services-app`
+      React Native project in the Sentry UI and swap the DSN in `.env`.
+- [ ] Tiles: CARTO basemaps are fine for a prototype. Before launch traffic,
+      move to a keyed tile provider (MapTiler/Mapbox) or self-host.

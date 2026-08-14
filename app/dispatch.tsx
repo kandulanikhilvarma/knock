@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import AppText from '../components/AppText';
-import NearbyMap, { type MapPin } from '../components/NearbyMap';
+import LiveMap, { type MapPin } from '../components/LiveMap';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
 import { getProvidersByCategory, providerName } from '../lib/queries';
 import { startDemoBooking } from '../lib/bookings';
+import { useMyLocation } from '../lib/useMyLocation';
+import { decodeGeohash, distanceKm, type LatLng } from '../lib/geo';
 
 // The dispatch loop, made visible: your block on the map, the pros around it,
 // then the four steps the engine actually runs (rank → wave 1 → first accept).
@@ -21,6 +23,7 @@ export default function Dispatch() {
   const { slug, cid } = useLocalSearchParams<{ slug?: string; cid?: string }>();
   const categorySlug = slug ?? 'electrician';
 
+  const me = useMyLocation();
   const pros = useQuery({
     queryKey: ['dispatch-pros', categorySlug],
     queryFn: () => getProvidersByCategory(categorySlug),
@@ -31,23 +34,25 @@ export default function Dispatch() {
   const [failed, setFailed] = useState<string | null>(null);
   const started = useRef(false);
 
-  // Real work starts immediately; the steps below narrate it while it runs.
+  // Wait for the fix before requesting: the engine scores 25% on distance, so
+  // sending the booking without coords would throw that factor away.
   useEffect(() => {
-    if (started.current) return;
+    if (me.loading || started.current) return;
     started.current = true;
-    startDemoBooking(cid ?? null, categorySlug)
+    startDemoBooking(cid ?? null, categorySlug, me.coords)
       .then(setResult)
       .catch((e: Error) => setFailed(e.message));
-  }, [cid, categorySlug]);
+  }, [cid, categorySlug, me.loading, me.coords]);
 
   useEffect(() => {
-    const a = setTimeout(() => setStep((s) => Math.max(s, 1)), 800);
-    const b = setTimeout(() => setStep((s) => Math.max(s, 2)), 1900);
+    if (me.loading) return;
+    const a = setTimeout(() => setStep((s) => Math.max(s, 1)), 700);
+    const b = setTimeout(() => setStep((s) => Math.max(s, 2)), 1800);
     return () => {
       clearTimeout(a);
       clearTimeout(b);
     };
-  }, []);
+  }, [me.loading]);
 
   useEffect(() => {
     if (!result || step < 2) return;
@@ -60,21 +65,37 @@ export default function Dispatch() {
   }, [result, step, router]);
 
   const fallbackName = t('provider.unnamed').split(' ')[0];
-  const list = (pros.data ?? []).slice(0, 5);
   const acceptedId = result?.providerId ?? null;
+
+  // Everyone in this trade who has a location, nearest first — the same order
+  // distance pushes them into on the server.
+  const located = useMemo(() => {
+    const rows = (pros.data ?? [])
+      .map((p) => {
+        const at = decodeGeohash(p.area_geohash);
+        return at
+          ? {
+              id: p.user_id,
+              name: providerName(p).split(' ')[0] || fallbackName,
+              ...at,
+              km: distanceKm(me.coords, at),
+            }
+          : null;
+      })
+      .filter((r): r is NonNullable<typeof r> => r !== null);
+    rows.sort((a, b) => a.km - b.km);
+    return rows;
+  }, [pros.data, me.coords, fallbackName]);
 
   const pins: MapPin[] = useMemo(() => {
     if (step < 1) return [];
-    // The pro who took the job is always shown, even if outside the top five.
-    const rows = list.map((p) => ({
-      id: p.user_id,
-      name: providerName(p).split(' ')[0] || fallbackName,
-    }));
-    if (acceptedId && !rows.some((r) => r.id === acceptedId)) {
-      rows[0] = { id: acceptedId, name: fallbackName };
-    }
-    return rows.map((r, i) => ({
-      ...r,
+    // Four nearest: enough to show the pool, tight enough that the map stays
+    // zoomed on the neighbourhood instead of the whole city.
+    return located.slice(0, 4).map((r, i) => ({
+      id: r.id,
+      name: r.name,
+      lat: r.lat,
+      lng: r.lng,
       state:
         step >= 3 && r.id === acceptedId
           ? ('accepted' as const)
@@ -82,10 +103,15 @@ export default function Dispatch() {
             ? ('pinged' as const)
             : ('idle' as const),
     }));
-  }, [list, step, acceptedId, fallbackName]);
+  }, [located, step, acceptedId]);
 
-  const acceptedName =
-    (() => { const p = list.find((x) => x.user_id === acceptedId); return (p ? providerName(p) : '') || t('provider.unnamed'); })();
+  const mapCenter: LatLng = me.coords;
+  const within3 = located.filter((r) => r.km <= 3).length;
+  const nearestKm = located[0]?.km;
+
+  const accepted = (pros.data ?? []).find((p) => p.user_id === acceptedId);
+  const acceptedName = (accepted ? providerName(accepted) : '') || t('provider.unnamed');
+  const acceptedKm = located.find((r) => r.id === acceptedId)?.km;
 
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
@@ -102,13 +128,18 @@ export default function Dispatch() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <NearbyMap pins={pins} youLabel={t('dispatch.you')} />
+        <LiveMap center={mapCenter} pins={pins} youLabel={t('dispatch.you')} />
 
         <View style={styles.meta}>
           <View style={styles.metaDot} />
           <AppText style={styles.metaTxt}>
-            {t('dispatch.nearbyCount', { count: Math.max(list.length, 1) })}
+            {t('dispatch.nearbyCount', { count: within3 })}
           </AppText>
+          {nearestKm !== undefined && (
+            <AppText style={styles.metaFar}>
+              {t('dispatch.nearest', { km: nearestKm.toFixed(1) })}
+            </AppText>
+          )}
         </View>
 
         {failed ? (
@@ -131,11 +162,17 @@ export default function Dispatch() {
                 state={step > i ? 'done' : step === i ? 'active' : 'todo'}
                 title={i === 3 && step >= 3 ? `${acceptedName} · ${t('dispatch.s4')}` : t(`dispatch.${k}`)}
                 sub={
-                  i === 3
-                    ? step >= 3
-                      ? t('dispatch.s4sub', { name: acceptedName })
-                      : t('dispatch.s4pending')
-                    : t(`dispatch.${k}sub`)
+                  i === 0
+                    ? me.precise
+                      ? t('dispatch.s1subPrecise')
+                      : t('dispatch.s1sub')
+                    : i === 3
+                      ? step >= 3
+                        ? acceptedKm !== undefined
+                          ? t('dispatch.s4subKm', { name: acceptedName, km: acceptedKm.toFixed(1) })
+                          : t('dispatch.s4sub', { name: acceptedName })
+                        : t('dispatch.s4pending')
+                      : t(`dispatch.${k}sub`)
                 }
               />
             ))}
@@ -237,6 +274,7 @@ const styles = StyleSheet.create({
   meta: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   metaDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
   metaTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.successInk },
+  metaFar: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
 
   steps: { gap: 0 },
   step: { flexDirection: 'row', gap: space.md },

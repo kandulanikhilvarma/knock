@@ -244,6 +244,9 @@
     "failed": "No pro free right now",
     "failedSub": "Browse the list and call one directly.",
     "zero": "You will pay {{name}} directly. The app takes ₹0.",
-    "s4pending": "First to accept wins the job. No one is assigned it."
+    "s4pending": "First to accept wins the job. No one is assigned it.",
+    "nearest": "nearest {{km}} km",
+    "s1subPrecise": "Using your live location",
+    "s4subKm": "{{name}} is {{km}} km away and on the way. Opening your booking."
   }
 }

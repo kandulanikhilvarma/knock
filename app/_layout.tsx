@@ -28,13 +28,16 @@ import {
 import { useTranslation } from 'react-i18next';
 import { colors, font } from '../theme/tokens';
 
+import { initSentry, Sentry } from '../lib/sentry';
+
 import '../lib/i18n';
 
+initSentry();
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-export default function RootLayout() {
+function RootLayout() {
   const { i18n } = useTranslation();
   const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
@@ -95,3 +98,6 @@ export default function RootLayout() {
     </QueryClientProvider>
   );
 }
+
+// Wraps the tree so unhandled render errors reach Sentry with the route stack.
+export default Sentry.wrap(RootLayout);

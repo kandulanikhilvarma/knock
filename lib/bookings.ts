@@ -60,6 +60,7 @@ export async function demoAccept(bookingId: string) {
 export async function startDemoBooking(
   categoryId: string | null,
   categorySlug: string,
+  coords?: { lat: number; lng: number },
 ): Promise<{ id: string; providerId: string | null }> {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
@@ -71,6 +72,8 @@ export async function startDemoBooking(
     categorySlug,
     description: 'AC not cooling (demo request)',
     address: 'Benz Circle, Vijayawada (demo)',
+    custLat: coords?.lat ?? null,
+    custLng: coords?.lng ?? null,
   });
   await new Promise((r) => setTimeout(r, 700)); // let dispatch seat the offers
   const res = await demoAccept(id);
