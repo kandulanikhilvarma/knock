@@ -18,6 +18,7 @@ import { categoryTint } from '../../lib/categoryTint';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
+import SafetyBar from '../../components/SafetyBar';
 import { Loading, ErrorState } from '../../components/StateView';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
@@ -73,6 +74,11 @@ export default function BookingStatusScreen() {
       <BookingHeader booking={booking} />
       {showSteps && <Steps current={stepIndex(booking)} />}
       {isProvider ? <ProviderPanel booking={booking} /> : <CustomerPanel booking={booking} />}
+      {/* §6-2b: rails stay up from the moment someone is on the way until the
+          job is finished. */}
+      {['assigned', 'verified', 'in_progress'].includes(booking.status) && (
+        <SafetyBar bookingId={booking.id} />
+      )}
       {canChat && (
         <Pressable
           style={styles.chatBtn}

@@ -93,7 +93,18 @@ Deno.serve(async (req) => {
       score: scoreOf.get(pid) ?? null,
       window_sec: wave1.windowSec,
     }));
-    const { error: oErr } = await db.from('dispatch_offers').insert(offers);
+    // Wave 2 is written now but parked; sweep_dispatch releases it if wave 1
+    // times out (§6-2a). Keeps one scoring pass and one audit trail.
+    const wave2 = plan.waves.find((w) => w.wave === 2);
+    const parked = (wave2?.providerIds ?? []).map((pid) => ({
+      booking_id,
+      provider_id: pid,
+      wave: 2,
+      score: scoreOf.get(pid) ?? null,
+      window_sec: wave2!.windowSec,
+      scheduled: true,
+    }));
+    const { error: oErr } = await db.from('dispatch_offers').insert([...offers, ...parked]);
     if (oErr) return json({ error: oErr.message }, 500);
 
     await db.from('bookings').update({ status: 'finding_pro' }).eq('id', booking_id);
@@ -102,6 +113,7 @@ Deno.serve(async (req) => {
       dispatched: true,
       wave: 1,
       pinged: wave1.providerIds.length,
+      parkedWave2: (plan.waves.find((w) => w.wave === 2)?.providerIds ?? []).length,
       windowSec: wave1.windowSec,
       quotaFilled: plan.quotaFilled,
     });

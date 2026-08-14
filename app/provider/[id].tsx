@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, Linking, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -57,19 +57,34 @@ export default function ProviderScreen() {
             </View>
           </View>
 
-          <View style={styles.voice}>
-            <View style={styles.voicePlay}>
-              <Ionicons name="play" size={13} color={colors.surface} />
-            </View>
-            <AppText style={styles.voiceTxt}>{t('provider.voiceIntro')}</AppText>
-          </View>
+          {data.voice_intro_url ? (
+            <Pressable style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
+              <View style={styles.voicePlay}>
+                <Ionicons name="play" size={13} color={colors.surface} />
+              </View>
+              <AppText style={styles.voiceTxt}>{t('provider.voiceIntro')}</AppText>
+            </Pressable>
+          ) : null}
         </SafeAreaView>
 
         <View style={styles.body}>
           <View style={styles.facts}>
-            <Fact icon="shield-checkmark" color={colors.success} label={t('provider.factKyc')} />
-            <Fact icon="time-outline" color={colors.ink} label={t('provider.factEta')} />
-            <Fact icon="star" color={colors.goldDeep} label={t('provider.factRating')} />
+            {verified && (
+              <Fact icon="shield-checkmark" color={colors.success} label={t('provider.factKyc')} />
+            )}
+            {data.city ? <Fact icon="location-outline" color={colors.ink} label={data.city} /> : null}
+            {stats?.jobs_done ? (
+              <Fact
+                icon="star"
+                color={colors.goldDeep}
+                label={t('provider.factRatingReal', {
+                  rating: stats.rating_avg.toFixed(1),
+                  count: stats.jobs_done,
+                })}
+              />
+            ) : (
+              <Fact icon="sparkles-outline" color={colors.goldDeep} label={t('provider.newHere')} />
+            )}
           </View>
 
           {/* ₹0 coin on its ink stage */}
@@ -109,9 +124,6 @@ export default function ProviderScreen() {
           }
         >
           <AppText style={styles.ctaTxt}>{t('provider.request')}</AppText>
-        </Pressable>
-        <Pressable style={styles.ghost}>
-          <Ionicons name="call-outline" size={19} color={colors.ink} />
         </Pressable>
       </SafeAreaView>
     </View>

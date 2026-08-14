@@ -72,6 +72,15 @@ export async function getFeaturedProvider(): Promise<ProviderCard | null> {
   return rows[0] ?? null;
 }
 
+export async function getAllProviders(): Promise<ProviderCard[]> {
+  const { data, error } = await supabase
+    .from('provider_profiles')
+    .select('*, profiles(full_name), provider_stats(*)')
+    .limit(50);
+  if (error) throw error;
+  return (data ?? []) as unknown as ProviderCard[];
+}
+
 export async function getProvider(id: string): Promise<ProviderCard | null> {
   const { data, error } = await supabase
     .from('provider_profiles')

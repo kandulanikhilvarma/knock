@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  View, Text, TextInput, Pressable, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
+  View, Text, TextInput, Pressable, FlatList, ScrollView, KeyboardAvoidingView, Platform, StyleSheet,
 } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, pressed } from '../../theme/tokens';
 import { getMessages, sendMessage, subscribeMessages, type Message } from '../../lib/chat';
 import { useSession } from '../../lib/session';
 import { Loading, ErrorState } from '../../components/StateView';
@@ -34,11 +34,16 @@ export default function ChatThread() {
     });
   }, [bookingId]);
 
+  const sendBody = async (body: string) => {
+    if (!body.trim()) return;
+    await sendMessage(bookingId!, body.trim());
+  };
+
   const send = async () => {
     const body = draft.trim();
     if (!body) return;
     setDraft('');
-    await sendMessage(bookingId!, body);
+    await sendBody(body);
   };
 
   if (q.isLoading) return <Loading />;
@@ -67,6 +72,25 @@ export default function ChatThread() {
         }}
         ListEmptyComponent={<AppText style={styles.empty}>{t('chat.empty')}</AppText>}
       />
+      {/* Canned replies, localized (§6 parity). Tier-2 users type slowly on a
+          phone keyboard; the four lines that get sent most are one tap. */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.quick}
+        keyboardShouldPersistTaps="always"
+      >
+        {['onWay', 'reached', 'howLong', 'callMe'].map((k) => (
+          <Pressable
+            key={k}
+            style={({ pressed: p }) => [styles.chip, p && pressed]}
+            onPress={() => sendBody(t(`chat.quick_${k}`))}
+          >
+            <AppText style={styles.chipTxt}>{t(`chat.quick_${k}`)}</AppText>
+          </Pressable>
+        ))}
+      </ScrollView>
+
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
@@ -86,6 +110,16 @@ export default function ChatThread() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
+  quick: { paddingHorizontal: space.lg, paddingBottom: space.sm, gap: space.sm },
+  chip: {
+    paddingHorizontal: space.lg,
+    paddingVertical: space.sm,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.line,
+  },
+  chipTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.ink2 },
   list: { padding: space.lg, gap: space.sm, flexGrow: 1 },
   empty: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center', marginTop: space.xxl },
   bubble: { maxWidth: '80%', paddingVertical: space.sm, paddingHorizontal: space.md, borderRadius: radius.card },

@@ -150,6 +150,7 @@ export type Database = {
           id: string
           provider_id: string
           responded_at: string | null
+          scheduled: boolean
           response: Database["public"]["Enums"]["offer_response"]
           score: number | null
           sent_at: string
@@ -161,6 +162,7 @@ export type Database = {
           id?: string
           provider_id: string
           responded_at?: string | null
+          scheduled?: boolean
           response?: Database["public"]["Enums"]["offer_response"]
           score?: number | null
           sent_at?: string
@@ -172,6 +174,7 @@ export type Database = {
           id?: string
           provider_id?: string
           responded_at?: string | null
+          scheduled?: boolean
           response?: Database["public"]["Enums"]["offer_response"]
           score?: number | null
           sent_at?: string

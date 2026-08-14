@@ -36,6 +36,8 @@ export const CONFIG = {
   quotaFraction: 0.2, // ~20% of wave-1 slots reserved for newcomers
   neutralPrior: 0.5, // new providers never zeroed out
   verifiedBonus: 0.03, // small score nudge; never bypasses safety
+  underRatingFloor: 4.0, // below this the score is penalised (published rule)
+  underRatingPenalty: 0.15, // 15% off the composite, never a silent block
   recencyHalflifeDays: 7,
 };
 
@@ -58,7 +60,15 @@ export function scoreCandidate(c: Candidate, cfg = CONFIG, now = Date.now()): nu
     0.15 * completion +
     0.1 * recency;
 
-  return clamp01(base + (c.verified ? cfg.verifiedBonus : 0));
+  const withBonus = base + (c.verified ? cfg.verifiedBonus : 0);
+  // Published performance rule: a rated provider under the floor loses a fixed
+  // slice of score. Never a hidden block — the rule is in the provider T&Cs and
+  // the pause below it is a separate, visible state.
+  const penalised =
+    c.ratingAvg != null && c.jobsDone > 0 && c.ratingAvg < cfg.underRatingFloor
+      ? withBonus * (1 - cfg.underRatingPenalty)
+      : withBonus;
+  return clamp01(penalised);
 }
 
 // Exponential decay on days since last activity; null → neutral prior.

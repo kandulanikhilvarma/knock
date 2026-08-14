@@ -126,6 +126,7 @@ export async function getMyOffers(): Promise<OfferWithBooking[]> {
     .from('dispatch_offers')
     .select('*, bookings(*)')
     .eq('response', 'pending')
+    .eq('scheduled', false) // parked wave-2 offers are not live yet
     .order('sent_at', { ascending: false });
   if (error) throw error;
   return (data ?? []) as unknown as OfferWithBooking[];

@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppText from '../../components/AppText';
+import { SEEN_KEY } from '../welcome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -27,6 +30,16 @@ import { Loading, ErrorState } from '../../components/StateView';
 export default function Home() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
+
+  // First launch goes to the language picker (§2-4), once.
+  useEffect(() => {
+    AsyncStorage.getItem(SEEN_KEY)
+      .then((seen) => {
+        if (!seen) router.replace('/welcome');
+      })
+      .catch(() => {});
+  }, [router]);
+
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const featured = useQuery({ queryKey: ['featured'], queryFn: getFeaturedProvider });
   const earnings = useQuery({ queryKey: ['earnings'], queryFn: getCityEarnings });
@@ -73,11 +86,14 @@ export default function Home() {
           </Pressable>
         </View>
 
-        <Pressable style={styles.search}>
+        <Pressable
+          style={({ pressed: p }) => [styles.search, p && pressed]}
+          onPress={() => router.push('/search')}
+        >
           <Ionicons name="search" size={18} color={colors.inkMuted} />
           <AppText style={styles.searchPh}>{t('home.searchPlaceholder')}</AppText>
           <View style={styles.mic}>
-            <Ionicons name="mic" size={16} color={colors.onDark} />
+            <Ionicons name="arrow-forward" size={16} color={colors.onDark} />
           </View>
         </Pressable>
 

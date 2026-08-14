@@ -45,6 +45,7 @@ Deno.serve(async (req) => {
       .select('id, provider_id')
       .eq('booking_id', booking_id)
       .eq('response', 'pending')
+      .eq('scheduled', false)
       .order('sent_at', { ascending: true })
       .limit(1)
       .maybeSingle();

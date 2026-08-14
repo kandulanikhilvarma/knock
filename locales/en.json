@@ -71,8 +71,6 @@
     "roleLine": "AC & appliance specialist · independent professional",
     "voiceIntro": "20-sec intro",
     "factKyc": "Aadhaar + PAN verified",
-    "factEta": "~8 min avg",
-    "factRating": "4.9 · 58 reviews",
     "sealTitle": "Every rupee you pay goes 100% to them.",
     "sealSub": "Direct by UPI. The app takes no commission, ever.",
     "priceLabel": "Prices, clear upfront",
@@ -83,7 +81,9 @@
     "yearsShort": "{{count}} yrs",
     "visit": "Visit ₹{{amount}}",
     "coinLine": "Every rupee you pay is 100% theirs, no commission.",
-    "unnamed": "Independent pro"
+    "unnamed": "Independent pro",
+    "factRatingReal": "{{rating}} · {{count}} jobs",
+    "newHere": "New here"
   },
   "auth": {
     "phoneTitle": "Enter your mobile number",
@@ -212,7 +212,11 @@
     "empty": "No messages yet, say hi.",
     "placeholder": "Type a message",
     "noThreads": "No chats yet",
-    "noThreadsSub": "Chats open once a pro is assigned to your booking."
+    "noThreadsSub": "Chats open once a pro is assigned to your booking.",
+    "quick_onWay": "On the way",
+    "quick_reached": "I have reached",
+    "quick_howLong": "How long will it take?",
+    "quick_callMe": "Please call me"
   },
   "jobs": {
     "title": "Job requests",
@@ -248,5 +252,23 @@
     "nearest": "nearest {{km}} km",
     "s1subPrecise": "Using your live location",
     "s4subKm": "{{name}} is {{km}} km away and on the way. Opening your booking."
+  },
+  "search": {
+    "services": "Services",
+    "people": "People",
+    "popular": "Available now",
+    "noneTitle": "Nothing matched that",
+    "noneSub": "Try the trade name, or what is broken."
+  },
+  "welcome": {
+    "title": "Zero commission. Ever.",
+    "sub": "A verified local tradesperson at your door in minutes. You pay them directly, they keep every rupee.",
+    "choose": "Choose your language"
+  },
+  "safety": {
+    "share": "Share this job",
+    "shareBody": "I have a job in progress. Follow it here: {{link}}",
+    "sos": "Emergency",
+    "sosConfirm": "Tap again to call 112"
   }
 }
