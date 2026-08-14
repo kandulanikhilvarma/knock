@@ -13,7 +13,7 @@ import {
   getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
-import { getProvider, getCategories, categoryName } from '../../lib/queries';
+import { getProvider, getCategories, categoryName, providerName } from '../../lib/queries';
 import { categoryTint } from '../../lib/categoryTint';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
@@ -306,7 +306,7 @@ function PaymentPanel({ booking }: { booking: Booking }) {
   const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method) });
 
   const upi = p.data?.upi_id;
-  const name = p.data?.profiles?.full_name ?? 'Provider';
+  const name = (p.data ? providerName(p.data) : '') || t('provider.unnamed');
   const amount = booking.price_agreed ?? p.data?.visiting_charge ?? undefined;
   const link = upi
     ? `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(name)}${amount ? `&am=${amount}` : ''}&cu=INR`

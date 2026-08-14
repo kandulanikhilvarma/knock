@@ -129,3 +129,23 @@ Or "Continue as guest" for an anonymous customer.
 ## Debt / cleanup
 - [ ] `npm audit` — 21 vulns (7 mod, 14 high) from scaffold transitive deps. Review at P7, don't `--force` now.
 - [ ] `expo-symbols` ships 7 font-weight modules via expo-router; only `regular` used. Upstream, not ours. P7.
+
+## Dispatch made visible + onboarding tiles (2026-08-14, later session)
+- [x] `app/dispatch.tsx` — one tap opens a drawn neighbourhood map (`components/
+      NearbyMap`): your pin at centre, real pros around it, then the four steps
+      the engine runs (locate → rank → wave-1 ping → first accept) before it
+      hands off to the live booking. Verified end-to-end in the browser: Kiran
+      Mohan accepted, booking screen opened at "Matched".
+- [x] "Coming soon" removed everywhere. Onboarding trades now read as full
+      pastel tiles + "Onboarding pros" chip (`home.nextUp` / `home.onboarding` /
+      `category.onboarding*`). en/te/hi at key parity.
+- [x] **CORS fix** — every Edge Function only allowed `authorization, content-type`,
+      so supabase-js's `x-client-info` header failed preflight and *every* function
+      call died in a browser. Added `apikey, x-client-info`; all 8 redeployed.
+      (Native builds were unaffected, which is why the Node e2e passed.)
+- [x] 0012: `provider_profiles.display_name` + sync triggers. profiles is
+      owner-only by RLS (it holds phone), so the directory showed "Provider" for
+      everyone. `providerName()` in lib/queries is the single read path.
+- [ ] Note: the MCP deploy of `dispatch` flattens `../_shared/*` to `./_shared/*`.
+      Repo layout is unchanged (correct for a CLI deploy) — re-check if deploying
+      by CLI later.

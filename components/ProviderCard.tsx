@@ -3,7 +3,7 @@ import AppText from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type, shadow } from '../theme/tokens';
-import type { ProviderCard as Provider } from '../lib/queries';
+import { providerName, type ProviderCard as Provider } from '../lib/queries';
 import Avatar from './Avatar';
 
 export default function ProviderCard({
@@ -14,7 +14,7 @@ export default function ProviderCard({
   onPress?: () => void;
 }) {
   const { t } = useTranslation();
-  const name = provider.profiles?.full_name ?? 'Provider';
+  const name = providerName(provider) || t('provider.unnamed');
   const stats = provider.provider_stats;
   const verified = provider.verify_tier === 'verified';
 

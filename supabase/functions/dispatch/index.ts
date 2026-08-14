@@ -12,7 +12,7 @@ import { distanceKm, decodeGeohash } from '../_shared/geo.ts';
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  'Access-Control-Allow-Headers': 'authorization, content-type, apikey, x-client-info',
 };
 
 Deno.serve(async (req) => {

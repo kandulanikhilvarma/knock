@@ -10,7 +10,7 @@ export default function Placeholder({ titleKey }: { titleKey: string }) {
     <SafeAreaView style={styles.screen} edges={['top']}>
       <View style={styles.center}>
         <AppText style={styles.title}>{t(titleKey)}</AppText>
-        <AppText style={styles.sub}>{t('common.comingSoon')}</AppText>
+        <AppText style={styles.sub}>{t('common.onboarding')}</AppText>
       </View>
     </SafeAreaView>
   );

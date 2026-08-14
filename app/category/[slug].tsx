@@ -99,14 +99,14 @@ function Waitlist({
         <CategoryArt slug={slug} size={48} bg={categoryTint(slug)} />
         <View style={{ flex: 1 }}>
           <View style={styles.heroBadge}>
-            <AppText style={styles.heroBadgeTxt}>{t('common.comingSoon')}</AppText>
+            <AppText style={styles.heroBadgeTxt}>{t('category.onboardingBadge')}</AppText>
           </View>
           <AppText style={styles.heroTitle}>{title}</AppText>
         </View>
       </View>
 
-      <AppText style={styles.wTitle}>{t('category.comingSoonTitle', { category: title })}</AppText>
-      <AppText style={styles.wSub}>{t('category.comingSoonSub')}</AppText>
+      <AppText style={styles.wTitle}>{t('category.onboardingTitle', { category: title })}</AppText>
+      <AppText style={styles.wSub}>{t('category.onboardingSub')}</AppText>
 
       <View style={styles.notifyBox}>
         <Ionicons name="notifications-outline" size={18} color={colors.accent} />

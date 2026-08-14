@@ -12,7 +12,6 @@
     "greeting": "What needs fixing?",
     "counter": "₹{{amount}} earned by workers in {{city}}, 100% kept by them",
     "available": "Available now",
-    "comingSoon": "Coming soon",
     "searchPlaceholder": "What needs fixing?",
     "earnLabel": "Vijayawada workers earned this week",
     "earnSub": "100% kept by them, the app takes no commission.",
@@ -23,7 +22,10 @@
     "lovedTitle": "Loved across Vijayawada",
     "tq1": "Electrician came in 10 minutes. Paid him directly, not a rupee extra.",
     "tq2": "I checked his ID at the door before opening. Felt safe letting him in.",
-    "tq3": "AC fixed the same afternoon. The zero-commission promise is real."
+    "tq3": "AC fixed the same afternoon. The zero-commission promise is real.",
+    "nextUp": "Next in Vijayawada",
+    "onboarding": "Onboarding pros",
+    "nextUpSub": "Pros in these trades are signing up now. Get a message the day yours opens."
   },
   "trust": {
     "title": "Why people trust us",
@@ -48,12 +50,13 @@
   "category": {
     "noProviders": "No pros here yet",
     "noProvidersSub": "We're onboarding providers in your area.",
-    "comingSoonTitle": "{{category}} is coming soon",
-    "comingSoonSub": "Leave your number and we'll message you the day it goes live.",
     "phonePlaceholder": "10-digit mobile number",
     "notifyMe": "Notify me",
     "waitlistDone": "You're on the list",
-    "waitlistDoneSub": "We'll message you when it launches."
+    "waitlistDoneSub": "We'll message you when it launches.",
+    "onboardingTitle": "We're onboarding {{category}} pros",
+    "onboardingSub": "Leave your number and we'll message you the day it opens in Vijayawada.",
+    "onboardingBadge": "Onboarding"
   },
   "provider": {
     "verified": "Verified",
@@ -63,7 +66,7 @@
     "about": "About",
     "visitCharge": "Visiting charge",
     "request": "Request this pro",
-    "ctaSoon": "Booking opens soon",
+    "ctaSoon": "Onboarding in progress",
     "notFound": "Provider not found",
     "roleLine": "AC & appliance specialist · independent professional",
     "voiceIntro": "20-sec intro",
@@ -79,7 +82,8 @@
     "jobsShort": "{{count}} jobs",
     "yearsShort": "{{count}} yrs",
     "visit": "Visit ₹{{amount}}",
-    "coinLine": "Every rupee you pay is 100% theirs, no commission."
+    "coinLine": "Every rupee you pay is 100% theirs, no commission.",
+    "unnamed": "Independent pro"
   },
   "auth": {
     "phoneTitle": "Enter your mobile number",
@@ -219,6 +223,24 @@
     "zeroNote": "Keep 100%. The app takes no commission."
   },
   "common": {
-    "comingSoon": "Coming soon"
+    "onboarding": "Onboarding pros"
+  },
+  "dispatch": {
+    "title": "Finding you a pro",
+    "you": "You",
+    "nearbyCount": "{{count}} pros within 3 km",
+    "s1": "Locating you",
+    "s1sub": "Benz Circle, Vijayawada",
+    "s2": "Ranking pros nearby",
+    "s2sub": "Rating, distance, acceptance and completion rate, plus one in five of every wave held for newcomers.",
+    "s3": "Pinging the closest 3",
+    "s3sub": "First wave. 90 seconds to accept, then the next 5 get it.",
+    "s4": "Accepted",
+    "s4sub": "{{name}} is on the way. Opening your booking.",
+    "cancel": "Cancel",
+    "failed": "No pro free right now",
+    "failedSub": "Browse the list and call one directly.",
+    "zero": "You will pay {{name}} directly. The app takes ₹0.",
+    "s4pending": "First to accept wins the job. No one is assigned it."
   }
 }

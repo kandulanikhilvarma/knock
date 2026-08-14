@@ -56,8 +56,11 @@ export async function demoAccept(bookingId: string) {
 }
 
 // One tap runs the entire flow: guest sign-in (if needed) → request → dispatch →
-// a pro auto-accepts → returns the booking id to open its live status.
-export async function startDemoBooking(categoryId: string | null, categorySlug: string): Promise<string> {
+// a pro auto-accepts → returns the booking and the pro who took it.
+export async function startDemoBooking(
+  categoryId: string | null,
+  categorySlug: string,
+): Promise<{ id: string; providerId: string | null }> {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
     const { error } = await supabase.auth.signInAnonymously();
@@ -70,8 +73,8 @@ export async function startDemoBooking(categoryId: string | null, categorySlug: 
     address: 'Benz Circle, Vijayawada (demo)',
   });
   await new Promise((r) => setTimeout(r, 700)); // let dispatch seat the offers
-  await demoAccept(id);
-  return id;
+  const res = await demoAccept(id);
+  return { id, providerId: res.provider_id ?? null };
 }
 
 export async function getBooking(id: string): Promise<Booking | null> {

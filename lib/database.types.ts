@@ -309,6 +309,7 @@ export type Database = {
           bio: string | null
           city: string | null
           created_at: string
+          display_name: string | null
           photo_url: string | null
           services: string[]
           upi_id: string | null
@@ -324,6 +325,7 @@ export type Database = {
           bio?: string | null
           city?: string | null
           created_at?: string
+          display_name?: string | null
           photo_url?: string | null
           services?: string[]
           upi_id?: string | null
@@ -339,6 +341,7 @@ export type Database = {
           bio?: string | null
           city?: string | null
           created_at?: string
+          display_name?: string | null
           photo_url?: string | null
           services?: string[]
           upi_id?: string | null

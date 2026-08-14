@@ -12,6 +12,15 @@ export type ProviderCard = ProviderProfileRow & {
 
 type Lang = 'en' | 'te' | 'hi';
 
+// profiles is owner-only by RLS (it holds phone), so the join is null for
+// anyone browsing. provider_profiles.display_name is the public mirror.
+export function providerName(p: {
+  display_name?: string | null;
+  profiles?: { full_name: string | null } | null;
+}): string {
+  return p.display_name ?? p.profiles?.full_name ?? '';
+}
+
 // Pick the localized category name for the active language.
 export function categoryName(cat: Category, lang: string): string {
   const key = (['en', 'te', 'hi'].includes(lang) ? lang : 'en') as Lang;

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
-import { getProvider } from '../../lib/queries';
+import { getProvider, providerName } from '../../lib/queries';
 import { getProviderReviews } from '../../lib/bookings';
 import Avatar from '../../components/Avatar';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
@@ -25,7 +25,7 @@ export default function ProviderScreen() {
   if (isError) return <ErrorState message={(error as Error)?.message} />;
   if (!data) return <Empty title={t('provider.notFound')} />;
 
-  const name = data.profiles?.full_name ?? 'Provider';
+  const name = providerName(data) || t('provider.unnamed');
   const stats = data.provider_stats;
   const verified = data.verify_tier === 'verified';
 
