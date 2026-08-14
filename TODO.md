@@ -149,3 +149,24 @@ Or "Continue as guest" for an anonymous customer.
 - [ ] Note: the MCP deploy of `dispatch` flattens `../_shared/*` to `./_shared/*`.
       Repo layout is unchanged (correct for a CLI deploy) — re-check if deploying
       by CLI later.
+
+## Telugu/Hindi render pass + navigation fixes (2026-08-14)
+- [x] **Script line-height.** Telugu and Devanagari stack vowel signs above and
+      below the baseline, so Latin-tuned lineHeights clipped them. `AppText` now
+      floors every line at 1.45x the font size for te/hi. Tab labels and header
+      titles are drawn by the navigator, not AppText, so both got the same
+      treatment in their layouts (per-script family + taller line + 64px bar).
+- [x] Category tiles allow 3 lines: "ఏసీ & ఉపకరణ రిపేర్" needed 93px in a 62px box.
+- [x] **No way back.** booking/[id], booking/new, chat/[bookingId], jobs,
+      provider-setup and auth/email set header titles but inherited
+      `headerShown: false`, so they rendered with no header and no back button.
+      Declared in the root Stack now.
+- [x] Guest profile rendered a blank name and blank avatar: anonymous Supabase
+      users return `email`/`phone` as empty strings, and `??` only catches null.
+- [x] "VERIFIED" was the one hardcoded English string in the app → `provider.verified`.
+- [x] Last raw hex/rgba from the old saffron+blue palette replaced with
+      `colors.tintSuccess` / `colors.tintGold` tokens. Re-theme stays single-file.
+- [x] 0014: the assigned pro can read their customer's name + phone while the job
+      is live (§6-2b). Booking screen shows a customer card with a call button.
+- [x] Walked Home, dispatch, booking, bookings, chat, profile, jobs in Telugu.
+      Overflow audit clean on every screen after the fixes.

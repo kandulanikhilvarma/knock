@@ -27,6 +27,20 @@ export function categoryName(cat: Category, lang: string): string {
   return { en: cat.name_en, te: cat.name_te, hi: cat.name_hi }[key];
 }
 
+// Readable only by the pro the booking is assigned to, and only while that job
+// is live (RLS policy profiles_select_assigned_customer). Null for anyone else.
+export async function getCustomerContact(
+  id: string,
+): Promise<{ full_name: string | null; phone: string | null } | null> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('full_name, phone')
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
 export async function getCategories(): Promise<Category[]> {
   const { data, error } = await supabase.from('categories').select('*').order('sort');
   if (error) throw error;

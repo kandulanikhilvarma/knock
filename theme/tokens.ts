@@ -34,6 +34,10 @@ export const colors = {
   pastelSage: '#C8D9B7',
   pastelPeach: '#F1C6A6',
   peach: '#ECAF87', // price / tag pills
+  // flat tints of success/gold over the cream surface — pill and card grounds.
+  // Flat, not alpha, so they never darken twice when stacked on a card.
+  tintSuccess: '#E0E4D7',
+  tintGold: '#F0E4D5',
 } as const;
 
 // 4pt spacing scale.

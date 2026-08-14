@@ -44,7 +44,7 @@ function ProviderSection() {
   if (!q.data) {
     return (
       <Pressable style={styles.linkRow} onPress={() => router.push('/provider-setup')}>
-        <View style={[styles.linkIcon, { backgroundColor: 'rgba(255,122,26,0.10)' }]}>
+        <View style={[styles.linkIcon, { backgroundColor: colors.pastelPeach }]}>
           <Ionicons name="briefcase-outline" size={18} color={colors.accent} />
         </View>
         <AppText style={styles.linkTxt}>{t('providerSetup.become')}</AppText>
@@ -80,9 +80,13 @@ export default function Profile() {
 
   const user = session?.user;
   const isGuest = !!user?.is_anonymous;
-  const identity = user?.email ?? user?.phone ?? (isGuest ? t('profileTab.guestName') : '·');
-  const initial = (user?.email ?? 'G').charAt(0).toUpperCase();
-  const accountType = isGuest ? t('profileTab.typeGuest') : user?.email ? t('profileTab.typeEmail') : t('profileTab.typePhone');
+  // Anonymous users come back with email/phone as empty strings, not null, so
+  // ?? would happily hand back "" and render a blank name and avatar.
+  const email = user?.email || null;
+  const phone = user?.phone || null;
+  const identity = email ?? phone ?? t('profileTab.guestName');
+  const initial = identity.charAt(0).toUpperCase();
+  const accountType = isGuest ? t('profileTab.typeGuest') : email ? t('profileTab.typeEmail') : t('profileTab.typePhone');
 
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>

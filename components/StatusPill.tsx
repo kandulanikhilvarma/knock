@@ -8,13 +8,13 @@ import { colors, radius, font } from '../theme/tokens';
 // ends (failed/cancelled) go muted/red. Keys live under booking.state.* .
 const META: Record<string, { fg: string; bg: string }> = {
   requested: { fg: colors.inkMuted, bg: colors.line2 },
-  finding_pro: { fg: colors.accent, bg: 'rgba(255,122,26,0.12)' },
+  finding_pro: { fg: colors.goldDeep, bg: colors.tintGold },
   assigned: { fg: colors.ink, bg: colors.line2 },
-  verified: { fg: colors.successInk, bg: 'rgba(18,161,80,0.12)' },
-  in_progress: { fg: colors.successInk, bg: 'rgba(18,161,80,0.12)' },
-  done: { fg: colors.successInk, bg: 'rgba(18,161,80,0.12)' },
+  verified: { fg: colors.successInk, bg: colors.tintSuccess },
+  in_progress: { fg: colors.successInk, bg: colors.tintSuccess },
+  done: { fg: colors.successInk, bg: colors.tintSuccess },
   cancelled: { fg: colors.inkMuted, bg: colors.line2 },
-  failed: { fg: colors.danger, bg: 'rgba(214,69,69,0.10)' },
+  failed: { fg: colors.danger, bg: colors.line2 },
 };
 
 export default function StatusPill({ status }: { status: string }) {

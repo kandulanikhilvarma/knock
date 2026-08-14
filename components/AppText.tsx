@@ -1,4 +1,4 @@
-import { Text as RNText, StyleSheet, type TextProps } from 'react-native';
+import { Text as RNText, StyleSheet, type TextProps, type TextStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 // Locale-aware text. Screens author styles with any font.* family; this swaps the
@@ -30,15 +30,21 @@ function weightOf(fam: string): Weight {
 export default function AppText({ style, ...rest }: TextProps) {
   const { i18n } = useTranslation();
   const lang = (['en', 'te', 'hi'].includes(i18n.language) ? i18n.language : 'en') as Lang;
-  const flat = StyleSheet.flatten(style) as { fontFamily?: string } | undefined;
+  const flat = StyleSheet.flatten(style) as TextStyle | undefined;
   const fam = flat?.fontFamily;
-  let swap: { fontFamily: string } | null = null;
+  let swap: TextStyle | null = null;
   if (fam && fam !== 'monospace') {
     if (/PlayfairDisplay|Fraunces/.test(fam)) {
       if (DISPLAY[lang]) swap = { fontFamily: DISPLAY[lang] }; // en keeps Fraunces
     } else {
       swap = { fontFamily: FAM[lang][weightOf(fam)] };
     }
+  }
+  // Telugu and Devanagari stack vowel signs above and below the baseline, so a
+  // Latin-tuned lineHeight clips them. Floor every line at 1.45x the size.
+  if (lang !== 'en' && typeof flat?.fontSize === 'number') {
+    const min = Math.ceil(flat.fontSize * 1.45);
+    if (!flat.lineHeight || flat.lineHeight < min) swap = { ...swap, lineHeight: min };
   }
   return <RNText {...rest} style={[style, swap]} />;
 }

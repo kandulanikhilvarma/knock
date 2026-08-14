@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import {
   getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
-import { getProvider, getCategories, categoryName, providerName } from '../../lib/queries';
+import { getProvider, getCategories, categoryName, providerName, getCustomerContact } from '../../lib/queries';
 import { categoryTint } from '../../lib/categoryTint';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
@@ -149,6 +149,7 @@ function ProviderPanel({ booking }: { booking: Booking }) {
 
   return (
     <View style={{ gap: space.md }}>
+      <CustomerCard customerId={booking.customer_id} />
       <View style={styles.addr}>
         <AppText style={styles.addrLbl}>{t('booking.jobAddress')}</AppText>
         <AppText style={styles.addrTxt}>{booking.address ?? '·'}</AppText>
@@ -264,6 +265,38 @@ function AssignedPro({ providerId }: { providerId: string }) {
           provider={p.data}
           onPress={() => router.push({ pathname: '/provider/[id]', params: { id: providerId } })}
         />
+      )}
+    </View>
+  );
+}
+
+// Who to ring at the door. RLS hands this row to the assigned pro only.
+function CustomerCard({ customerId }: { customerId: string }) {
+  const { t } = useTranslation();
+  const c = useQuery({
+    queryKey: ['customer', customerId],
+    queryFn: () => getCustomerContact(customerId),
+  });
+  const name = c.data?.full_name?.trim();
+  const phone = c.data?.phone?.trim();
+
+  return (
+    <View style={styles.custCard}>
+      <View style={{ flex: 1 }}>
+        <AppText style={styles.addrLbl}>{t('booking.customerLbl')}</AppText>
+        <AppText style={styles.custName} numberOfLines={1}>
+          {name || t('profileTab.guestName')}
+        </AppText>
+        {!phone && <AppText style={styles.custNo}>{t('booking.noPhone')}</AppText>}
+      </View>
+      {phone && (
+        <Pressable
+          style={({ pressed: p }) => [styles.callBtn, p && pressed]}
+          onPress={() => Linking.openURL(`tel:${phone}`)}
+        >
+          <Ionicons name="call" size={15} color={colors.onDark} />
+          <AppText style={styles.callTxt}>{t('booking.call')}</AppText>
+        </Pressable>
       )}
     </View>
   );
@@ -398,7 +431,7 @@ const styles = StyleSheet.create({
   headerThumb: { width: 52, height: 52, borderRadius: radius.chip },
   headerCat: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink },
   headerPill: { alignSelf: 'flex-start', marginTop: 5, backgroundColor: colors.line2, paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill },
-  headerPillProof: { backgroundColor: 'rgba(18,161,80,0.12)' },
+  headerPillProof: { backgroundColor: colors.tintSuccess },
   headerPillTxt: { fontFamily: font.teBold, fontSize: 11, color: colors.inkMuted, letterSpacing: 0.2 },
   headerPillTxtProof: { color: colors.successInk },
 
@@ -432,6 +465,29 @@ const styles = StyleSheet.create({
   addrTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   addrDesc: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
 
+  custCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.line,
+    padding: space.lg,
+  },
+  custName: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink },
+  custNo: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
+  callBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    height: 40,
+    paddingHorizontal: space.lg,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accent,
+  },
+  callTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.onDark },
+
   codeCard: { backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, alignItems: 'center', gap: space.sm },
   codeTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.onDark, textAlign: 'center' },
   codeSub: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, textAlign: 'center' },
@@ -459,7 +515,7 @@ const styles = StyleSheet.create({
   tagTxt: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
   tagTxtOn: { color: colors.onDark },
 
-  proof: { backgroundColor: 'rgba(18,161,80,0.10)', borderRadius: radius.card, borderWidth: 1, borderColor: colors.success, padding: space.lg, gap: 4 },
+  proof: { backgroundColor: colors.tintSuccess, borderRadius: radius.card, borderWidth: 1, borderColor: colors.success, padding: space.lg, gap: 4 },
   proofTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.successInk },
   proofSub: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
 

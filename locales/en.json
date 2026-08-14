@@ -201,7 +201,10 @@
       "done": "Completed",
       "cancelled": "Cancelled",
       "failed": "No pro found"
-    }
+    },
+    "customerLbl": "Customer",
+    "call": "Call",
+    "noPhone": "No number on file"
   },
   "chat": {
     "title": "Chat",

@@ -138,7 +138,7 @@ export default function Home() {
                   <View style={styles.soonArt}>
                     <CategoryArt slug={c.slug} size={40} bg={colors.surface} />
                   </View>
-                  <AppText style={styles.soonTxt} numberOfLines={2}>
+                  <AppText style={styles.soonTxt} numberOfLines={3}>
                     {categoryName(c, i18n.language)}
                   </AppText>
                   <View style={styles.soonChip}>
@@ -168,7 +168,7 @@ function Grid({ cats, lang, onPick }: { cats: Category[]; lang: string; onPick: 
           onPress={() => onPick(c)}
         >
           <CategoryArt slug={c.slug} size={52} bg={categoryTint(c.slug)} />
-          <AppText style={styles.tileTxt} numberOfLines={2}>
+          <AppText style={styles.tileTxt} numberOfLines={3}>
             {categoryName(c, lang)}
           </AppText>
           <View style={styles.avail}>

@@ -25,6 +25,9 @@ import {
   PlayfairDisplay_700Bold,
 } from '@expo-google-fonts/playfair-display';
 
+import { useTranslation } from 'react-i18next';
+import { colors, font } from '../theme/tokens';
+
 import '../lib/i18n';
 
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +35,7 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
+  const { i18n } = useTranslation();
   const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -52,6 +56,12 @@ export default function RootLayout() {
 
   if (!fontsLoaded && !fontError) return null;
 
+  // Header titles are drawn by the navigator, so the serif has to be swapped
+  // per script here the way AppText does it everywhere else.
+  const lang = i18n.language;
+  const headerFont =
+    lang === 'te' ? font.teBold : lang === 'hi' ? font.hiBold : font.display;
+
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
@@ -59,11 +69,11 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            headerStyle: { backgroundColor: '#EAE5D9' },
+            headerStyle: { backgroundColor: colors.bg },
             headerShadowVisible: false,
-            headerTintColor: '#191811',
-            headerTitleStyle: { fontFamily: 'PlayfairDisplay_600SemiBold', color: '#191811' },
-            contentStyle: { backgroundColor: '#EAE5D9' },
+            headerTintColor: colors.ink,
+            headerTitleStyle: { fontFamily: headerFont, color: colors.ink },
+            contentStyle: { backgroundColor: colors.bg },
           }}
         >
           <Stack.Screen name="(tabs)" />
@@ -72,6 +82,14 @@ export default function RootLayout() {
           <Stack.Screen name="auth/phone" options={{ headerShown: true, title: '' }} />
           <Stack.Screen name="auth/otp" options={{ headerShown: true, title: '' }} />
           <Stack.Screen name="auth/role" options={{ headerShown: false }} />
+          {/* These set their own titles; without a header there is no way back. */}
+          <Stack.Screen name="auth/email" options={{ headerShown: true }} />
+          <Stack.Screen name="booking/new" options={{ headerShown: true }} />
+          <Stack.Screen name="booking/[id]" options={{ headerShown: true }} />
+          <Stack.Screen name="chat/[bookingId]" options={{ headerShown: true }} />
+          <Stack.Screen name="jobs/index" options={{ headerShown: true }} />
+          <Stack.Screen name="provider-setup" options={{ headerShown: true }} />
+          <Stack.Screen name="dispatch" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>
     </QueryClientProvider>
