@@ -7,7 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {
@@ -25,6 +24,7 @@ import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
 import HowItWorks from '../../components/HowItWorks';
 import OrganicLines from '../../components/OrganicLines';
+import NearbyProviders from '../../components/NearbyProviders';
 import { Loading, ErrorState } from '../../components/StateView';
 
 export default function Home() {
@@ -51,12 +51,6 @@ export default function Home() {
     router.push({ pathname: '/category/[slug]', params: { slug: cat.slug } });
   }
 
-  // One tap opens the dispatch screen: your block on the map, the pros around
-  // it, then the engine's real run (rank → wave 1 → first accept → booking).
-  function runDemo() {
-    const c = live[0];
-    router.push({ pathname: '/dispatch', params: { slug: c?.slug ?? 'electrician', cid: c?.id ?? '' } });
-  }
 
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
@@ -72,18 +66,6 @@ export default function Home() {
             <LanguageSwitcher />
           </View>
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
-          <Pressable
-            style={({ pressed: p }) => [styles.demoCta, p && pressed]}
-            disabled={cats.isLoading}
-            onPress={runDemo}
-          >
-            {cats.isLoading ? (
-              <ActivityIndicator color={colors.onDark} size="small" />
-            ) : (
-              <Ionicons name="flash" size={16} color={colors.onDark} />
-            )}
-            <AppText style={styles.demoCtaTxt}>{t('home.demoCta')}</AppText>
-          </Pressable>
         </View>
 
         <Pressable
@@ -96,6 +78,9 @@ export default function Home() {
             <Ionicons name="arrow-forward" size={16} color={colors.onDark} />
           </View>
         </Pressable>
+
+        {/* Rapido-style: your location + the pros around you, up front. */}
+        <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
 
         {/* City earnings — forest block, big serif number */}
         <View style={styles.earn}>
@@ -217,20 +202,6 @@ const styles = StyleSheet.create({
     marginTop: space.md,
     maxWidth: '90%',
   },
-  demoCta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: space.sm,
-    alignSelf: 'flex-start',
-    marginTop: space.lg,
-    height: 46,
-    paddingHorizontal: space.xl,
-    borderRadius: radius.pill,
-    backgroundColor: colors.accent,
-    ...shadow.soft,
-  },
-  demoCtaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
 
   search: {
     flexDirection: 'row',

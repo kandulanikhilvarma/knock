@@ -307,5 +307,13 @@
     "s2sub": "Scan the code the pro shows before you let anyone in. The job cannot start without it.",
     "s3": "Pay them, directly",
     "s3sub": "UPI straight to the pro. No booking fee, no commission, nothing held in between."
+  },
+  "nearby": {
+    "title": "Pros near you",
+    "count": "{{count}} available nearby",
+    "cta": "Get a pro now",
+    "offTitle": "Turn on location",
+    "offSub": "See the pros around you and send one to your exact door.",
+    "turnOn": "Turn on location"
   }
 }

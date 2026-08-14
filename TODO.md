@@ -248,3 +248,12 @@ Or "Continue as guest" for an anonymous customer.
       (§7-1, §7-2) — blocked on a vendor, a domain and the entity.
 - [ ] Sentry project is `javascript-nextjs`; the org blocks project creation for
       members. Create a `services-app` RN project and swap the DSN.
+
+## Rapido-style home map (2026-08-14)
+- [x] `components/NearbyProviders` on Home: real OSM map with your location and
+      the available pros around you (nearest 6), shown before anything is
+      requested. Tap the CTA to run the dispatch flow.
+- [x] Location gate: if permission is denied the map shows the city with a
+      "Turn on location" card that re-requests (useMyLocation.request). Never
+      blocks the rest of Home.
+- [x] Verified in preview: 6 tiles load, all 6 pros + You render on the map.
