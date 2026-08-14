@@ -151,7 +151,7 @@ function ProviderPanel({ booking }: { booking: Booking }) {
     <View style={{ gap: space.md }}>
       <View style={styles.addr}>
         <AppText style={styles.addrLbl}>{t('booking.jobAddress')}</AppText>
-        <AppText style={styles.addrTxt}>{booking.address ?? '—'}</AppText>
+        <AppText style={styles.addrTxt}>{booking.address ?? '·'}</AppText>
         {booking.description ? <AppText style={styles.addrDesc}>{booking.description}</AppText> : null}
       </View>
 

@@ -35,7 +35,7 @@ export default function ProviderCard({
             )}
           </View>
           <View style={styles.metaRow}>
-            <AppText style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</AppText>
+            <AppText style={styles.rating}>★ {stats?.rating_avg?.toFixed(1) ?? '·'}</AppText>
             <AppText style={styles.dot}>·</AppText>
             <AppText style={styles.meta}>{t('provider.jobsShort', { count: stats?.jobs_done ?? 0 })}</AppText>
             {provider.years_exp ? (

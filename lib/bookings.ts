@@ -47,6 +47,33 @@ export async function runDispatch(bookingId: string) {
   return data as { dispatched: boolean; fallback?: boolean; pinged?: number };
 }
 
+// Solo-demo: auto-accept the first offered pro so the whole loop is visible
+// without a second device. Server-side, own booking only. See demo-accept fn.
+export async function demoAccept(bookingId: string) {
+  const { data, error } = await supabase.functions.invoke('demo-accept', { body: { booking_id: bookingId } });
+  if (error) throw error;
+  return data as { assigned: boolean; provider_id?: string; reason?: string };
+}
+
+// One tap runs the entire flow: guest sign-in (if needed) → request → dispatch →
+// a pro auto-accepts → returns the booking id to open its live status.
+export async function startDemoBooking(categoryId: string | null, categorySlug: string): Promise<string> {
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) {
+    const { error } = await supabase.auth.signInAnonymously();
+    if (error) throw error;
+  }
+  const id = await createBooking({
+    categoryId,
+    categorySlug,
+    description: 'AC not cooling (demo request)',
+    address: 'Benz Circle, Vijayawada (demo)',
+  });
+  await new Promise((r) => setTimeout(r, 700)); // let dispatch seat the offers
+  await demoAccept(id);
+  return id;
+}
+
 export async function getBooking(id: string): Promise<Booking | null> {
   const { data, error } = await supabase.from('bookings').select('*').eq('id', id).maybeSingle();
   if (error) throw error;

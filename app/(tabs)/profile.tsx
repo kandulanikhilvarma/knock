@@ -80,7 +80,7 @@ export default function Profile() {
 
   const user = session?.user;
   const isGuest = !!user?.is_anonymous;
-  const identity = user?.email ?? user?.phone ?? (isGuest ? t('profileTab.guestName') : '—');
+  const identity = user?.email ?? user?.phone ?? (isGuest ? t('profileTab.guestName') : '·');
   const initial = (user?.email ?? 'G').charAt(0).toUpperCase();
   const accountType = isGuest ? t('profileTab.typeGuest') : user?.email ? t('profileTab.typeEmail') : t('profileTab.typePhone');
 

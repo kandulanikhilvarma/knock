@@ -48,7 +48,7 @@ export default function ProviderScreen() {
               <AppText style={styles.name}>{name}</AppText>
               <AppText style={styles.role}>{t('provider.roleLine')}</AppText>
               <View style={styles.rr}>
-                <AppText style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '—'}</AppText>
+                <AppText style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '·'}</AppText>
                 <AppText style={styles.rrMut}>
                   · {t('provider.jobsDone', { count: stats?.jobs_done ?? 0 })}
                   {data.years_exp ? ` · ${t('provider.yearsExp', { count: data.years_exp })}` : ''}
@@ -87,7 +87,7 @@ export default function ProviderScreen() {
             <AppText style={styles.priceLbl}>{t('provider.priceLabel')}</AppText>
             <View style={styles.priceRow}>
               <AppText style={styles.priceK}>{t('provider.visitCharge')}</AppText>
-              <AppText style={styles.priceV}>₹{data.visiting_charge ?? '—'}</AppText>
+              <AppText style={styles.priceV}>₹{data.visiting_charge ?? '·'}</AppText>
             </View>
           </View>
 

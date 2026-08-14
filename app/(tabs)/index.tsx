@@ -2,8 +2,9 @@ import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {
@@ -14,11 +15,13 @@ import {
   categoryName,
   type Category,
 } from '../../lib/queries';
+import { startDemoBooking } from '../../lib/bookings';
 import { categoryTint } from '../../lib/categoryTint';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
+import Testimonials from '../../components/Testimonials';
 import OrganicLines from '../../components/OrganicLines';
 import { Loading, ErrorState } from '../../components/StateView';
 
@@ -36,6 +39,16 @@ export default function Home() {
     router.push({ pathname: '/category/[slug]', params: { slug: cat.slug } });
   }
 
+  // One tap runs the whole loop (request → dispatch → auto-accept) and opens the
+  // live booking so the flow is visible without a second device.
+  const demo = useMutation({
+    mutationFn: () => {
+      const c = live[0];
+      return startDemoBooking(c?.id ?? null, c?.slug ?? 'electrician');
+    },
+    onSuccess: (id) => router.push({ pathname: '/booking/[id]', params: { id } }),
+  });
+
   return (
     <SafeAreaView style={styles.screen} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -50,6 +63,23 @@ export default function Home() {
             <LanguageSwitcher />
           </View>
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
+          <Pressable
+            style={({ pressed: p }) => [styles.demoCta, p && pressed]}
+            disabled={demo.isPending || cats.isLoading}
+            onPress={() => demo.mutate()}
+          >
+            {demo.isPending ? (
+              <>
+                <ActivityIndicator color={colors.onDark} size="small" />
+                <AppText style={styles.demoCtaTxt}>{t('home.demoRunning')}</AppText>
+              </>
+            ) : (
+              <>
+                <Ionicons name="flash" size={16} color={colors.onDark} />
+                <AppText style={styles.demoCtaTxt}>{t('home.demoCta')}</AppText>
+              </>
+            )}
+          </Pressable>
         </View>
 
         <Pressable style={styles.search}>
@@ -97,6 +127,8 @@ export default function Home() {
 
         <TrustPillars />
 
+        <Testimonials />
+
         {soon.length > 0 && (
           <View style={styles.section}>
             <AppText style={styles.sectionTitle}>{t('home.comingSoon')}</AppText>
@@ -128,20 +160,11 @@ function Grid({
           style={({ pressed: p }) => [styles.tile, p && pressed]}
           onPress={() => onPick(c)}
         >
-          <View style={styles.tileTop}>
-            <CategoryArt slug={c.slug} size={42} bg={categoryTint(c.slug)} muted={soon} />
-            {soon && (
-              <View style={styles.soonTag}>
-                <AppText style={styles.soonTagTxt}>{t('home.soonTag')}</AppText>
-              </View>
-            )}
-          </View>
+          <CategoryArt slug={c.slug} size={52} bg={categoryTint(c.slug)} muted={soon} />
           <AppText style={[styles.tileTxt, soon && styles.tileTxtSoon]} numberOfLines={2}>
             {categoryName(c, lang)}
           </AppText>
-          {soon ? (
-            <AppText style={styles.tileSoonHint}>{t('home.soonHint')}</AppText>
-          ) : (
+          {!soon && (
             <View style={styles.avail}>
               <View style={styles.availDot} />
               <AppText style={styles.availTxt}>{t('home.availableNow')}</AppText>
@@ -169,6 +192,20 @@ const styles = StyleSheet.create({
     marginTop: space.md,
     maxWidth: '90%',
   },
+  demoCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: space.sm,
+    alignSelf: 'flex-start',
+    marginTop: space.lg,
+    height: 46,
+    paddingHorizontal: space.xl,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accent,
+    ...shadow.soft,
+  },
+  demoCtaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
 
   search: {
     flexDirection: 'row',
@@ -214,28 +251,19 @@ const styles = StyleSheet.create({
     width: '47%',
     flexGrow: 0,
     minWidth: 150,
-    minHeight: 138,
+    minHeight: 176,
     borderRadius: radius.card,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.line,
-    padding: space.lg,
-    gap: space.sm,
-    justifyContent: 'space-between',
+    padding: space.xl,
+    gap: space.md,
+    justifyContent: 'flex-start',
     ...shadow.card,
   },
-  tileTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  tileTxt: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink, lineHeight: type.h2 + 2 },
+  tileTxt: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink, lineHeight: type.h1 + 1, marginTop: 'auto' },
   tileTxtSoon: { color: colors.inkMuted },
   avail: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   availDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
-  availTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.successInk, letterSpacing: 0.2 },
-  tileSoonHint: { fontFamily: font.regular, fontSize: type.chip, color: colors.inkMuted },
-  soonTag: {
-    backgroundColor: colors.line2,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: radius.pill,
-  },
-  soonTagTxt: { fontFamily: font.semibold, fontSize: 9, color: colors.inkMuted, letterSpacing: 0.3 },
+  availTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.successInk, letterSpacing: 0.2 },
 });
