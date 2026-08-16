@@ -36,7 +36,8 @@
           "locationWhenInUsePermission": "Used to find professionals near you and to show the one on the way to your door."
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "expo-web-browser"
     ]
   }
 }
