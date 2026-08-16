@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, pressed } from '../../theme/tokens';
 import { supabase } from '../../lib/supabase';
-import { signInWithGoogle } from '../../lib/auth';
+import { signInWithGoogle, sendEmailLink } from '../../lib/auth';
 
 // Finishes any auth session left open when the app was backgrounded mid-redirect.
 WebBrowser.maybeCompleteAuthSession();
@@ -42,8 +42,13 @@ export default function EmailAuthScreen() {
     onSuccess: () => router.back(),
   });
 
-  const valid = email.includes('@') && password.length >= 6;
-  const busy = m.isPending || google.isPending || guest.isPending;
+  // Passwordless: email a one-time sign-in link. Stays on-screen and shows a
+  // confirmation — the tap happens in the user's inbox, not here.
+  const link = useMutation({ mutationFn: () => sendEmailLink(email) });
+
+  const emailValid = email.includes('@');
+  const valid = emailValid && password.length >= 6;
+  const busy = m.isPending || google.isPending || guest.isPending || link.isPending;
 
   return (
     <View style={styles.screen}>
@@ -104,6 +109,23 @@ export default function EmailAuthScreen() {
       </Pressable>
       {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
 
+      {/* Passwordless — no password needed, just the email above. */}
+      {link.isSuccess ? (
+        <View style={styles.sent}>
+          <Ionicons name="mail-outline" size={18} color={colors.successInk} />
+          <AppText style={styles.sentTxt}>{t('auth.linkSent')}</AppText>
+        </View>
+      ) : (
+        <Pressable
+          style={({ pressed: p }) => [styles.linkBtn, p && pressed, (!emailValid || busy) && styles.ctaOff]}
+          disabled={!emailValid || busy}
+          onPress={() => link.mutate()}
+        >
+          <AppText style={styles.linkTxt}>{link.isPending ? t('auth.sending') : t('auth.emailLink')}</AppText>
+        </Pressable>
+      )}
+      {link.isError && <AppText style={styles.err}>{(link.error as Error).message}</AppText>}
+
       <Pressable style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
         <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
       </Pressable>
@@ -163,6 +185,18 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.primary },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger },
+
+  linkBtn: { height: tap.min, alignItems: 'center', justifyContent: 'center' },
+  linkTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.primary },
+  sent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+    padding: space.md,
+    borderRadius: radius.card,
+    backgroundColor: colors.tintSuccess,
+  },
+  sentTxt: { flex: 1, fontFamily: font.medium, fontSize: type.small, lineHeight: 19, color: colors.successInk },
   guest: {
     height: tap.min,
     alignItems: 'center',

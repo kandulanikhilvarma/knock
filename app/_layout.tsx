@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import * as Linking from 'expo-linking';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -29,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { colors, font } from '../theme/tokens';
 
 import { initSentry, Sentry } from '../lib/sentry';
+import { setSessionFromUrl } from '../lib/auth';
 
 import '../lib/i18n';
 
@@ -56,6 +58,18 @@ function RootLayout() {
   useEffect(() => {
     if (fontsLoaded || fontError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontError]);
+
+  // Finish sign-in when a magic link / OAuth redirect deep-links back into the
+  // app — cold start (getInitialURL) and warm (the 'url' event) both.
+  useEffect(() => {
+    const sub = Linking.addEventListener('url', ({ url }) => {
+      setSessionFromUrl(url).catch(() => {});
+    });
+    Linking.getInitialURL().then((url) => {
+      if (url) setSessionFromUrl(url).catch(() => {});
+    });
+    return () => sub.remove();
+  }, []);
 
   if (!fontsLoaded && !fontError) return null;
 
