@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -55,15 +55,25 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
       <View style={styles.mapWrap}>
         <LiveMap center={me.coords} pins={pins} youLabel={t('dispatch.you')} height={210} insetX={32} zoom={13} />
 
-        {/* Location off → a Rapido-style prompt sitting over the city fallback */}
+        {/* Location off → a Rapido-style prompt sitting over the city fallback.
+            iOS only shows the system dialog once; after a hard deny the OS won't
+            re-prompt, so send the user to Settings instead of a button that
+            silently no-ops. */}
         {me.denied && (
           <View style={styles.gate}>
             <View style={styles.gateCard}>
               <Ionicons name="location" size={22} color={colors.primary} />
               <AppText style={styles.gateTitle}>{t('nearby.offTitle')}</AppText>
-              <AppText style={styles.gateSub}>{t('nearby.offSub')}</AppText>
-              <Pressable style={({ pressed: p }) => [styles.gateBtn, p && pressed]} onPress={me.request}>
-                <AppText style={styles.gateBtnTxt}>{t('nearby.turnOn')}</AppText>
+              <AppText style={styles.gateSub}>
+                {me.canAskAgain ? t('nearby.offSub') : t('nearby.offBlockedSub')}
+              </AppText>
+              <Pressable
+                style={({ pressed: p }) => [styles.gateBtn, p && pressed]}
+                onPress={() => (me.canAskAgain ? me.request() : Linking.openSettings())}
+              >
+                <AppText style={styles.gateBtnTxt}>
+                  {me.canAskAgain ? t('nearby.turnOn') : t('nearby.openSettings')}
+                </AppText>
               </Pressable>
             </View>
           </View>

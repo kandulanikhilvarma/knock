@@ -7,6 +7,7 @@ export type LocationState = {
   precise: boolean; // false = the city fallback, not the device
   loading: boolean;
   denied: boolean;
+  canAskAgain: boolean; // false = iOS already denied; must go to Settings
   request: () => void; // ask again after the user turns it on
 };
 
@@ -18,14 +19,15 @@ export function useMyLocation(): LocationState {
     precise: false,
     loading: true,
     denied: false,
+    canAskAgain: true,
   });
 
   const read = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
+      const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true });
+        setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true, canAskAgain });
         return;
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
@@ -34,16 +36,17 @@ export function useMyLocation(): LocationState {
         precise: true,
         loading: false,
         denied: false,
+        canAskAgain: true,
       });
     } catch {
-      setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true });
+      setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true, canAskAgain: true });
     }
   }, []);
 
   useEffect(() => {
     let alive = true;
     read().catch(() => {
-      if (alive) setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true });
+      if (alive) setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true, canAskAgain: true });
     });
     return () => {
       alive = false;
