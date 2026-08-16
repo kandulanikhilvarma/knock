@@ -12,6 +12,8 @@ import { Empty } from '../components/StateView';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
 import { getCategories, getAllProviders, categoryName, providerName, type Category } from '../lib/queries';
 import { categoryTint } from '../lib/categoryTint';
+import { useMyLocation } from '../lib/useMyLocation';
+import { decodeGeohash, distanceKm } from '../lib/geo';
 
 // What people type is the problem ("fan not working"), not the trade name, so
 // each category carries a keyword list in all three languages.
@@ -51,18 +53,35 @@ export default function Search() {
 
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const pros = useQuery({ queryKey: ['all-providers'], queryFn: getAllProviders });
+  const me = useMyLocation();
 
   const hitCats = useMemo(
     () => (term ? (cats.data ?? []).filter((c) => matches(term, c, i18n.language)) : (cats.data ?? []).filter((c) => c.is_live)),
     [term, cats.data, i18n.language],
   );
-  const hitPros = useMemo(
-    () =>
+
+  // Local first: providers matched by name OR by the searched service, each
+  // measured from the user's location and sorted nearest-first (plan §188 —
+  // distance is the ranking that matters). Empty term = pros near you.
+  const hitPros = useMemo(() => {
+    const pool = pros.data ?? [];
+    const catSlugs = new Set(hitCats.map((c) => c.slug));
+    const base =
       term.length < 2
-        ? []
-        : (pros.data ?? []).filter((p) => providerName(p).toLowerCase().includes(term)),
-    [term, pros.data],
-  );
+        ? pool
+        : pool.filter(
+            (p) =>
+              providerName(p).toLowerCase().includes(term) ||
+              (p.services ?? []).some((s) => catSlugs.has(s)),
+          );
+    return base
+      .map((p) => {
+        const g = decodeGeohash(p.area_geohash);
+        return { p, d: g ? distanceKm(me.coords, g) : null };
+      })
+      .sort((a, b) => (a.d ?? 1e9) - (b.d ?? 1e9))
+      .slice(0, 10);
+  }, [term, pros.data, hitCats, me.coords]);
 
   const nothing = term.length > 1 && hitCats.length === 0 && hitPros.length === 0;
 
@@ -119,11 +138,12 @@ export default function Search() {
 
         {hitPros.length > 0 && (
           <View style={styles.section}>
-            <AppText style={styles.secTitle}>{t('search.people')}</AppText>
-            {hitPros.map((p) => (
+            <AppText style={styles.secTitle}>{t('nearby.title')}</AppText>
+            {hitPros.map(({ p, d }) => (
               <ProviderCard
                 key={p.user_id}
                 provider={p}
+                distanceKm={d}
                 onPress={() => router.push({ pathname: '/provider/[id]', params: { id: p.user_id } })}
               />
             ))}

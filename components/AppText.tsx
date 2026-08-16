@@ -9,15 +9,19 @@ type Lang = 'en' | 'te' | 'hi';
 type Weight = 'r' | 'm' | 's' | 'b';
 const FAM: Record<Lang, Record<Weight, string>> = {
   en: { r: 'Inter_400Regular', m: 'Inter_500Medium', s: 'Inter_600SemiBold', b: 'Inter_700Bold' },
-  // Noto ships 400 + 700 only: medium folds to regular, semibold to bold.
-  te: { r: 'NotoSansTelugu_400Regular', m: 'NotoSansTelugu_400Regular', s: 'NotoSansTelugu_700Bold', b: 'NotoSansTelugu_700Bold' },
-  hi: { r: 'NotoSansDevanagari_400Regular', m: 'NotoSansDevanagari_400Regular', s: 'NotoSansDevanagari_700Bold', b: 'NotoSansDevanagari_700Bold' },
+  // Noto ships 400 + 700 only, and the 700 reads far heavier in these scripts
+  // than a Latin bold — conjuncts clot at title sizes. So medium AND semibold
+  // fold to regular; only an explicit bold (b) stays 700. Hierarchy comes from
+  // size, not weight, which is how Telugu/Devanagari editorial actually sets.
+  te: { r: 'NotoSansTelugu_400Regular', m: 'NotoSansTelugu_400Regular', s: 'NotoSansTelugu_400Regular', b: 'NotoSansTelugu_700Bold' },
+  hi: { r: 'NotoSansDevanagari_400Regular', m: 'NotoSansDevanagari_400Regular', s: 'NotoSansDevanagari_400Regular', b: 'NotoSansDevanagari_700Bold' },
 };
-// Editorial serif is Latin-only; Telugu/Hindi display falls back to their bold.
+// Editorial serif is Latin-only. Telugu/Hindi display uses REGULAR Noto — the
+// bold face is too heavy for big headlines in these scripts; size carries it.
 const DISPLAY: Record<Lang, string> = {
   en: '', // keep the Fraunces weight the style already set
-  te: 'NotoSansTelugu_700Bold',
-  hi: 'NotoSansDevanagari_700Bold',
+  te: 'NotoSansTelugu_400Regular',
+  hi: 'NotoSansDevanagari_400Regular',
 };
 
 function weightOf(fam: string): Weight {

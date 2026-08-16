@@ -75,6 +75,7 @@
     "reviewsTitle": "रिव्यू",
     "speaksTelugu": "तेलुगु बोलते हैं",
     "jobsShort": "{{count}} काम",
+    "km": "{{km}} किमी",
     "yearsShort": "{{count}} साल",
     "visit": "विज़िट ₹{{amount}}",
     "coinLine": "आप जो रुपया देते हैं, 100% उन्हीं का, कोई कमीशन नहीं.",

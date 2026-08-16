@@ -9,14 +9,17 @@ import Avatar from './Avatar';
 export default function ProviderCard({
   provider,
   onPress,
+  distanceKm,
 }: {
   provider: Provider;
   onPress?: () => void;
+  distanceKm?: number | null;
 }) {
   const { t } = useTranslation();
   const name = providerName(provider) || t('provider.unnamed');
   const stats = provider.provider_stats;
   const verified = provider.verify_tier === 'verified';
+  const km = distanceKm == null ? null : distanceKm < 1 ? '<1' : distanceKm.toFixed(1);
 
   return (
     <Pressable style={styles.card} onPress={onPress}>
@@ -44,6 +47,13 @@ export default function ProviderCard({
                 <AppText style={styles.meta}>{t('provider.yearsShort', { count: provider.years_exp })}</AppText>
               </>
             ) : null}
+            {km != null && (
+              <>
+                <AppText style={styles.dot}>·</AppText>
+                <Ionicons name="location" size={11} color={colors.success} />
+                <AppText style={styles.km}>{t('provider.km', { km })}</AppText>
+              </>
+            )}
           </View>
           <View style={styles.tags}>
             <View style={styles.tag}>
@@ -96,6 +106,7 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   rating: { fontFamily: font.bold, fontSize: type.small, color: colors.goldDeep },
   meta: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
+  km: { fontFamily: font.semibold, fontSize: type.small, color: colors.successInk },
   dot: { color: colors.line },
   tags: { flexDirection: 'row', gap: 6, marginTop: 3, flexWrap: 'wrap' },
   tag: {
