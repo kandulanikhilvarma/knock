@@ -107,8 +107,11 @@
     "google": "Continue with Google",
     "or": "or",
     "googleUnavailable": "Google sign-in isn't set up yet.",
-    "emailLink": "Email me a sign-in link",
-    "linkSent": "Check your email — tap the link to sign in. It may take a minute."
+    "emailCode": "Email me a code",
+    "codeSentTo": "Enter the 6-digit code sent to {{email}}",
+    "codePlaceholder": "6-digit code",
+    "verifyCode": "Verify",
+    "resend": "Send again"
   },
   "profileTab": {
     "language": "Language",

@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, pressed } from '../../theme/tokens';
 import { supabase } from '../../lib/supabase';
-import { signInWithGoogle, sendEmailLink } from '../../lib/auth';
+import { signInWithGoogle, sendEmailCode, verifyEmailCode } from '../../lib/auth';
 
 // Finishes any auth session left open when the app was backgrounded mid-redirect.
 WebBrowser.maybeCompleteAuthSession();
@@ -42,13 +42,18 @@ export default function EmailAuthScreen() {
     onSuccess: () => router.back(),
   });
 
-  // Passwordless: email a one-time sign-in link. Stays on-screen and shows a
-  // confirmation — the tap happens in the user's inbox, not here.
-  const link = useMutation({ mutationFn: () => sendEmailLink(email) });
+  // Passwordless: email a 6-digit code, then verify it in-app. No deep link, so
+  // it works inside Expo Go (unlike Google/magic-link, which need a dev build).
+  const [code, setCode] = useState('');
+  const send = useMutation({ mutationFn: () => sendEmailCode(email) });
+  const verify = useMutation({
+    mutationFn: () => verifyEmailCode(email, code),
+    onSuccess: () => router.back(),
+  });
 
   const emailValid = email.includes('@');
   const valid = emailValid && password.length >= 6;
-  const busy = m.isPending || google.isPending || guest.isPending || link.isPending;
+  const busy = m.isPending || google.isPending || guest.isPending || send.isPending || verify.isPending;
 
   return (
     <View style={styles.screen}>
@@ -109,22 +114,43 @@ export default function EmailAuthScreen() {
       </Pressable>
       {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
 
-      {/* Passwordless — no password needed, just the email above. */}
-      {link.isSuccess ? (
-        <View style={styles.sent}>
-          <Ionicons name="mail-outline" size={18} color={colors.successInk} />
-          <AppText style={styles.sentTxt}>{t('auth.linkSent')}</AppText>
+      {/* Passwordless code — no password needed, just the email above. Works in
+          Expo Go because there's no redirect: read the code, type it here. */}
+      {send.isSuccess ? (
+        <View style={styles.codeBox}>
+          <AppText style={styles.sentTxt}>{t('auth.codeSentTo', { email })}</AppText>
+          <TextInput
+            style={styles.codeInput}
+            value={code}
+            onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
+            placeholder={t('auth.codePlaceholder')}
+            placeholderTextColor={colors.inkMuted}
+            keyboardType="number-pad"
+            autoFocus
+            maxLength={6}
+          />
+          <Pressable
+            style={({ pressed: p }) => [styles.cta, p && pressed, (code.length < 6 || busy) && styles.ctaOff]}
+            disabled={code.length < 6 || busy}
+            onPress={() => verify.mutate()}
+          >
+            <AppText style={styles.ctaTxt}>{verify.isPending ? t('auth.verifying') : t('auth.verifyCode')}</AppText>
+          </Pressable>
+          {verify.isError && <AppText style={styles.err}>{(verify.error as Error).message}</AppText>}
+          <Pressable disabled={busy} onPress={() => send.mutate()}>
+            <AppText style={styles.resend}>{send.isPending ? t('auth.sending') : t('auth.resend')}</AppText>
+          </Pressable>
         </View>
       ) : (
         <Pressable
           style={({ pressed: p }) => [styles.linkBtn, p && pressed, (!emailValid || busy) && styles.ctaOff]}
           disabled={!emailValid || busy}
-          onPress={() => link.mutate()}
+          onPress={() => send.mutate()}
         >
-          <AppText style={styles.linkTxt}>{link.isPending ? t('auth.sending') : t('auth.emailLink')}</AppText>
+          <AppText style={styles.linkTxt}>{send.isPending ? t('auth.sending') : t('auth.emailCode')}</AppText>
         </Pressable>
       )}
-      {link.isError && <AppText style={styles.err}>{(link.error as Error).message}</AppText>}
+      {send.isError && !send.isSuccess && <AppText style={styles.err}>{(send.error as Error).message}</AppText>}
 
       <Pressable style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
         <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
@@ -188,15 +214,22 @@ const styles = StyleSheet.create({
 
   linkBtn: { height: tap.min, alignItems: 'center', justifyContent: 'center' },
   linkTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.primary },
-  sent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm,
-    padding: space.md,
+  codeBox: { gap: space.sm },
+  sentTxt: { fontFamily: font.medium, fontSize: type.small, lineHeight: 19, color: colors.inkMuted },
+  codeInput: {
+    height: tap.min,
     borderRadius: radius.card,
-    backgroundColor: colors.tintSuccess,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    paddingHorizontal: space.lg,
+    fontFamily: font.semibold,
+    fontSize: type.hero,
+    letterSpacing: 8,
+    textAlign: 'center',
+    color: colors.ink,
   },
-  sentTxt: { flex: 1, fontFamily: font.medium, fontSize: type.small, lineHeight: 19, color: colors.successInk },
+  resend: { fontFamily: font.semibold, fontSize: type.small, color: colors.primary, textAlign: 'center', paddingVertical: space.sm },
   guest: {
     height: tap.min,
     alignItems: 'center',

@@ -106,16 +106,24 @@ export async function signInWithGoogle(): Promise<void> {
   if (!ok) throw new Error('Google sign-in returned no session');
 }
 
-// Passwordless email: send a one-time magic link. Tapping it in the email
-// deep-links back into the app, where the _layout listener finishes sign-in.
-// Note: the default Supabase mailer is rate-limited (a few/hour) and sends a
-// link, not a 6-digit code — the code variant needs custom SMTP + a template
-// edit. shouldCreateUser lets a first-time email sign straight in.
-export async function sendEmailLink(email: string): Promise<void> {
-  const redirectTo = Linking.createURL('auth-callback');
+// Passwordless email, 6-digit CODE flow. Unlike a magic link this needs no
+// deep-link return — the user reads the code and types it in-app — so it's the
+// one email method that works inside Expo Go (where exp:// redirects reload the
+// app and lose the session). shouldCreateUser lets a first-time email sign in.
+// Delivery of the code needs custom SMTP + a template carrying {{ .Token }}.
+export async function sendEmailCode(email: string): Promise<void> {
   const { error } = await supabase.auth.signInWithOtp({
     email: email.trim(),
-    options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
+    options: { shouldCreateUser: true },
+  });
+  if (error) throw error;
+}
+
+export async function verifyEmailCode(email: string, token: string): Promise<void> {
+  const { error } = await supabase.auth.verifyOtp({
+    email: email.trim(),
+    token: token.trim(),
+    type: 'email',
   });
   if (error) throw error;
 }
