@@ -11,7 +11,7 @@
   "home": {
     "greeting": "What needs fixing?",
     "counter": "₹{{amount}} earned by workers in {{city}}, 100% kept by them",
-    "available": "Available now",
+    "available": "Book a service",
     "searchPlaceholder": "Fan, tap, AC, geyser…",
     "earnLabel": "Paid to Vijayawada workers this week",
     "earnSub": "100% kept by them, the app takes no commission.",
@@ -19,7 +19,7 @@
     "availableNow": "Available",
     "demoCta": "See how it works",
     "demoRunning": "Matching a pro…",
-    "nextUp": "Next in Vijayawada",
+    "nextUp": "Opening soon in Vijayawada",
     "onboarding": "Onboarding pros",
     "nextUpSub": "Pros in these trades are signing up now. Get a message the day yours opens.",
     "earnSubZero": "The counter starts at the first paid job. Every rupee of it is theirs."
@@ -102,7 +102,10 @@
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
     "signInBtn": "Sign in",
-    "guest": "Continue as guest"
+    "guest": "Continue as guest",
+    "google": "Continue with Google",
+    "or": "or",
+    "googleUnavailable": "Google sign-in isn't set up yet."
   },
   "profileTab": {
     "language": "Language",
@@ -314,6 +317,8 @@
     "cta": "Get a pro now",
     "offTitle": "Turn on location",
     "offSub": "See the pros around you and send one to your exact door.",
-    "turnOn": "Turn on location"
+    "offBlockedSub": "Location is off for this app. Enable it in Settings to see pros near you.",
+    "turnOn": "Turn on location",
+    "openSettings": "Open Settings"
   }
 }

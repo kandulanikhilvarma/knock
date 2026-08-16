@@ -90,13 +90,16 @@ export const font = {
   mono: 'monospace',
 } as const;
 
+// Mobile-tuned scale. Playfair display is high-contrast, so it reads a size
+// larger than a sans at the same px — these are set for a ~390pt iPhone, where
+// the old 40/30/26 tier shouted. Telugu/Hindi line-height is floored in AppText.
 export const type = {
-  display: 40, // big editorial screen titles
-  hero: 30,
-  h1: 26,
-  h2: 21,
-  h3: 17,
-  body: 16,
+  display: 30, // big editorial screen titles
+  hero: 24,
+  h1: 20,
+  h2: 18,
+  h3: 16,
+  body: 15,
   small: 13,
   chip: 11,
 } as const;

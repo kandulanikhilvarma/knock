@@ -11,7 +11,6 @@ import { useRouter } from 'expo-router';
 import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {
   getCategories,
-  getFeaturedProvider,
   getCityEarnings,
   formatINR,
   categoryName,
@@ -19,7 +18,6 @@ import {
 } from '../../lib/queries';
 import { categoryTint } from '../../lib/categoryTint';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
-import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
 import HowItWorks from '../../components/HowItWorks';
@@ -41,7 +39,6 @@ export default function Home() {
   }, [router]);
 
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
-  const featured = useQuery({ queryKey: ['featured'], queryFn: getFeaturedProvider });
   const earnings = useQuery({ queryKey: ['earnings'], queryFn: getCityEarnings });
 
   const live = (cats.data ?? []).filter((c) => c.is_live);
@@ -79,29 +76,14 @@ export default function Home() {
           </View>
         </Pressable>
 
-        {/* Rapido-style: your location + the pros around you, up front. */}
+        {/* Rapido-style: your location + the pros around you, up front. This is
+            the primary action — book a pro to your door. */}
         <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
-
-        {/* City earnings — forest block, big serif number */}
-        <View style={styles.earn}>
-          <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
-          <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
-          <View style={styles.earnSub}>
-            {!!earnings.data && (
-              <View style={styles.live}>
-                <View style={styles.liveDot} />
-                <AppText style={styles.liveTxt}>LIVE</AppText>
-              </View>
-            )}
-            <AppText style={styles.earnSubTxt}>
-              {earnings.data ? t('home.earnSub') : t('home.earnSubZero')}
-            </AppText>
-          </View>
-        </View>
 
         {cats.isLoading && <Loading />}
         {cats.isError && <ErrorState message={(cats.error as Error)?.message} />}
 
+        {/* The core task: pick a trade. */}
         {live.length > 0 && (
           <View style={styles.section}>
             <AppText style={styles.sectionTitle}>{t('home.available')}</AppText>
@@ -109,21 +91,9 @@ export default function Home() {
           </View>
         )}
 
-        {featured.data && (
-          <View style={styles.section}>
-            <AppText style={styles.sectionTitle}>{t('home.nearYou')}</AppText>
-            <ProviderCard
-              provider={featured.data}
-              onPress={() =>
-                router.push({ pathname: '/provider/[id]', params: { id: featured.data!.user_id } })
-              }
-            />
-          </View>
-        )}
+        <HowItWorks />
 
         <TrustPillars />
-
-        <HowItWorks />
 
         {soon.length > 0 && (
           <View style={styles.section}>
@@ -157,6 +127,23 @@ export default function Home() {
             </View>
           </View>
         )}
+
+        {/* City earnings — proof strip at the foot, out of the booking path. */}
+        <View style={styles.earn}>
+          <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
+          <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
+          <View style={styles.earnSub}>
+            {!!earnings.data && (
+              <View style={styles.live}>
+                <View style={styles.liveDot} />
+                <AppText style={styles.liveTxt}>LIVE</AppText>
+              </View>
+            )}
+            <AppText style={styles.earnSubTxt}>
+              {earnings.data ? t('home.earnSub') : t('home.earnSubZero')}
+            </AppText>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -197,10 +184,11 @@ const styles = StyleSheet.create({
   headline: {
     fontFamily: font.displayBold,
     fontSize: type.display,
-    lineHeight: type.display + 4,
+    lineHeight: type.display + 3,
+    letterSpacing: -0.5,
     color: colors.ink,
-    marginTop: space.md,
-    maxWidth: '90%',
+    marginTop: space.sm,
+    maxWidth: '92%',
   },
 
   search: {
@@ -228,8 +216,9 @@ const styles = StyleSheet.create({
   earnLbl: { fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
   earnNum: {
     fontFamily: font.displayBold,
-    fontSize: 46,
-    lineHeight: 52,
+    fontSize: 38,
+    lineHeight: 44,
+    letterSpacing: -0.5,
     color: colors.onDark,
     marginTop: 2,
   },
