@@ -8,10 +8,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
+import { getSavedAddresses } from '../../lib/addresses';
 import { useSession } from '../../lib/session';
 import CategoryArt from '../../components/CategoryArt';
 import { categoryTint } from '../../lib/categoryTint';
 import { Loading } from '../../components/StateView';
+
+// §4: AC/appliance splits into these at booking time — the pro needs to know
+// which machine before they arrive. Prepended to the description.
+const APPLIANCES = ['ac', 'fridge', 'washing', 'tv', 'geyser', 'ro'] as const;
 
 export default function NewBookingScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -25,15 +30,21 @@ export default function NewBookingScreen() {
 
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
+  const [appliance, setAppliance] = useState<string | null>(null);
+
+  const isAppliance = slug === 'ac_appliance';
+  const saved = useQuery({ queryKey: ['addresses'], queryFn: getSavedAddresses, enabled: !!session });
 
   const m = useMutation({
-    mutationFn: () =>
-      createBooking({
+    mutationFn: () => {
+      const desc = appliance ? `${t(`booking.appl_${appliance}`)}: ${description.trim()}` : description.trim();
+      return createBooking({
         categoryId: category?.id ?? null,
         categorySlug: slug ?? '',
-        description: description.trim(),
+        description: desc,
         address: address.trim(),
-      }),
+      });
+    },
     onSuccess: (id) => router.replace({ pathname: '/booking/[id]', params: { id } }),
   });
 
@@ -73,6 +84,26 @@ export default function NewBookingScreen() {
         <AppText style={styles.cat}>{title}</AppText>
       )}
 
+      {isAppliance && (
+        <>
+          <AppText style={styles.label}>{t('booking.applianceLabel')}</AppText>
+          <View style={styles.chips}>
+            {APPLIANCES.map((a) => {
+              const on = appliance === a;
+              return (
+                <Pressable
+                  key={a}
+                  style={[styles.chip, on && styles.chipOn]}
+                  onPress={() => setAppliance(on ? null : a)}
+                >
+                  <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{t(`booking.appl_${a}`)}</AppText>
+                </Pressable>
+              );
+            })}
+          </View>
+        </>
+      )}
+
       <AppText style={styles.label}>{t('booking.descLabel')}</AppText>
       <TextInput
         style={[styles.input, styles.multiline]}
@@ -84,6 +115,16 @@ export default function NewBookingScreen() {
       />
 
       <AppText style={styles.label}>{t('booking.addressLabel')}</AppText>
+      {(saved.data?.length ?? 0) > 0 && (
+        <View style={styles.chips}>
+          {saved.data!.map((a) => (
+            <Pressable key={a.id} style={styles.savedChip} onPress={() => setAddress(a.line)}>
+              <Ionicons name="location" size={13} color={colors.primary} />
+              <AppText style={styles.savedChipTxt}>{a.label}</AppText>
+            </Pressable>
+          ))}
+        </View>
+      )}
       <TextInput
         style={[styles.input, styles.multiline]}
         value={address}
@@ -139,6 +180,30 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   multiline: { minHeight: 84, textAlignVertical: 'top' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: 2 },
+  chip: {
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+  },
+  chipOn: { backgroundColor: colors.primary, borderColor: colors.primary },
+  chipTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.ink },
+  chipTxtOn: { color: colors.onDark },
+  savedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.tintSuccess,
+  },
+  savedChipTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.successInk },
   coinRow: {
     flexDirection: 'row',
     alignItems: 'center',
