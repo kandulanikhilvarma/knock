@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useState } from 'react';
 import { useSession } from '../../lib/session';
 import { signOut, deleteAccount } from '../../lib/auth';
@@ -208,10 +208,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.line,
     padding: space.lg,
     gap: space.xs,
+    ...shadow.soft,
   },
   linkRow: {
     flexDirection: 'row',
@@ -219,10 +218,9 @@ const styles = StyleSheet.create({
     gap: space.md,
     minHeight: tap.min,
     borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.line,
     backgroundColor: colors.surface,
     paddingHorizontal: space.md,
+    ...shadow.soft,
   },
   linkIcon: { width: 34, height: 34, borderRadius: radius.chip, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' },
   linkTxt: { flex: 1, fontFamily: font.teBold, fontSize: type.body, color: colors.ink },

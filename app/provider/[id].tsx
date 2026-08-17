@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { getProvider, providerName } from '../../lib/queries';
 import { getProviderReviews } from '../../lib/bookings';
 import Avatar from '../../components/Avatar';
@@ -219,12 +219,11 @@ const styles = StyleSheet.create({
   fact: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.line,
     borderRadius: radius.chip,
     padding: space.md,
     alignItems: 'center',
     gap: 5,
+    ...shadow.soft,
   },
   factTxt: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted, textAlign: 'center', lineHeight: 14 },
 
@@ -252,10 +251,9 @@ const styles = StyleSheet.create({
 
   price: {
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.line,
     borderRadius: radius.chip,
     padding: space.md,
+    ...shadow.soft,
   },
   priceLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted },
   priceRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 },
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
 
   reviews: { gap: space.sm, marginTop: space.xs },
   reviewsTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
-  reviewRow: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, borderRadius: radius.chip, padding: space.md, gap: 3 },
+  reviewRow: { backgroundColor: colors.surface, borderRadius: radius.chip, padding: space.md, gap: 3, ...shadow.soft },
   reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.gold },
   reviewTags: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
   reviewBody: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
