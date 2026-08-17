@@ -192,6 +192,8 @@
     "verifyPlaceholder": "PIN",
     "verifyBtn": "Verify arrival",
     "verifyWrong": "Wrong code, check with the pro.",
+    "scanQr": "Scan the QR",
+    "orPin": "or enter PIN",
     "payTitle": "Pay the pro directly",
     "paySub": "Scan with any UPI app. The app takes ₹0.",
     "payInApp": "Open UPI app",
@@ -327,6 +329,12 @@
     "s2sub": "Scan the code the pro shows before you let anyone in. The job cannot start without it.",
     "s3": "Pay them, directly",
     "s3sub": "UPI straight to the pro. No booking fee, no commission, nothing held in between."
+  },
+  "scan": {
+    "permTitle": "Camera access",
+    "permSub": "Allow the camera to scan the pro's QR code at your door.",
+    "allow": "Allow camera",
+    "hint": "Point at the pro's QR code"
   },
   "addresses": {
     "title": "Saved addresses",

@@ -21,6 +21,7 @@ import CategoryArt from '../../components/CategoryArt';
 import SafetyBar from '../../components/SafetyBar';
 import { Loading, ErrorState } from '../../components/StateView';
 import PhotoGrid from '../../components/PhotoGrid';
+import QrScanner from '../../components/QrScanner';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
@@ -313,13 +314,27 @@ function CustomerCard({ customerId }: { customerId: string }) {
 function VerifyPanel({ bookingId }: { bookingId: string }) {
   const { t } = useTranslation();
   const [pin, setPin] = useState('');
-  const m = useMutation({ mutationFn: () => verifyArrival(bookingId, pin.trim()) });
+  const [scanOpen, setScanOpen] = useState(false);
+  // Accepts the 4-digit PIN OR the scanned QR token — the edge fn checks both.
+  const m = useMutation({ mutationFn: (code: string) => verifyArrival(bookingId, code) });
   const wrong = m.data && !m.data.verified;
 
   return (
     <View style={styles.verify}>
       <AppText style={styles.codeTitle}>{t('booking.verifyTitle')}</AppText>
       <AppText style={styles.codeSub}>{t('booking.verifySub')}</AppText>
+
+      <Pressable style={styles.scanBtn} disabled={m.isPending} onPress={() => setScanOpen(true)}>
+        <Ionicons name="qr-code-outline" size={20} color={colors.onDark} />
+        <AppText style={styles.scanTxt}>{t('booking.scanQr')}</AppText>
+      </Pressable>
+
+      <View style={styles.orRow}>
+        <View style={styles.orLine} />
+        <AppText style={styles.orTxt}>{t('booking.orPin')}</AppText>
+        <View style={styles.orLine} />
+      </View>
+
       <TextInput
         style={styles.pinInput}
         value={pin}
@@ -332,11 +347,13 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
       <Pressable
         style={[styles.cta, (pin.length < 4 || m.isPending) && styles.ctaOff]}
         disabled={pin.length < 4 || m.isPending}
-        onPress={() => m.mutate()}
+        onPress={() => m.mutate(pin.trim())}
       >
         <AppText style={styles.ctaTxt}>{t('booking.verifyBtn')}</AppText>
       </Pressable>
       {wrong && <AppText style={styles.err}>{t('booking.verifyWrong')}</AppText>}
+
+      <QrScanner visible={scanOpen} onClose={() => setScanOpen(false)} onScan={(v) => m.mutate(v.trim())} />
     </View>
   );
 }
@@ -504,6 +521,14 @@ const styles = StyleSheet.create({
   pin: { fontFamily: font.mono, fontSize: 34, letterSpacing: 8, color: colors.gold, fontWeight: '700' },
 
   verify: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm },
+  scanBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.sm,
+    height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, marginTop: space.xs,
+  },
+  scanTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
+  orRow: { flexDirection: 'row', alignItems: 'center', gap: space.md },
+  orLine: { flex: 1, height: 1, backgroundColor: colors.line },
+  orTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
   pinInput: {
     height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.bg,
     textAlign: 'center', fontFamily: font.mono, fontSize: 24, letterSpacing: 8, color: colors.ink,

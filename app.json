@@ -40,7 +40,13 @@
         }
       ],
       "@sentry/react-native",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived."
+        }
+      ]
     ]
   }
 }
