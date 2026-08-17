@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
+import { View, Pressable, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
-import { Stack } from 'expo-router';
+import { Stack, type ErrorBoundaryProps } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -27,7 +28,8 @@ import {
 } from '@expo-google-fonts/playfair-display';
 
 import { useTranslation } from 'react-i18next';
-import { colors, font } from '../theme/tokens';
+import AppText from '../components/AppText';
+import { colors, font, space, radius, type, tap } from '../theme/tokens';
 
 import { initSentry, Sentry } from '../lib/sentry';
 import { setSessionFromUrl } from '../lib/auth';
@@ -118,6 +120,32 @@ function RootLayout() {
     </QueryClientProvider>
   );
 }
+
+// expo-router renders this instead of a white screen when a child route throws
+// during render. `retry` re-mounts the segment. Sentry.wrap (below) still gets
+// the report; this is the recovery UI the user sees.
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  const { t } = useTranslation();
+  return (
+    <View style={eb.screen}>
+      <AppText style={eb.title}>{t('common.crashTitle')}</AppText>
+      <AppText style={eb.sub}>{t('common.crashSub')}</AppText>
+      {__DEV__ && <AppText style={eb.detail}>{error.message}</AppText>}
+      <Pressable style={eb.cta} onPress={retry} accessibilityRole="button">
+        <AppText style={eb.ctaTxt}>{t('common.crashRetry')}</AppText>
+      </Pressable>
+    </View>
+  );
+}
+
+const eb = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
+  title: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink, textAlign: 'center' },
+  sub: { fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted, textAlign: 'center' },
+  detail: { fontFamily: font.mono, fontSize: type.small, color: colors.danger, textAlign: 'center', marginTop: space.sm },
+  cta: { marginTop: space.md, height: tap.min, paddingHorizontal: space.xl, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
+});
 
 // Wraps the tree so unhandled render errors reach Sentry with the route stack.
 export default Sentry.wrap(RootLayout);

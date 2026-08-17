@@ -250,7 +250,10 @@
     "zeroNote": "Keep 100%. The app takes no commission."
   },
   "common": {
-    "onboarding": "Onboarding pros"
+    "onboarding": "Onboarding pros",
+    "crashTitle": "Something went wrong",
+    "crashSub": "Try again — your data is safe.",
+    "crashRetry": "Try again"
   },
   "dispatch": {
     "title": "Finding you a pro",
