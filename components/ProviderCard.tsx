@@ -22,7 +22,7 @@ export default function ProviderCard({
   const km = distanceKm == null ? null : distanceKm < 1 ? '<1' : distanceKm.toFixed(1);
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <Pressable style={styles.card} onPress={onPress} accessibilityRole="button">
       <View style={styles.top}>
         <Avatar name={name} photoUrl={provider.photo_url} />
         <View style={styles.info}>

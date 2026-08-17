@@ -140,7 +140,13 @@ export default function ChatThread() {
           placeholderTextColor={colors.inkMuted}
           multiline
         />
-        <Pressable style={[styles.send, !draft.trim() && styles.sendOff]} disabled={!draft.trim()} onPress={send}>
+        <Pressable
+          style={[styles.send, !draft.trim() && styles.sendOff]}
+          disabled={!draft.trim()}
+          onPress={send}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.send')}
+        >
           <Ionicons name="arrow-up" size={20} color={colors.onDark} />
         </Pressable>
       </View>

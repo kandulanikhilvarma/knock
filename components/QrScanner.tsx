@@ -56,7 +56,13 @@ export default function QrScanner({
         )}
 
         <SafeAreaView style={styles.closeWrap} pointerEvents="box-none">
-          <Pressable style={styles.close} hitSlop={10} onPress={onClose}>
+          <Pressable
+            style={styles.close}
+            hitSlop={10}
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel={t('a11y.close')}
+          >
             <Ionicons name="close" size={22} color={colors.onDark} />
           </Pressable>
         </SafeAreaView>

@@ -363,5 +363,10 @@
     "offBlockedSub": "Location is off for this app. Enable it in Settings to see pros near you.",
     "turnOn": "Turn on location",
     "openSettings": "Open Settings"
+  },
+  "a11y": {
+    "send": "Send message",
+    "removePhoto": "Remove photo",
+    "close": "Close"
   }
 }

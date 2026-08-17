@@ -4,10 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type } from '../theme/tokens';
 
-const LANGS: { code: string; label: string }[] = [
-  { code: 'en', label: 'EN' },
-  { code: 'te', label: 'తె' },
-  { code: 'hi', label: 'हि' },
+// `name` is the language's endonym — read aloud by screen readers, where the
+// two-glyph chip label ("EN", "తె") would be meaningless.
+const LANGS: { code: string; label: string; name: string }[] = [
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'te', label: 'తె', name: 'తెలుగు' },
+  { code: 'hi', label: 'हि', name: 'हिन्दी' },
 ];
 
 export const LANG_KEY = 'app.lang';
@@ -31,6 +33,9 @@ export default function LanguageSwitcher() {
             onPress={() => pick(l.code)}
             style={[styles.chip, on && styles.chipOn]}
             hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={l.name}
+            accessibilityState={{ selected: on }}
           >
             <AppText style={[styles.txt, on && styles.txtOn]}>{l.label}</AppText>
           </Pressable>

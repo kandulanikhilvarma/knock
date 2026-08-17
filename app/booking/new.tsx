@@ -132,7 +132,13 @@ export default function NewBookingScreen() {
         {photos.map((p, i) => (
           <View key={p.uri} style={styles.thumbWrap}>
             <Image source={{ uri: p.uri }} style={styles.thumb} />
-            <Pressable style={styles.thumbX} hitSlop={6} onPress={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}>
+            <Pressable
+              style={styles.thumbX}
+              hitSlop={6}
+              onPress={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
+              accessibilityRole="button"
+              accessibilityLabel={t('a11y.removePhoto')}
+            >
               <Ionicons name="close" size={12} color={colors.onDark} />
             </Pressable>
           </View>
