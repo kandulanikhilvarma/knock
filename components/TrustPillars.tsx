@@ -36,7 +36,7 @@ export default function TrustPillars() {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.md, ...shadow.card },
+  card: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: space.md, ...shadow.soft },
   title: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   grid: { gap: space.md },
   pillar: { flexDirection: 'row', gap: space.md, alignItems: 'center' },

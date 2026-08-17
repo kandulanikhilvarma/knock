@@ -68,8 +68,6 @@ const styles = StyleSheet.create({
     padding: space.lg,
     borderRadius: radius.card,
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.line,
     ...shadow.soft,
   },
   chip: {
