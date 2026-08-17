@@ -126,6 +126,19 @@ Or "Continue as guest" for an anonymous customer.
 - [ ] **Expo account** → I run `eas login`, cut Android build, start 14-day Play clock
 - [ ] **App name** (§1) → locks bundle ID before first build
 
+## Apple-grade UI polish (2026-08-18)
+- [x] Borderless soft cards app-wide (surfaces float on `shadow.soft`, borders only on inputs/buttons/proof).
+- [x] Optical letter-spacing on Latin serif titles — auto in `AppText`, one chokepoint.
+- [x] Filled active tab icons (iOS convention) in `(tabs)/_layout`.
+- [x] Tactile press feedback on primary CTAs via `components/Touchable`.
+- [x] Gentle staggered fade-in on Home (`components/FadeIn`, Animated/Expo-Go safe).
+- [ ] **Line-height rhythm system** — HELD, not shipped. A global `lead` ratio in tokens would
+      shift vertical rhythm on every screen; can't eyeball-verify on device for ~1 week, so not
+      worth shipping blind. Per-screen line-heights already tuned. Do this ON-DEVICE: add ratios,
+      retrofit, screenshot Telugu-first.
+- [ ] Extend press feedback + FadeIn to secondary rows (linkRows, list cards) and other screens
+      once the dev build lets motion be tuned live.
+
 ## Debt / cleanup
 - [ ] `npm audit` — 21 vulns (7 mod, 14 high) from scaffold transitive deps. Review at P7, don't `--force` now.
 - [ ] `expo-symbols` ships 7 font-weight modules via expo-router; only `regular` used. Upstream, not ours. P7.
