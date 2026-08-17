@@ -157,6 +157,14 @@ Or "Continue as guest" for an anonymous customer.
       provider consenting — breaks the "provider agreed to this job" chain the doorstep-verify proof assumes.
       Fine for solo demo; remove or gate behind a debug flag before real users. Same for `seed-testers`.
 - [ ] Enable **leaked-password protection** (HaveIBeenPwned) — Supabase dashboard → Auth → Password. One toggle.
+- [x] **Write-path edge-fn integrity audit** — all server-enforced, no client forgery: `respond`
+      (provider consent + atomic first-accept-wins on `status='finding_pro'`), `swap` (customer-only,
+      one-free `swap_used` guard), `submit-review` (done + customer + unique constraint), `job-action`
+      (done: assigned pro only; paid: party only; status-gated, no double-count), `verify-arrival`
+      (customer + assigned + token/PIN). Only `demo-accept` violates the model (above).
+- [x] **Error-state coverage** — no catastrophic silent failures; screens degrade via `data ?? []`→`Empty`
+      or safe defaults, and the new root `ErrorBoundary` catches render throws. MINOR: `search`/`dispatch`
+      show a dropped-network error as "nothing found" rather than a retry prompt — polish later, low value now.
 
 ## Debt / cleanup
 - [ ] `npm audit` — build-toolchain only (metro/expo/image-size), 0 runtime. Don't `--force`; clears on SDK bump.
