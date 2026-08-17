@@ -17,6 +17,7 @@ import { getProvider, getCategories, categoryName, providerName, getCustomerCont
 import { categoryTint } from '../../lib/categoryTint';
 import { useSession } from '../../lib/session';
 import ProviderCard from '../../components/ProviderCard';
+import Touchable from '../../components/Touchable';
 import CategoryArt from '../../components/CategoryArt';
 import SafetyBar from '../../components/SafetyBar';
 import { Loading, ErrorState } from '../../components/StateView';
@@ -82,13 +83,13 @@ export default function BookingStatusScreen() {
         <SafetyBar bookingId={booking.id} />
       )}
       {canChat && (
-        <Pressable
+        <Touchable
           style={styles.chatBtn}
           onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: booking.id } })}
         >
           <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.ink} />
           <AppText style={styles.chatTxt}>{t('chat.open')}</AppText>
-        </Pressable>
+        </Touchable>
       )}
     </ScrollView>
   );
@@ -184,18 +185,18 @@ function ProviderPanel({ booking }: { booking: Booking }) {
       {booking.status === 'in_progress' && (
         <View style={{ gap: space.md }}>
           <Proof text={t('booking.verifiedAtDoor')} />
-          <Pressable style={styles.cta} disabled={done.isPending} onPress={() => done.mutate()}>
+          <Touchable style={styles.cta} disabled={done.isPending} onPress={() => done.mutate()}>
             <AppText style={styles.ctaTxt}>{done.isPending ? '…' : t('booking.markDone')}</AppText>
-          </Pressable>
+          </Touchable>
         </View>
       )}
 
       {booking.status === 'done' && !booking.paid_at && (
         <View style={styles.payCard}>
           <AppText style={styles.codeTitle}>{t('booking.receivePayTitle')}</AppText>
-          <Pressable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
+          <Touchable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
             <AppText style={styles.ctaTxt}>{t('booking.markReceived')}</AppText>
-          </Pressable>
+          </Touchable>
         </View>
       )}
 
@@ -227,9 +228,9 @@ function CustomerPanel({ booking }: { booking: Booking }) {
         <>
           <AssignedPro providerId={booking.assigned_provider_id} />
           {!booking.swap_used && (
-            <Pressable style={styles.swap} disabled={swap.isPending} onPress={() => swap.mutate()}>
+            <Touchable style={styles.swap} disabled={swap.isPending} onPress={() => swap.mutate()}>
               <AppText style={styles.swapTxt}>{swap.isPending ? t('booking.swapping') : t('booking.swap')}</AppText>
-            </Pressable>
+            </Touchable>
           )}
           <VerifyPanel bookingId={booking.id} />
         </>
@@ -324,10 +325,10 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
       <AppText style={styles.codeTitle}>{t('booking.verifyTitle')}</AppText>
       <AppText style={styles.codeSub}>{t('booking.verifySub')}</AppText>
 
-      <Pressable style={styles.scanBtn} disabled={m.isPending} onPress={() => setScanOpen(true)}>
+      <Touchable style={styles.scanBtn} disabled={m.isPending} onPress={() => setScanOpen(true)}>
         <Ionicons name="qr-code-outline" size={20} color={colors.onDark} />
         <AppText style={styles.scanTxt}>{t('booking.scanQr')}</AppText>
-      </Pressable>
+      </Touchable>
 
       <View style={styles.orRow}>
         <View style={styles.orLine} />
@@ -344,13 +345,13 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
         keyboardType="number-pad"
         maxLength={4}
       />
-      <Pressable
+      <Touchable
         style={[styles.cta, (pin.length < 4 || m.isPending) && styles.ctaOff]}
         disabled={pin.length < 4 || m.isPending}
         onPress={() => m.mutate(pin.trim())}
       >
         <AppText style={styles.ctaTxt}>{t('booking.verifyBtn')}</AppText>
-      </Pressable>
+      </Touchable>
       {wrong && <AppText style={styles.err}>{t('booking.verifyWrong')}</AppText>}
 
       <QrScanner visible={scanOpen} onClose={() => setScanOpen(false)} onScan={(v) => m.mutate(v.trim())} />
@@ -383,16 +384,16 @@ function PaymentPanel({ booking }: { booking: Booking }) {
       {amount ? <AppText style={styles.amount}>₹{amount}</AppText> : null}
 
       {link && (
-        <Pressable style={styles.cta} onPress={() => Linking.openURL(link)}>
+        <Touchable style={styles.cta} onPress={() => Linking.openURL(link)}>
           <AppText style={styles.ctaTxt}>{t('booking.payInApp')}</AppText>
-        </Pressable>
+        </Touchable>
       )}
-      <Pressable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('upi')}>
+      <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('upi')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidUpi')}</AppText>
-      </Pressable>
-      <Pressable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('cash')}>
+      </Touchable>
+      <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('cash')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidCash')}</AppText>
-      </Pressable>
+      </Touchable>
     </View>
   );
 }
@@ -427,9 +428,9 @@ function ReviewPanel({ booking }: { booking: Booking }) {
           </Pressable>
         ))}
       </View>
-      <Pressable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
+      <Touchable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
         <AppText style={styles.ctaTxt}>{t('booking.reviewSubmit')}</AppText>
-      </Pressable>
+      </Touchable>
       {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </View>
   );

@@ -11,6 +11,7 @@ import { getMyBookings } from '../../lib/bookings';
 import { getCategories, categoryName } from '../../lib/queries';
 import { categoryTint } from '../../lib/categoryTint';
 import CategoryArt from '../../components/CategoryArt';
+import Touchable from '../../components/Touchable';
 import StatusPill from '../../components/StatusPill';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -78,9 +79,9 @@ function SignedOut({ cta }: { cta: () => void }) {
       </View>
       <AppText style={styles.soTitle}>{t('booking.signInFirst')}</AppText>
       <AppText style={styles.soSub}>{t('bookingsTab.signInSub')}</AppText>
-      <Pressable style={styles.soCta} onPress={cta}>
+      <Touchable style={styles.soCta} onPress={cta}>
         <AppText style={styles.soCtaTxt}>{t('profileTab.signIn')}</AppText>
-      </Pressable>
+      </Touchable>
     </View>
   );
 }

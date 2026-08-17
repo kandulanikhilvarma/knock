@@ -11,6 +11,7 @@ import { useSession } from '../../lib/session';
 import { signOut, deleteAccount } from '../../lib/auth';
 import { getMyProviderProfile, setAvailability, type Availability } from '../../lib/provider';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
+import Touchable from '../../components/Touchable';
 import { Loading } from '../../components/StateView';
 
 const STATES: Availability[] = ['available', 'busy', 'paused'];
@@ -174,9 +175,9 @@ export default function Profile() {
             <DeleteAccount />
           </>
         ) : (
-          <Pressable style={styles.cta} onPress={() => router.push('/auth/email')}>
+          <Touchable style={styles.cta} onPress={() => router.push('/auth/email')}>
             <AppText style={styles.ctaTxt}>{t('profileTab.signIn')}</AppText>
-          </Pressable>
+          </Touchable>
         )}
       </ScrollView>
     </SafeAreaView>

@@ -12,6 +12,7 @@ import {
   joinWaitlist,
 } from '../../lib/queries';
 import ProviderCard from '../../components/ProviderCard';
+import Touchable from '../../components/Touchable';
 import CategoryArt from '../../components/CategoryArt';
 import { categoryTint } from '../../lib/categoryTint';
 import { track } from '../../lib/analytics';
@@ -125,13 +126,13 @@ function Waitlist({
           maxLength={10}
         />
       </View>
-      <Pressable
+      <Touchable
         style={[styles.cta, (!valid || m.isPending) && styles.ctaOff]}
         disabled={!valid || m.isPending}
         onPress={() => m.mutate()}
       >
         <AppText style={styles.ctaTxt}>{t('category.notifyMe')}</AppText>
-      </Pressable>
+      </Touchable>
       {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </ScrollView>
   );

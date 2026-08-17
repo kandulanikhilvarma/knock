@@ -13,6 +13,7 @@ import { pickImages, uploadPhotos, type PickedPhoto } from '../../lib/photos';
 import { supabase } from '../../lib/supabase';
 import { useSession } from '../../lib/session';
 import CategoryArt from '../../components/CategoryArt';
+import Touchable from '../../components/Touchable';
 import { categoryTint } from '../../lib/categoryTint';
 import { Loading } from '../../components/StateView';
 
@@ -72,9 +73,9 @@ export default function NewBookingScreen() {
         </View>
         <AppText style={styles.gateTitle}>{t('booking.signInFirst')}</AppText>
         <AppText style={styles.gateSub}>{t('bookingsTab.signInSub')}</AppText>
-        <Pressable style={styles.gateCta} onPress={() => router.push('/auth/email')}>
+        <Touchable style={styles.gateCta} onPress={() => router.push('/auth/email')}>
           <AppText style={styles.ctaTxt}>{t('booking.signInCta')}</AppText>
-        </Pressable>
+        </Touchable>
       </View>
     );
   }
@@ -172,13 +173,13 @@ export default function NewBookingScreen() {
         <AppText style={styles.coinNote}>{t('booking.zeroNote')}</AppText>
       </View>
 
-      <Pressable
+      <Touchable
         style={[styles.cta, (!valid || m.isPending) && styles.ctaOff]}
         disabled={!valid || m.isPending}
         onPress={() => m.mutate()}
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</AppText>
-      </Pressable>
+      </Touchable>
       {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
     </ScrollView>
   );
