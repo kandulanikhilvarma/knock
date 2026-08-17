@@ -23,6 +23,7 @@ import TrustPillars from '../../components/TrustPillars';
 import HowItWorks from '../../components/HowItWorks';
 import OrganicLines from '../../components/OrganicLines';
 import NearbyProviders from '../../components/NearbyProviders';
+import FadeIn from '../../components/FadeIn';
 import { Loading, ErrorState } from '../../components/StateView';
 
 export default function Home() {
@@ -53,7 +54,7 @@ export default function Home() {
     <SafeAreaView style={styles.screen} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Hero — organic motif behind an editorial serif headline */}
-        <View style={styles.hero}>
+        <FadeIn style={styles.hero}>
           <OrganicLines color={colors.primary} opacity={0.1} />
           <View style={styles.heroTop}>
             <View style={styles.loc}>
@@ -63,22 +64,26 @@ export default function Home() {
             <LanguageSwitcher />
           </View>
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
-        </View>
+        </FadeIn>
 
-        <Pressable
-          style={({ pressed: p }) => [styles.search, p && pressed]}
-          onPress={() => router.push('/search')}
-        >
-          <Ionicons name="search" size={18} color={colors.inkMuted} />
-          <AppText style={styles.searchPh}>{t('home.searchPlaceholder')}</AppText>
-          <View style={styles.mic}>
-            <Ionicons name="arrow-forward" size={16} color={colors.onDark} />
-          </View>
-        </Pressable>
+        <FadeIn delay={70}>
+          <Pressable
+            style={({ pressed: p }) => [styles.search, p && pressed]}
+            onPress={() => router.push('/search')}
+          >
+            <Ionicons name="search" size={18} color={colors.inkMuted} />
+            <AppText style={styles.searchPh}>{t('home.searchPlaceholder')}</AppText>
+            <View style={styles.mic}>
+              <Ionicons name="arrow-forward" size={16} color={colors.onDark} />
+            </View>
+          </Pressable>
+        </FadeIn>
 
         {/* Rapido-style: your location + the pros around you, up front. This is
             the primary action — book a pro to your door. */}
-        <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
+        <FadeIn delay={140}>
+          <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
+        </FadeIn>
 
         {cats.isLoading && <Loading />}
         {cats.isError && <ErrorState message={(cats.error as Error)?.message} />}
