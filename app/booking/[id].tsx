@@ -20,6 +20,7 @@ import ProviderCard from '../../components/ProviderCard';
 import CategoryArt from '../../components/CategoryArt';
 import SafetyBar from '../../components/SafetyBar';
 import { Loading, ErrorState } from '../../components/StateView';
+import PhotoGrid from '../../components/PhotoGrid';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
@@ -160,6 +161,7 @@ function ProviderPanel({ booking }: { booking: Booking }) {
         <AppText style={styles.addrLbl}>{t('booking.jobAddress')}</AppText>
         <AppText style={styles.addrTxt}>{booking.address ?? '·'}</AppText>
         {booking.description ? <AppText style={styles.addrDesc}>{booking.description}</AppText> : null}
+        {booking.photos?.length ? <PhotoGrid paths={booking.photos} /> : null}
       </View>
 
       {booking.status === 'assigned' && (

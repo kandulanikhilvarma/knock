@@ -12,7 +12,8 @@
       "bundleIdentifier": "com.servicesapp.app",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Used to find professionals near you and to show the one on the way to your door.",
-        "NSCameraUsageDescription": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived."
+        "NSCameraUsageDescription": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived.",
+        "NSPhotoLibraryUsageDescription": "Used to attach photos of the problem to your booking."
       }
     },
     "android": {

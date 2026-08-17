@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,8 @@ import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { getSavedAddresses } from '../../lib/addresses';
+import { pickImages, uploadPhotos, type PickedPhoto } from '../../lib/photos';
+import { supabase } from '../../lib/supabase';
 import { useSession } from '../../lib/session';
 import CategoryArt from '../../components/CategoryArt';
 import { categoryTint } from '../../lib/categoryTint';
@@ -31,19 +33,30 @@ export default function NewBookingScreen() {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [appliance, setAppliance] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
 
   const isAppliance = slug === 'ac_appliance';
   const saved = useQuery({ queryKey: ['addresses'], queryFn: getSavedAddresses, enabled: !!session });
+  const pick = useMutation({
+    mutationFn: () => pickImages(5),
+    onSuccess: (p) => p.length && setPhotos((prev) => [...prev, ...p].slice(0, 5)),
+  });
 
   const m = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       const desc = appliance ? `${t(`booking.appl_${appliance}`)}: ${description.trim()}` : description.trim();
-      return createBooking({
+      const id = await createBooking({
         categoryId: category?.id ?? null,
         categorySlug: slug ?? '',
         description: desc,
         address: address.trim(),
       });
+      // Upload after the booking exists so photos live under this booking's folder.
+      if (photos.length) {
+        const paths = await uploadPhotos(id, photos);
+        await supabase.from('bookings').update({ photos: paths }).eq('id', id);
+      }
+      return id;
     },
     onSuccess: (id) => router.replace({ pathname: '/booking/[id]', params: { id } }),
   });
@@ -114,6 +127,24 @@ export default function NewBookingScreen() {
         multiline
       />
 
+      <View style={styles.photoRow}>
+        {photos.map((p, i) => (
+          <View key={p.uri} style={styles.thumbWrap}>
+            <Image source={{ uri: p.uri }} style={styles.thumb} />
+            <Pressable style={styles.thumbX} hitSlop={6} onPress={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}>
+              <Ionicons name="close" size={12} color={colors.onDark} />
+            </Pressable>
+          </View>
+        ))}
+        {photos.length < 5 && (
+          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+            <Ionicons name="camera-outline" size={22} color={colors.primary} />
+            <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('booking.addPhotos')}</AppText>
+          </Pressable>
+        )}
+      </View>
+      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+
       <AppText style={styles.label}>{t('booking.addressLabel')}</AppText>
       {(saved.data?.length ?? 0) > 0 && (
         <View style={styles.chips}>
@@ -180,6 +211,18 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   multiline: { minHeight: 84, textAlignVertical: 'top' },
+  photoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.sm },
+  thumbWrap: { position: 'relative' },
+  thumb: { width: 72, height: 72, borderRadius: radius.chip, backgroundColor: colors.line2 },
+  thumbX: {
+    position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: 10,
+    backgroundColor: colors.ink, alignItems: 'center', justifyContent: 'center',
+  },
+  addPhoto: {
+    width: 72, height: 72, borderRadius: radius.chip, borderWidth: 1, borderColor: colors.line,
+    borderStyle: 'dashed', backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', gap: 2,
+  },
+  addPhotoTxt: { fontFamily: font.medium, fontSize: type.chip, color: colors.primary },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: 2 },
   chip: {
     paddingHorizontal: space.md,
