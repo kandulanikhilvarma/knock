@@ -139,8 +139,27 @@ Or "Continue as guest" for an anonymous customer.
 - [ ] Extend press feedback + FadeIn to secondary rows (linkRows, list cards) and other screens
       once the dev build lets motion be tuned live.
 
+## Security + hardening audit (2026-08-18) — verifiable-without-device pass
+- [x] **Secrets in client**: clean. No `service_role`/keys in `app/ lib/ components/` (anon key + RLS only).
+- [x] **RLS crown jewels verified** (pg_policies): all correctly uid-scoped —
+      `job_tokens` → `is_assigned_provider(booking_id)` (door PIN/QR readable by assigned pro only);
+      `profiles` (phone PII) → own or the pro on an active booking; `messages` → participants,
+      insert checks `sender_id=auth.uid()`; `saved_addresses` → owner-only; `bookings`/`dispatch_offers`
+      → own + offered/assigned. Advisor "anonymous access" WARNs are false alarms: policies gate on
+      `auth.uid()`, which is NULL for a true anon → 0 rows. "Guest" = anon-authenticated (real uid), intended.
+- [x] **Error boundary** added (`app/_layout.tsx` `ErrorBoundary`) — themed retry screen replaces the
+      white-screen a render crash used to cause. Sentry.wrap still reports.
+- [x] **npm audit** re-triaged: 19 vulns (10 high) ALL build-toolchain (metro/@expo/cli/image-size DoS
+      parsers) — build-time only, nothing in the shipped runtime bundle. `--force` breaks locked SDK 57.
+      Hold until an SDK bump.
+- [ ] **BLOCK before public launch — `demo-accept` edge fn.** Auth'd + own-booking-scoped (no mass abuse),
+      but self-accepts on the offered provider's behalf and mints a real door `job_token` PIN WITHOUT the
+      provider consenting — breaks the "provider agreed to this job" chain the doorstep-verify proof assumes.
+      Fine for solo demo; remove or gate behind a debug flag before real users. Same for `seed-testers`.
+- [ ] Enable **leaked-password protection** (HaveIBeenPwned) — Supabase dashboard → Auth → Password. One toggle.
+
 ## Debt / cleanup
-- [ ] `npm audit` — 21 vulns (7 mod, 14 high) from scaffold transitive deps. Review at P7, don't `--force` now.
+- [ ] `npm audit` — build-toolchain only (metro/expo/image-size), 0 runtime. Don't `--force`; clears on SDK bump.
 - [ ] `expo-symbols` ships 7 font-weight modules via expo-router; only `regular` used. Upstream, not ours. P7.
 
 ## Dispatch made visible + onboarding tiles (2026-08-14, later session)
