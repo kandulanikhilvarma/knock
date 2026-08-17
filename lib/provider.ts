@@ -24,6 +24,7 @@ export type ProviderInput = {
   visitingCharge: number | null;
   bio: string;
   workPhotos?: string[];
+  voiceIntroUrl?: string | null;
 };
 
 // Create or update the caller's provider profile, mark their role, and ensure a
@@ -45,6 +46,7 @@ export async function saveProviderProfile(input: ProviderInput) {
       visiting_charge: input.visitingCharge,
       bio: input.bio || null,
       ...(input.workPhotos ? { work_photos: input.workPhotos } : {}),
+      ...(input.voiceIntroUrl !== undefined ? { voice_intro_url: input.voiceIntroUrl } : {}),
     },
     { onConflict: 'user_id' },
   );

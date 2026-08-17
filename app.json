@@ -46,6 +46,12 @@
         {
           "cameraPermission": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived."
         }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Used to record a short voice intro customers hear on your profile."
+        }
       ]
     ]
   }

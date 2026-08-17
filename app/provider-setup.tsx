@@ -11,6 +11,7 @@ import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
 import { pickImages, uploadGalleryPhotos } from '../lib/photos';
 import { useSession } from '../lib/session';
 import { Loading } from '../components/StateView';
+import VoiceRecorder from '../components/VoiceRecorder';
 
 export default function ProviderSetup() {
   const { t, i18n } = useTranslation();
@@ -26,6 +27,7 @@ export default function ProviderSetup() {
   const [charge, setCharge] = useState('');
   const [bio, setBio] = useState('');
   const [workPhotos, setWorkPhotos] = useState<string[]>([]);
+  const [voiceUrl, setVoiceUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const p = mine.data;
@@ -36,6 +38,7 @@ export default function ProviderSetup() {
       setCharge(p.visiting_charge != null ? String(p.visiting_charge) : '');
       setBio(p.bio ?? '');
       setWorkPhotos(p.work_photos ?? []);
+      setVoiceUrl(p.voice_intro_url ?? null);
     }
   }, [mine.data]);
 
@@ -57,6 +60,7 @@ export default function ProviderSetup() {
         visitingCharge: charge ? parseInt(charge, 10) : null,
         bio: bio.trim(),
         workPhotos,
+        voiceIntroUrl: voiceUrl,
       }),
     onSuccess: () => router.back(),
   });
@@ -121,6 +125,9 @@ export default function ProviderSetup() {
         )}
       </View>
       {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+
+      <AppText style={styles.label}>{t('providerSetup.voiceIntro')}</AppText>
+      <VoiceRecorder value={voiceUrl} onChange={setVoiceUrl} />
 
       <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>

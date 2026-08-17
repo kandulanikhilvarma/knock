@@ -138,6 +138,7 @@
     "bio": "About you",
     "gallery": "Work photos",
     "addPhoto": "Add photo",
+    "voiceIntro": "Voice intro (optional)",
     "save": "Save profile",
     "saving": "Saving…",
     "become": "Become a provider",
@@ -329,6 +330,14 @@
     "s2sub": "Scan the code the pro shows before you let anyone in. The job cannot start without it.",
     "s3": "Pay them, directly",
     "s3sub": "UPI straight to the pro. No booking fee, no commission, nothing held in between."
+  },
+  "voice": {
+    "record": "Record intro",
+    "stop": "Stop recording",
+    "saving": "Saving…",
+    "recorded": "Voice intro recorded",
+    "remove": "Remove",
+    "denied": "Microphone access denied"
   },
   "scan": {
     "permTitle": "Camera access",
