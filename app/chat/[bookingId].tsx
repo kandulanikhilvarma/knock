@@ -7,7 +7,7 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap, pressed } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import { getMessages, sendMessage, subscribeMessages, type Message } from '../../lib/chat';
 import { useSession } from '../../lib/session';
 import { Loading, ErrorState } from '../../components/StateView';
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 
   bubble: { paddingVertical: 9, paddingHorizontal: space.md, borderRadius: radius.card },
   mine: { backgroundColor: colors.primary },
-  theirs: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line },
+  theirs: { backgroundColor: colors.surface, ...shadow.soft },
   msgTxt: { fontFamily: font.regular, fontSize: type.body, lineHeight: 21, color: colors.ink },
   msgTxtMine: { color: colors.onDark },
   time: { fontFamily: font.regular, fontSize: type.chip, color: colors.inkMuted, paddingHorizontal: 4 },

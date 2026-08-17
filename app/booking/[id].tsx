@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
 
   header: {
     flexDirection: 'row', alignItems: 'center', gap: space.md,
-    backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.sm,
+    backgroundColor: colors.surface, borderRadius: radius.card, padding: space.sm,
     ...shadow.soft,
   },
   headerThumb: { width: 52, height: 52, borderRadius: radius.chip },
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
   swap: { height: tap.min, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
   swapTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
 
-  addr: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: 4 },
+  addr: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: 4, ...shadow.soft },
   addrLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.inkMuted },
   addrTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   addrDesc: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
@@ -496,9 +496,8 @@ const styles = StyleSheet.create({
     gap: space.md,
     backgroundColor: colors.surface,
     borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.line,
     padding: space.lg,
+    ...shadow.soft,
   },
   custName: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.ink },
   custNo: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
@@ -520,7 +519,7 @@ const styles = StyleSheet.create({
   pinLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted },
   pin: { fontFamily: font.mono, fontSize: 34, letterSpacing: 8, color: colors.gold, fontWeight: '700' },
 
-  verify: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.sm },
+  verify: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: space.sm, ...shadow.soft },
   scanBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.sm,
     height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, marginTop: space.xs,
@@ -534,11 +533,11 @@ const styles = StyleSheet.create({
     textAlign: 'center', fontFamily: font.mono, fontSize: 24, letterSpacing: 8, color: colors.ink,
   },
 
-  payCard: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, alignItems: 'center', gap: space.sm },
+  payCard: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, alignItems: 'center', gap: space.sm, ...shadow.soft },
   upiTxt: { fontFamily: font.mono, fontSize: type.body, color: colors.ink },
   amount: { fontFamily: font.displayBold, fontSize: type.hero, color: colors.ink },
 
-  review: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: 1, borderColor: colors.line, padding: space.lg, gap: space.md },
+  review: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: space.md, ...shadow.soft },
   stars: { flexDirection: 'row', gap: space.xs, justifyContent: 'center' },
   star: { fontSize: 36, color: colors.line },
   starOn: { color: colors.gold },
