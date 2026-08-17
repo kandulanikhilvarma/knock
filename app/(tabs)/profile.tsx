@@ -161,6 +161,13 @@ export default function Profile() {
               <AppText style={styles.linkTxt}>{t('profileTab.myJobs')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
+            <Pressable style={styles.linkRow} onPress={() => router.push('/addresses')}>
+              <View style={styles.linkIcon}>
+                <Ionicons name="location-outline" size={18} color={colors.ink} />
+              </View>
+              <AppText style={styles.linkTxt}>{t('profileTab.addresses')}</AppText>
+              <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
+            </Pressable>
             <Pressable style={styles.signout} onPress={() => signOut()}>
               <AppText style={styles.signoutTxt}>{t('profileTab.signOut')}</AppText>
             </Pressable>

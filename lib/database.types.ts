@@ -454,6 +454,39 @@ export type Database = {
           },
         ]
       }
+      saved_addresses: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          label: string
+          lat: number | null
+          line: string
+          lng: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          label: string
+          lat?: number | null
+          line: string
+          lng?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          label?: string
+          lat?: number | null
+          line?: string
+          lng?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       waitlist_signups: {
         Row: {
           category_id: string | null

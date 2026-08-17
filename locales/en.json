@@ -119,6 +119,7 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "myJobs": "Job requests",
+    "addresses": "Saved addresses",
     "delete": "Delete account",
     "deleteConfirm": "Tap again to permanently delete",
     "guestName": "Guest",
@@ -316,6 +317,15 @@
     "s2sub": "Scan the code the pro shows before you let anyone in. The job cannot start without it.",
     "s3": "Pay them, directly",
     "s3sub": "UPI straight to the pro. No booking fee, no commission, nothing held in between."
+  },
+  "addresses": {
+    "title": "Saved addresses",
+    "empty": "No saved addresses yet. Add one so you don't retype it every booking.",
+    "add": "Save address",
+    "labelPlaceholder": "Label (Home, Work, Mom's)",
+    "linePlaceholder": "Flat, building, area, landmark",
+    "default": "Default",
+    "makeDefault": "Set as default"
   },
   "nearby": {
     "title": "Pros near you",

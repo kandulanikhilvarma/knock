@@ -111,6 +111,7 @@ function RootLayout() {
           <Stack.Screen name="search" options={{ headerShown: false }} />
           <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="provider-setup" options={{ headerShown: true }} />
+          <Stack.Screen name="addresses" options={{ headerShown: true }} />
           <Stack.Screen name="dispatch" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>
