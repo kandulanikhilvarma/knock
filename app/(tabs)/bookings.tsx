@@ -94,8 +94,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.line,
     padding: space.sm,
     flexDirection: 'row',
     alignItems: 'center',
