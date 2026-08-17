@@ -136,6 +136,8 @@
     "city": "City",
     "charge": "Visiting charge (optional)",
     "bio": "About you",
+    "gallery": "Work photos",
+    "addPhoto": "Add photo",
     "save": "Save profile",
     "saving": "Saving…",
     "become": "Become a provider",

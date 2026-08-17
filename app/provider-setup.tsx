@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
 import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
+import { pickImages, uploadGalleryPhotos } from '../lib/photos';
 import { useSession } from '../lib/session';
 import { Loading } from '../components/StateView';
 
@@ -23,6 +25,7 @@ export default function ProviderSetup() {
   const [city, setCity] = useState('Vijayawada');
   const [charge, setCharge] = useState('');
   const [bio, setBio] = useState('');
+  const [workPhotos, setWorkPhotos] = useState<string[]>([]);
 
   useEffect(() => {
     const p = mine.data;
@@ -32,8 +35,18 @@ export default function ProviderSetup() {
       setCity(p.city ?? 'Vijayawada');
       setCharge(p.visiting_charge != null ? String(p.visiting_charge) : '');
       setBio(p.bio ?? '');
+      setWorkPhotos(p.work_photos ?? []);
     }
   }, [mine.data]);
+
+  // Pick → upload to the public gallery bucket → append the returned URLs.
+  const pick = useMutation({
+    mutationFn: async () => {
+      const picked = await pickImages(6);
+      return picked.length ? uploadGalleryPhotos(picked) : [];
+    },
+    onSuccess: (urls) => urls.length && setWorkPhotos((prev) => [...prev, ...urls].slice(0, 12)),
+  });
 
   const save = useMutation({
     mutationFn: () =>
@@ -43,6 +56,7 @@ export default function ProviderSetup() {
         city: city.trim(),
         visitingCharge: charge ? parseInt(charge, 10) : null,
         bio: bio.trim(),
+        workPhotos,
       }),
     onSuccess: () => router.back(),
   });
@@ -89,6 +103,25 @@ export default function ProviderSetup() {
       <AppText style={styles.label}>{t('providerSetup.bio')}</AppText>
       <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} multiline placeholderTextColor={colors.inkMuted} />
 
+      <AppText style={styles.label}>{t('providerSetup.gallery')}</AppText>
+      <View style={styles.photoRow}>
+        {workPhotos.map((u, i) => (
+          <View key={u} style={styles.thumbWrap}>
+            <Image source={{ uri: u }} style={styles.thumb} />
+            <Pressable style={styles.thumbX} hitSlop={6} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
+              <Ionicons name="close" size={12} color={colors.onDark} />
+            </Pressable>
+          </View>
+        ))}
+        {workPhotos.length < 12 && (
+          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+            <Ionicons name="camera-outline" size={22} color={colors.primary} />
+            <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('providerSetup.addPhoto')}</AppText>
+          </Pressable>
+        )}
+      </View>
+      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+
       <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
@@ -121,6 +154,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.md, paddingVertical: space.sm, fontFamily: font.te, fontSize: type.body, color: colors.ink,
   },
   multi: { minHeight: 80, textAlignVertical: 'top' },
+  photoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: 2 },
+  thumbWrap: { position: 'relative' },
+  thumb: { width: 72, height: 72, borderRadius: radius.chip, backgroundColor: colors.line2 },
+  thumbX: {
+    position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: 10,
+    backgroundColor: colors.ink, alignItems: 'center', justifyContent: 'center',
+  },
+  addPhoto: {
+    width: 72, height: 72, borderRadius: radius.chip, borderWidth: 1, borderColor: colors.line,
+    borderStyle: 'dashed', backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', gap: 2,
+  },
+  addPhotoTxt: { fontFamily: font.medium, fontSize: type.chip, color: colors.primary },
   cta: { height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', marginTop: space.lg },
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },

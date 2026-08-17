@@ -23,6 +23,7 @@ export type ProviderInput = {
   city: string;
   visitingCharge: number | null;
   bio: string;
+  workPhotos?: string[];
 };
 
 // Create or update the caller's provider profile, mark their role, and ensure a
@@ -43,6 +44,7 @@ export async function saveProviderProfile(input: ProviderInput) {
       city: input.city || null,
       visiting_charge: input.visitingCharge,
       bio: input.bio || null,
+      ...(input.workPhotos ? { work_photos: input.workPhotos } : {}),
     },
     { onConflict: 'user_id' },
   );

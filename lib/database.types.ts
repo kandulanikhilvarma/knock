@@ -319,6 +319,7 @@ export type Database = {
           user_id: string
           verify_tier: string
           visiting_charge: number | null
+          work_photos: string[]
           voice_intro_url: string | null
           years_exp: number | null
         }
@@ -335,6 +336,7 @@ export type Database = {
           user_id: string
           verify_tier?: string
           visiting_charge?: number | null
+          work_photos?: string[]
           voice_intro_url?: string | null
           years_exp?: number | null
         }
@@ -351,6 +353,7 @@ export type Database = {
           user_id?: string
           verify_tier?: string
           visiting_charge?: number | null
+          work_photos?: string[]
           voice_intro_url?: string | null
           years_exp?: number | null
         }

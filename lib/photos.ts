@@ -45,3 +45,22 @@ export async function signedPhotoUrl(path: string): Promise<string | null> {
   const { data } = await supabase.storage.from('job-photos').createSignedUrl(path, 3600);
   return data?.signedUrl ?? null;
 }
+
+// Provider work gallery lives in a PUBLIC bucket so any customer can see it.
+// Returns stable public URLs to store directly in provider_profiles.work_photos.
+export async function uploadGalleryPhotos(photos: PickedPhoto[]): Promise<string[]> {
+  const { data: auth } = await supabase.auth.getUser();
+  const uid = auth.user?.id;
+  if (!uid) throw new Error('Not signed in');
+  const urls: string[] = [];
+  for (const p of photos) {
+    const bytes = Uint8Array.from(atob(p.base64), (c) => c.charCodeAt(0));
+    const path = `${uid}/${Date.now()}-${urls.length}.jpg`;
+    const { error } = await supabase.storage
+      .from('provider-gallery')
+      .upload(path, bytes, { contentType: 'image/jpeg', upsert: false });
+    if (error) throw error;
+    urls.push(supabase.storage.from('provider-gallery').getPublicUrl(path).data.publicUrl);
+  }
+  return urls;
+}

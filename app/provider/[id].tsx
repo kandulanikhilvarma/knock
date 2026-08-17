@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable, Linking, StyleSheet } from 'react-native';
+import { View, Image, ScrollView, Pressable, Linking, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -64,6 +64,14 @@ export default function ProviderScreen() {
               </View>
               <AppText style={styles.voiceTxt}>{t('provider.voiceIntro')}</AppText>
             </Pressable>
+          ) : null}
+
+          {data.work_photos?.length ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.gallery}>
+              {data.work_photos.map((u) => (
+                <Image key={u} source={{ uri: u }} style={styles.galleryImg} />
+              ))}
+            </ScrollView>
           ) : null}
         </SafeAreaView>
 
@@ -203,6 +211,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   voiceTxt: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted },
+  gallery: { gap: space.sm, paddingTop: space.md },
+  galleryImg: { width: 120, height: 120, borderRadius: radius.card, backgroundColor: colors.line2 },
 
   body: { padding: space.lg, gap: space.md },
   facts: { flexDirection: 'row', gap: space.sm },
