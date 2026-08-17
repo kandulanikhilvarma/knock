@@ -37,12 +37,22 @@ export default function AppText({ style, ...rest }: TextProps) {
   const flat = StyleSheet.flatten(style) as TextStyle | undefined;
   const fam = flat?.fontFamily;
   let swap: TextStyle | null = null;
+  const isDisplay = fam ? /PlayfairDisplay|Fraunces/.test(fam) : false;
   if (fam && fam !== 'monospace') {
-    if (/PlayfairDisplay|Fraunces/.test(fam)) {
+    if (isDisplay) {
       if (DISPLAY[lang]) swap = { fontFamily: DISPLAY[lang] }; // en keeps Fraunces
     } else {
       swap = { fontFamily: FAM[lang][weightOf(fam)] };
     }
+  }
+  // Optical tracking for the high-contrast Latin serif: big titles want to draw
+  // in, small ones stay as authored. Applied only when the style hasn't set its
+  // own letterSpacing, so a deliberate override always wins. Latin only — the
+  // Noto scripts are not letter-spaced.
+  if (isDisplay && lang === 'en' && flat?.letterSpacing == null && typeof flat?.fontSize === 'number') {
+    const s = flat.fontSize;
+    const track = s >= 28 ? -0.6 : s >= 20 ? -0.4 : s >= 16 ? -0.2 : 0;
+    if (track) swap = { ...swap, letterSpacing: track };
   }
   // Telugu and Devanagari stack vowel signs above and below the baseline, so a
   // Latin-tuned lineHeight clips them. Floor every line at 1.45x the size.
