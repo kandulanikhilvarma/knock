@@ -156,7 +156,9 @@ Or "Continue as guest" for an anonymous customer.
       (v4 deployed + repo synced). No secret → 403, so prod is safe by default. To run a solo demo:
       dashboard → Edge Functions → Secrets → set `DEMO_MODE=on`; remove it after. Was: self-accepts on
       the provider's behalf + mints a real door PIN without consent — unsafe for real users.
-- [ ] **`seed-testers`** — still open. Same class (test-only). Remove or gate before public launch.
+- [x] **`seed-testers`** — already inert. Deployed body is a stub returning `410 gone` (no DB, no input),
+      retired in an earlier session. Nothing to gate. Optional cleanup: delete the slug entirely at launch
+      (no MCP delete API — do it from the dashboard/CLI). Harmless as-is.
 - [ ] Enable **leaked-password protection** (HaveIBeenPwned) — Supabase dashboard → Auth → Password. One toggle.
 - [x] **Write-path edge-fn integrity audit** — all server-enforced, no client forgery: `respond`
       (provider consent + atomic first-accept-wins on `status='finding_pro'`), `swap` (customer-only,
