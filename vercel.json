@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npx expo export -p web",
+  "outputDirectory": "dist",
+  "framework": null,
+  "build": {
+    "env": {
+      "EXPO_PUBLIC_SUPABASE_URL": "https://bbzbiffpyuznlivbqmih.supabase.co",
+      "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_QdzvjTK5lT-S-R8s99nEgw_2hsgitlp"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
