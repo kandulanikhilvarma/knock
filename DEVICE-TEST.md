@@ -6,6 +6,24 @@ Session of 2026-08-18 shipped the code-verifiable half (UI polish + security aud
 
 ---
 
+## ✅ Verified running end-to-end (2026-08-18, web build, Telugu)
+Ran `npm run web` (metro, port 8081) and walked the whole customer product live in Telugu. All of this WORKS today:
+- First-run language pick (Telugu) → home renders: CARTO map, 6 nearby pros, 3 live categories, trust pillars, tabs.
+- Guest sign-in (anonymous auth).
+- **Real booking form** (electrician, Telugu problem + address) → booking created.
+- **Dispatch engine** → 2 nearest electricians offered; when the 90s window lapsed → booking `failed` → "no pro found, see the list" fallback UI (timeout path proven).
+- **One-tap dispatch demo** → matched **Kiran Mohan** (verified, ★4.9, ₹180) inside the window.
+- **Doorstep verify**: entered the 4-digit PIN → `verify-arrival` accepted → `in_progress`, UI flipped to "✓ verified at door" via realtime. **The differentiator works.**
+- **Realtime chat**: customer message sent + rendered live.
+- **Search**: distance-ranked (Suresh <1km → Kiran 1.3km → Ravi 2.6km).
+- a11y labels render (send button announces).
+
+NOT walked in UI (provider-password boundary — I don't type auth passwords): `in_progress → done` (provider-only), then pay (UPI link) + review. These transitions are verified at the edge-function code level (`job-action`, `submit-review` audited). To see them live: on a second login as the assigned pro, tap "mark done", then back as customer the pay + review screens open.
+
+**`DEMO_MODE=on` is currently SET** (I enabled it to close the loop). Leave it for your solo demos; **unset it before public launch** (that re-closes the `demo-accept` gate).
+
+---
+
 ## 0. Before anything: gate the demo edge functions
 The security audit found one real launch blocker.
 

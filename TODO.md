@@ -153,9 +153,9 @@ Or "Continue as guest" for an anonymous customer.
       parsers) — build-time only, nothing in the shipped runtime bundle. `--force` breaks locked SDK 57.
       Hold until an SDK bump.
 - [x] **`demo-accept` gated (2026-08-18).** Now fail-CLOSED on project secret `DEMO_MODE === 'on'`
-      (v4 deployed + repo synced). No secret → 403, so prod is safe by default. To run a solo demo:
-      dashboard → Edge Functions → Secrets → set `DEMO_MODE=on`; remove it after. Was: self-accepts on
-      the provider's behalf + mints a real door PIN without consent — unsafe for real users.
+      (v4 deployed + repo synced). No secret → 403, so prod is safe by default. **NOTE: `DEMO_MODE=on` is
+      currently SET** (enabled to walk the full loop live). Leave it for solo demos; **unset before launch.**
+      Was: self-accepts on the provider's behalf + mints a real door PIN without consent — unsafe for real users.
 - [x] **`seed-testers` deleted (2026-08-18)** from the dashboard. Was already an inert `410` stub; slug now
       gone entirely. 9 edge functions remain, all production ones.
 - [ ] Enable **leaked-password protection** (HaveIBeenPwned) — Supabase dashboard → Auth → Password. One toggle.
