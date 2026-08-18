@@ -152,10 +152,11 @@ Or "Continue as guest" for an anonymous customer.
 - [x] **npm audit** re-triaged: 19 vulns (10 high) ALL build-toolchain (metro/@expo/cli/image-size DoS
       parsers) — build-time only, nothing in the shipped runtime bundle. `--force` breaks locked SDK 57.
       Hold until an SDK bump.
-- [ ] **BLOCK before public launch — `demo-accept` edge fn.** Auth'd + own-booking-scoped (no mass abuse),
-      but self-accepts on the offered provider's behalf and mints a real door `job_token` PIN WITHOUT the
-      provider consenting — breaks the "provider agreed to this job" chain the doorstep-verify proof assumes.
-      Fine for solo demo; remove or gate behind a debug flag before real users. Same for `seed-testers`.
+- [x] **`demo-accept` gated (2026-08-18).** Now fail-CLOSED on project secret `DEMO_MODE === 'on'`
+      (v4 deployed + repo synced). No secret → 403, so prod is safe by default. To run a solo demo:
+      dashboard → Edge Functions → Secrets → set `DEMO_MODE=on`; remove it after. Was: self-accepts on
+      the provider's behalf + mints a real door PIN without consent — unsafe for real users.
+- [ ] **`seed-testers`** — still open. Same class (test-only). Remove or gate before public launch.
 - [ ] Enable **leaked-password protection** (HaveIBeenPwned) — Supabase dashboard → Auth → Password. One toggle.
 - [x] **Write-path edge-fn integrity audit** — all server-enforced, no client forgery: `respond`
       (provider consent + atomic first-accept-wins on `status='finding_pro'`), `swap` (customer-only,

@@ -2,8 +2,12 @@
 // end to end without a second device: it accepts the oldest pending offer on the
 // caller's OWN booking, on behalf of that offered provider, using the exact same
 // server path as `respond` (claim booking → accept offer → expire others → issue
-// doorstep token). Not a way to forge assignments: it only touches a booking the
-// caller owns, and only a provider the dispatch engine already offered.
+// doorstep token).
+//
+// SECURITY GATE: this bypasses the provider's own consent to a job (it accepts on
+// their behalf and mints a real door PIN), so it is fail-CLOSED. It runs ONLY when
+// the project secret DEMO_MODE === 'on'. Unset the secret to disable it — a fresh
+// or production project has no such hole by default. MUST stay off for real users.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.112.3';
 
 const cors = {
@@ -13,6 +17,12 @@ const cors = {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
+
+  // Fail-closed demo gate. No secret → disabled.
+  if (Deno.env.get('DEMO_MODE') !== 'on') {
+    return json({ error: 'demo mode disabled' }, 403);
+  }
+
   try {
     const { booking_id } = await req.json();
     if (!booking_id) return json({ error: 'booking_id required' }, 400);

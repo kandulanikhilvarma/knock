@@ -9,8 +9,8 @@ Session of 2026-08-18 shipped the code-verifiable half (UI polish + security aud
 ## 0. Before anything: gate the demo edge functions
 The security audit found one real launch blocker.
 
-- [ ] **`demo-accept`** self-accepts a job on a provider's behalf and mints a real door PIN **without the provider consenting** — it breaks the "the provider agreed to this job" chain. Fine for solo demos, unsafe for real users. Before public launch: delete it, or gate it behind a debug flag.
-- [ ] **`seed-testers`** — same, remove before launch.
+- [x] **`demo-accept` gated** — now fail-closed on secret `DEMO_MODE === 'on'` (no secret → 403). Prod safe by default. To run a solo demo: dashboard → Edge Functions → Secrets → `DEMO_MODE=on`, then remove it after. No further action needed for launch beyond leaving the secret unset.
+- [ ] **`seed-testers`** — still test-only, remove before launch.
 - [ ] Supabase dashboard → Auth → Password → enable **leaked-password protection** (HaveIBeenPwned). One toggle.
 
 ---
