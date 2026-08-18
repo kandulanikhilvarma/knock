@@ -10,7 +10,7 @@ Session of 2026-08-18 shipped the code-verifiable half (UI polish + security aud
 The security audit found one real launch blocker.
 
 - [x] **`demo-accept` gated** — now fail-closed on secret `DEMO_MODE === 'on'` (no secret → 403). Prod safe by default. To run a solo demo: dashboard → Edge Functions → Secrets → `DEMO_MODE=on`, then remove it after. No further action needed for launch beyond leaving the secret unset.
-- [x] **`seed-testers`** — already inert (returns `410 gone`, no DB/input). Optional: delete the slug from the dashboard at launch. Harmless as-is.
+- [x] **`seed-testers`** — deleted from the dashboard (was an inert `410` stub). Gone.
 - [ ] Supabase dashboard → Auth → Password → enable **leaked-password protection** (HaveIBeenPwned). One toggle.
 
 ---
