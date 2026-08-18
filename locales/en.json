@@ -39,7 +39,8 @@
     "subtitle": "Track every pro you've requested.",
     "empty": "No bookings yet",
     "emptySub": "Request a pro from Home and it'll show up here.",
-    "signInSub": "Sign in to see and track your bookings."
+    "signInSub": "Sign in to see and track your bookings.",
+    "emptyCta": "Book a service"
   },
   "chatTab": {
     "subtitle": "Message the pro on your active jobs."

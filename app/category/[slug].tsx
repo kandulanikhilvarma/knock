@@ -94,7 +94,7 @@ function Waitlist({
   });
 
   if (m.isSuccess) {
-    return <Empty icon="checkmark-circle" title={t('category.waitlistDone')} sub={t('category.waitlistDoneSub')} />;
+    return <Empty icon="checkmark-circle" tint={colors.tintSuccess} title={t('category.waitlistDone')} sub={t('category.waitlistDoneSub')} />;
   }
 
   const valid = /^\d{10}$/.test(phone.trim());

@@ -70,7 +70,7 @@ export default function Chat() {
             </Pressable>
           )}
           ListEmptyComponent={
-            <Empty icon="chatbubbles-outline" title={t('chat.noThreads')} sub={t('chat.noThreadsSub')} />
+            <Empty icon="chatbubbles-outline" tint={colors.pastelPeach} title={t('chat.noThreads')} sub={t('chat.noThreadsSub')} />
           }
         />
       )}

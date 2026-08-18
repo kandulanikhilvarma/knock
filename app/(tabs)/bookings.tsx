@@ -62,7 +62,13 @@ export default function Bookings() {
             </Pressable>
           )}
           ListEmptyComponent={
-            <Empty icon="reader-outline" title={t('bookingsTab.empty')} sub={t('bookingsTab.emptySub')} />
+            <Empty
+              icon="reader-outline"
+              tint={colors.pastelBlue}
+              title={t('bookingsTab.empty')}
+              sub={t('bookingsTab.emptySub')}
+              action={{ label: t('bookingsTab.emptyCta'), onPress: () => router.push('/') }}
+            />
           }
         />
       )}
