@@ -23,6 +23,7 @@ import SafetyBar from '../../components/SafetyBar';
 import { Loading, ErrorState } from '../../components/StateView';
 import PhotoGrid from '../../components/PhotoGrid';
 import QrScanner from '../../components/QrScanner';
+import FindingPro from '../../components/FindingPro';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
@@ -215,14 +216,7 @@ function CustomerPanel({ booking }: { booking: Booking }) {
 
   return (
     <View style={{ gap: space.md }}>
-      {SEARCHING.includes(status) && (
-        <View style={styles.finding}>
-          <View style={styles.liveDot} />
-          <ActivityIndicator color={colors.accent} style={{ marginVertical: space.md }} />
-          <AppText style={styles.findTitle}>{t('booking.findingPro')}</AppText>
-          <AppText style={styles.findSub}>{t('booking.findingSub')}</AppText>
-        </View>
-      )}
+      {SEARCHING.includes(status) && <FindingPro slug={booking.category_slug} />}
 
       {status === 'assigned' && booking.assigned_provider_id && (
         <>
@@ -474,11 +468,6 @@ const styles = StyleSheet.create({
   dotInnerNow: { backgroundColor: colors.gold },
   stepTxt: { fontFamily: font.te, fontSize: 9, color: colors.inkMuted, textAlign: 'center' },
   stepTxtOn: { color: colors.ink, fontFamily: font.teBold },
-
-  finding: { alignItems: 'center', paddingVertical: space.xxl, gap: space.xs },
-  liveDot: { width: 10, height: 10, borderRadius: radius.pill, backgroundColor: colors.accent },
-  findTitle: { fontFamily: font.displayBold, fontSize: type.h1, color: colors.ink, textAlign: 'center' },
-  findSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
 
   matched: { backgroundColor: colors.success, borderRadius: radius.chip, paddingVertical: space.sm, paddingHorizontal: space.md, alignSelf: 'flex-start' },
   matchedTxt: { fontFamily: font.teBold, fontSize: type.small, color: colors.surface },
