@@ -137,8 +137,8 @@ export default function Profile() {
           </View>
         ) : (
           <View style={styles.idCard}>
-            <View style={[styles.avatar, { backgroundColor: colors.line2 }]}>
-              <Ionicons name="person-outline" size={22} color={colors.inkMuted} />
+            <View style={[styles.avatar, { backgroundColor: colors.primarySoft }]}>
+              <Ionicons name="person-outline" size={22} color={colors.onDarkMuted} />
             </View>
             <View style={{ flex: 1 }}>
               <AppText style={styles.idName}>{t('profileTab.guestName')}</AppText>

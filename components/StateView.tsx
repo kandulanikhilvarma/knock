@@ -1,4 +1,5 @@
-import { View, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, Animated, Easing, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -6,10 +7,30 @@ import OrganicLines from './OrganicLines';
 import { colors, font, radius, space, type, tap, pressed } from '../theme/tokens';
 
 // Shared loading / error / empty states — every list screen ships all three (GATE 4→5).
+// The loader is the ₹0 coin, breathing — the wait still says zero-commission.
 export function Loading() {
+  const a = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(a, { toValue: 1, duration: 750, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(a, { toValue: 0, duration: 750, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+      ]),
+    ).start();
+  }, [a]);
   return (
     <View style={styles.center}>
-      <ActivityIndicator color={colors.primary} />
+      <Animated.View
+        style={[
+          styles.coin,
+          {
+            opacity: a.interpolate({ inputRange: [0, 1], outputRange: [0.55, 1] }),
+            transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1.04] }) }],
+          },
+        ]}
+      >
+        <AppText style={styles.coinTxt}>₹0</AppText>
+      </Animated.View>
     </View>
   );
 }
@@ -70,6 +91,17 @@ export function Empty({
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
+  coin: {
+    width: 60,
+    height: 60,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coinTxt: { fontFamily: font.bold, fontSize: 20, color: colors.gold },
   motif: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
   chip: {
     width: 76,

@@ -433,8 +433,13 @@ function ReviewPanel({ booking }: { booking: Booking }) {
 function Proof({ text, sub }: { text: string; sub?: string }) {
   return (
     <View style={styles.proof}>
-      <AppText style={styles.proofTxt}>✓ {text}</AppText>
-      {sub ? <AppText style={styles.proofSub}>{sub}</AppText> : null}
+      <View style={styles.proofBadge}>
+        <Ionicons name="checkmark" size={20} color={colors.onDark} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <AppText style={styles.proofTxt}>{text}</AppText>
+        {sub ? <AppText style={styles.proofSub}>{sub}</AppText> : null}
+      </View>
     </View>
   );
 }
@@ -537,9 +542,10 @@ const styles = StyleSheet.create({
   tagTxt: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
   tagTxtOn: { color: colors.onDark },
 
-  proof: { backgroundColor: colors.tintSuccess, borderRadius: radius.card, borderWidth: 1, borderColor: colors.success, padding: space.lg, gap: 4 },
+  proof: { flexDirection: 'row', alignItems: 'center', gap: space.md, backgroundColor: colors.tintSuccess, borderRadius: radius.card, padding: space.lg, ...shadow.soft },
+  proofBadge: { width: 40, height: 40, borderRadius: radius.pill, backgroundColor: colors.success, alignItems: 'center', justifyContent: 'center' },
   proofTxt: { fontFamily: font.teBold, fontSize: type.h3, color: colors.successInk },
-  proofSub: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
+  proofSub: { fontFamily: font.te, fontSize: type.small, color: colors.ink2, marginTop: 2 },
 
   fallback: { gap: space.sm, paddingVertical: space.lg },
   fbTitle: { fontFamily: font.teBold, fontSize: type.h2, color: colors.ink },
