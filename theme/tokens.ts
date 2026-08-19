@@ -75,11 +75,12 @@ export const font = {
   medium: 'Inter_500Medium',
   semibold: 'Inter_600SemiBold',
   bold: 'Inter_700Bold',
-  // editorial high-contrast serif display — the Shifud voice (Latin). AppText
-  // falls Telugu/Hindi display back to their Noto bold (no serif bundled).
-  display: 'PlayfairDisplay_600SemiBold',
-  displayBold: 'PlayfairDisplay_700Bold',
-  displayLight: 'PlayfairDisplay_500Medium',
+  // editorial soft-serif display — Fraunces, the Shifud voice (Latin). Warmer and
+  // more characterful than a classic Didone. AppText falls Telugu/Hindi display
+  // back to their Noto face (no serif bundled for those scripts).
+  display: 'Fraunces_600SemiBold',
+  displayBold: 'Fraunces_700Bold',
+  displayLight: 'Fraunces_500Medium',
   // Telugu — test first; strings run ~30% longer.
   te: 'NotoSansTelugu_400Regular',
   teBold: 'NotoSansTelugu_700Bold',
@@ -90,7 +91,7 @@ export const font = {
   mono: 'monospace',
 } as const;
 
-// Mobile-tuned scale. Playfair display is high-contrast, so it reads a size
+// Mobile-tuned scale. Fraunces display is high-contrast, so it reads a size
 // larger than a sans at the same px — these are set for a ~390pt iPhone, where
 // the old 40/30/26 tier shouted. Telugu/Hindi line-height is floored in AppText.
 export const type = {

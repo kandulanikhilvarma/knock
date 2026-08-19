@@ -22,10 +22,10 @@ import {
   NotoSansDevanagari_700Bold,
 } from '@expo-google-fonts/noto-sans-devanagari';
 import {
-  PlayfairDisplay_500Medium,
-  PlayfairDisplay_600SemiBold,
-  PlayfairDisplay_700Bold,
-} from '@expo-google-fonts/playfair-display';
+  Fraunces_500Medium,
+  Fraunces_600SemiBold,
+  Fraunces_700Bold,
+} from '@expo-google-fonts/fraunces';
 
 import { useTranslation } from 'react-i18next';
 import AppText from '../components/AppText';
@@ -52,9 +52,9 @@ function RootLayout() {
     NotoSansTelugu_700Bold,
     NotoSansDevanagari_400Regular,
     NotoSansDevanagari_700Bold,
-    PlayfairDisplay_500Medium,
-    PlayfairDisplay_600SemiBold,
-    PlayfairDisplay_700Bold,
+    Fraunces_500Medium,
+    Fraunces_600SemiBold,
+    Fraunces_700Bold,
   });
 
   useEffect(() => {
