@@ -114,6 +114,16 @@ Or "Continue as guest" for an anonymous customer.
       bookings/chat/profile tabs; icon-tile heroes on booking-new + coming-soon.
 - [ ] Real-device Telugu render pass (non-fakeable, needs your eyes).
 
+## Session 2026-08-20 — deploy, web-auth fix, design, README
+- [x] **Live web preview on Vercel** — https://services-app-kandula.vercel.app (git-linked, auto-redeploys on push, public env baked via vercel.json).
+- [x] **Web sign-in fixed** — Google now full-page redirect on web (was native-only WebBrowser flow, silently dead); `detectSessionInUrl` true on web; post-auth `router.replace('/')` (was hanging `router.back()`). Supabase URL config updated: Site URL → Vercel, redirect allowlist + `https://services-app-kandula.vercel.app/**`. Guest sign-in verified creating a session on the live build.
+- [x] **Bug fixed** — `getCityEarnings` used `.single()` → crashed on empty `city_stats`; now `.maybeSingle()`.
+- [x] **Display serif → Fraunces** (was Playfair; matches CLAUDE.md spec). Verified live via computed style.
+- [x] **Empty/error/loading states** redesigned (pastel chip + serif + motif + CTA; branded ₹0-coin loader; success badges; live-map finding screen).
+- [x] **README.md** added (product, architecture, mermaid flow, run steps).
+- [ ] **Email-code sign-in (SMTP)** — NOT verified this session; needs SMTP configured on the project (Resend). Guest + Google cover the preview.
+- [ ] After guest sign-in on a fresh browser, the first-run language picker shows once (SEEN_KEY unset) — harmless, could suppress for an existing session.
+
 ## P7 Harden · P8 Ship — remaining, mostly blocked on user
 - [ ] Telugu layout audit on a real device (screenshot-verify — not headless).
 - [ ] Push notifications (Expo tokens) · WhatsApp offer alerts · wave-2 escalation.
