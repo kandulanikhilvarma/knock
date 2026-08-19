@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { supabase } from './supabase';
@@ -89,6 +90,17 @@ export async function setSessionFromUrl(url: string): Promise<boolean> {
 // Google consent URL (we open it ourselves, so skipBrowserRedirect), open it in
 // the system auth session, and lift the session out of the returned URL.
 export async function signInWithGoogle(): Promise<void> {
+  // Web: a full-page redirect to Google and back; detectSessionInUrl (web) then
+  // lifts the session out of the return URL. No WebBrowser auth session on web.
+  if (Platform.OS === 'web') {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) throw error;
+    return;
+  }
+
   const redirectTo = Linking.createURL('auth-callback');
 
   const { data, error } = await supabase.auth.signInWithOAuth({

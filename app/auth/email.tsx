@@ -26,12 +26,12 @@ export default function EmailAuthScreen() {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (error) throw error;
     },
-    onSuccess: () => router.back(),
+    onSuccess: () => router.replace('/'),
   });
 
   const google = useMutation({
     mutationFn: signInWithGoogle,
-    onSuccess: () => router.back(),
+    onSuccess: () => router.replace('/'),
   });
 
   const guest = useMutation({
@@ -39,7 +39,7 @@ export default function EmailAuthScreen() {
       const { error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
     },
-    onSuccess: () => router.back(),
+    onSuccess: () => router.replace('/'),
   });
 
   // Passwordless: email a 6-digit code, then verify it in-app. No deep link, so
@@ -48,7 +48,7 @@ export default function EmailAuthScreen() {
   const send = useMutation({ mutationFn: () => sendEmailCode(email) });
   const verify = useMutation({
     mutationFn: () => verifyEmailCode(email, code),
-    onSuccess: () => router.back(),
+    onSuccess: () => router.replace('/'),
   });
 
   const emailValid = email.includes('@');
