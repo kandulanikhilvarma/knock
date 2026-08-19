@@ -97,7 +97,7 @@ export async function getCityEarnings(): Promise<number> {
   const { data, error } = await supabase
     .from('city_stats' as never)
     .select('total_paid')
-    .single();
+    .maybeSingle(); // no row yet on a fresh city → 0, not a thrown error
   if (error) throw error;
   return (data as { total_paid?: number } | null)?.total_paid ?? 0;
 }
