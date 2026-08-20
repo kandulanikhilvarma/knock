@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { Animated, type ViewStyle } from 'react-native';
+import { Animated, type StyleProp, type ViewStyle } from 'react-native';
 
 // Gentle mount entrance: fade + a short rise. JS-driven Animated (works in Expo
 // Go, no Reanimated/dev-build needed). `delay` staggers a column of these. The
@@ -11,7 +11,7 @@ export default function FadeIn({
 }: {
   children: ReactNode;
   delay?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }) {
   const t = useRef(new Animated.Value(0)).current;
   useEffect(() => {

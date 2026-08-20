@@ -14,7 +14,7 @@ const LANGS: { code: string; label: string; name: string }[] = [
 
 export const LANG_KEY = 'app.lang';
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ onDark = false }: { onDark?: boolean }) {
   const { i18n } = useTranslation();
   const active = i18n.language;
 
@@ -24,20 +24,30 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, onDark && styles.rowDark]}>
       {LANGS.map((l) => {
         const on = active === l.code;
         return (
           <Pressable
             key={l.code}
             onPress={() => pick(l.code)}
-            style={[styles.chip, on && styles.chipOn]}
+            style={[
+              onDark ? styles.chipDark : styles.chip,
+              on && (onDark ? styles.chipOnDark : styles.chipOn),
+            ]}
             hitSlop={8}
             accessibilityRole="button"
             accessibilityLabel={l.name}
             accessibilityState={{ selected: on }}
           >
-            <AppText style={[styles.txt, on && styles.txtOn]}>{l.label}</AppText>
+            <AppText
+              style={[
+                onDark ? styles.txtDark : styles.txt,
+                on && (onDark ? styles.txtOnDark : styles.txtOn),
+              ]}
+            >
+              {l.label}
+            </AppText>
           </Pressable>
         );
       })}
@@ -47,6 +57,8 @@ export default function LanguageSwitcher() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: space.xs },
+  // onDark: one translucent pill housing the chips, matching the forest hero.
+  rowDark: { gap: 2, padding: 3, borderRadius: radius.pill, backgroundColor: 'rgba(255,255,255,0.1)' },
   chip: {
     minWidth: 40,
     height: 32,
@@ -61,4 +73,15 @@ const styles = StyleSheet.create({
   chipOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   txt: { fontFamily: font.semibold, fontSize: type.small, color: colors.inkMuted },
   txtOn: { color: colors.surface },
+  chipDark: {
+    minWidth: 36,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 9,
+    borderRadius: radius.pill,
+  },
+  chipOnDark: { backgroundColor: colors.surface },
+  txtDark: { fontFamily: font.semibold, fontSize: type.small, color: colors.onDarkMuted },
+  txtOnDark: { color: colors.primary },
 });

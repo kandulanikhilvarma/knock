@@ -10,6 +10,7 @@
   },
   "home": {
     "hi": "Hi, {{name}}",
+    "zeroCommission": "zero\ncommission",
     "greeting": "What needs fixing?",
     "counter": "₹{{amount}} earned by workers in {{city}}, 100% kept by them",
     "available": "Book a service",

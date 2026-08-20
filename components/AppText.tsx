@@ -19,7 +19,7 @@ const FAM: Record<Lang, Record<Weight, string>> = {
 // Editorial serif is Latin-only. Telugu/Hindi display uses REGULAR Noto — the
 // bold face is too heavy for big headlines in these scripts; size carries it.
 const DISPLAY: Record<Lang, string> = {
-  en: '', // keep the Fraunces weight the style already set
+  en: '', // keep the Bricolage weight the style already set
   te: 'NotoSansTelugu_400Regular',
   hi: 'NotoSansDevanagari_400Regular',
 };
@@ -37,7 +37,7 @@ export default function AppText({ style, ...rest }: TextProps) {
   const flat = StyleSheet.flatten(style) as TextStyle | undefined;
   const fam = flat?.fontFamily;
   let swap: TextStyle | null = null;
-  const isDisplay = fam ? /PlayfairDisplay|Fraunces/.test(fam) : false;
+  const isDisplay = fam ? /PlayfairDisplay|Fraunces|Bricolage/.test(fam) : false;
   if (fam && fam !== 'monospace') {
     if (isDisplay) {
       if (DISPLAY[lang]) swap = { fontFamily: DISPLAY[lang] }; // en keeps Fraunces

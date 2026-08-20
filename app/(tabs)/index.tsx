@@ -3,7 +3,7 @@ import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppText from '../../components/AppText';
 import { SEEN_KEY } from '../welcome';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,7 +22,6 @@ import LanguageSwitcher from '../../components/LanguageSwitcher';
 import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
 import HowItWorks from '../../components/HowItWorks';
-import OrganicLines from '../../components/OrganicLines';
 import NearbyProviders from '../../components/NearbyProviders';
 import FadeIn from '../../components/FadeIn';
 import { Loading, ErrorState } from '../../components/StateView';
@@ -32,6 +31,7 @@ export default function Home() {
   const router = useRouter();
   const { session } = useSession();
   const myName = firstName(session?.user);
+  const insets = useSafeAreaInsets();
 
   // First launch goes to the language picker (§2-4), once.
   useEffect(() => {
@@ -54,23 +54,34 @@ export default function Home() {
 
 
   return (
-    <SafeAreaView style={styles.screen} edges={['top']}>
+    <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Hero — organic motif behind an editorial serif headline */}
-        <FadeIn style={styles.hero}>
-          <OrganicLines color={colors.primary} opacity={0.1} />
+        {/* Hero — a deep forest band that reaches the top edge, the ₹0 promise
+            as a badge, the headline and search living on the dark ground. */}
+        <FadeIn style={[styles.hero, { paddingTop: insets.top + space.md }]}>
+          <View style={styles.heroGlow} pointerEvents="none" />
           <View style={styles.heroTop}>
             <View style={styles.loc}>
-              <Ionicons name="location-outline" size={13} color={colors.inkMuted} />
+              <View style={styles.locMk}>
+                <Ionicons name="location" size={13} color={colors.onDark} />
+              </View>
               <AppText style={styles.locTxt}>Vijayawada</AppText>
             </View>
-            <LanguageSwitcher />
+            <LanguageSwitcher onDark />
           </View>
-          {myName && <AppText style={styles.hi}>{t('home.hi', { name: myName })}</AppText>}
-          <AppText style={styles.headline}>{t('home.greeting')}</AppText>
-        </FadeIn>
 
-        <FadeIn delay={70}>
+          <View style={styles.greetRow}>
+            {myName && <AppText style={styles.hi}>{t('home.hi', { name: myName })}</AppText>}
+            <View style={styles.coin}>
+              <View style={styles.coinDisc}>
+                <AppText style={styles.coinDiscTxt}>₹0</AppText>
+              </View>
+              <AppText style={styles.coinTxt}>{t('home.zeroCommission')}</AppText>
+            </View>
+          </View>
+
+          <AppText style={styles.headline}>{t('home.greeting')}</AppText>
+
           <Pressable
             style={({ pressed: p }) => [styles.search, p && pressed]}
             onPress={() => router.push('/search')}
@@ -83,78 +94,81 @@ export default function Home() {
           </Pressable>
         </FadeIn>
 
-        {/* Rapido-style: your location + the pros around you, up front. This is
-            the primary action — book a pro to your door. */}
-        <FadeIn delay={140}>
-          <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
-        </FadeIn>
+        <View style={styles.body}>
+          {/* Rapido-style: your location + the pros around you, up front. This is
+              the primary action — book a pro to your door. */}
+          <FadeIn delay={140}>
+            <NearbyProviders liveSlug={live[0]?.slug ?? 'electrician'} liveCid={live[0]?.id ?? null} />
+          </FadeIn>
 
-        {cats.isLoading && <Loading />}
-        {cats.isError && <ErrorState message={(cats.error as Error)?.message} />}
+          {cats.isLoading && <Loading />}
+          {cats.isError && <ErrorState message={(cats.error as Error)?.message} />}
 
-        {/* The core task: pick a trade. */}
-        {live.length > 0 && (
-          <View style={styles.section}>
-            <AppText style={styles.sectionTitle}>{t('home.available')}</AppText>
-            <Grid cats={live} lang={i18n.language} onPick={open} />
-          </View>
-        )}
-
-        <HowItWorks />
-
-        <TrustPillars />
-
-        {soon.length > 0 && (
-          <View style={styles.section}>
-            <AppText style={styles.sectionTitle}>{t('home.nextUp')}</AppText>
-            <AppText style={styles.sectionSub}>{t('home.nextUpSub')}</AppText>
-            <View style={styles.grid}>
-              {soon.map((c) => (
-                <Pressable
-                  key={c.id}
-                  style={({ pressed: p }) => [
-                    styles.soonTile,
-                    { backgroundColor: categoryTint(c.slug) },
-                    p && pressed,
-                  ]}
-                  onPress={() => open(c)}
-                >
-                  <View style={styles.soonArt}>
-                    <CategoryArt slug={c.slug} size={40} bg={colors.surface} />
-                  </View>
-                  <AppText style={styles.soonTxt} numberOfLines={3}>
-                    {categoryName(c, i18n.language)}
-                  </AppText>
-                  <View style={styles.soonChip}>
-                    <Ionicons name="person-add-outline" size={12} color={colors.ink} />
-                    <AppText style={styles.soonChipTxt} numberOfLines={1}>
-                      {t('home.onboarding')}
-                    </AppText>
-                  </View>
-                </Pressable>
-              ))}
+          {/* The core task: pick a trade. */}
+          {live.length > 0 && (
+            <View style={styles.section}>
+              <AppText style={styles.sectionTitle}>{t('home.available')}</AppText>
+              <Grid cats={live} lang={i18n.language} onPick={open} />
             </View>
-          </View>
-        )}
+          )}
 
-        {/* City earnings — proof strip at the foot, out of the booking path. */}
-        <View style={styles.earn}>
-          <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
-          <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
-          <View style={styles.earnSub}>
-            {!!earnings.data && (
-              <View style={styles.live}>
-                <View style={styles.liveDot} />
-                <AppText style={styles.liveTxt}>LIVE</AppText>
+          <HowItWorks />
+
+          <TrustPillars />
+
+          {soon.length > 0 && (
+            <View style={styles.section}>
+              <AppText style={styles.sectionTitle}>{t('home.nextUp')}</AppText>
+              <AppText style={styles.sectionSub}>{t('home.nextUpSub')}</AppText>
+              <View style={styles.grid}>
+                {soon.map((c) => (
+                  <Pressable
+                    key={c.id}
+                    style={({ pressed: p }) => [
+                      styles.soonTile,
+                      { backgroundColor: categoryTint(c.slug) },
+                      p && pressed,
+                    ]}
+                    onPress={() => open(c)}
+                  >
+                    <View style={styles.soonArt}>
+                      <CategoryArt slug={c.slug} size={40} bg={colors.surface} />
+                    </View>
+                    <AppText style={styles.soonTxt} numberOfLines={3}>
+                      {categoryName(c, i18n.language)}
+                    </AppText>
+                    <View style={styles.soonChip}>
+                      <Ionicons name="person-add-outline" size={12} color={colors.ink} />
+                      <AppText style={styles.soonChipTxt} numberOfLines={1}>
+                        {t('home.onboarding')}
+                      </AppText>
+                    </View>
+                  </Pressable>
+                ))}
               </View>
-            )}
-            <AppText style={styles.earnSubTxt}>
-              {earnings.data ? t('home.earnSub') : t('home.earnSubZero')}
-            </AppText>
+            </View>
+          )}
+
+          {/* City earnings — proof strip at the foot, out of the booking path. */}
+          <View style={styles.earn}>
+            <View style={styles.earnGlow} pointerEvents="none" />
+            <AppText style={styles.earnLbl}>{t('home.earnLabel')}</AppText>
+            <AppText style={styles.earnNum}>₹{formatINR(earnings.data ?? 0)}</AppText>
+            <View style={styles.earnSub}>
+              {!!earnings.data && (
+                <View style={styles.live}>
+                  <View style={styles.liveDot} />
+                  <AppText style={styles.liveTxt}>LIVE</AppText>
+                </View>
+              )}
+              <AppText style={styles.earnSubTxt}>
+                {earnings.data ? t('home.earnSub') : t('home.earnSubZero')}
+              </AppText>
+            </View>
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -184,20 +198,59 @@ function Grid({ cats, lang, onPick }: { cats: Category[]; lang: string; onPick: 
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxl },
+  content: { paddingBottom: space.xxl },
 
-  hero: { paddingTop: space.sm, paddingBottom: space.xs, overflow: 'hidden' },
+  // Full-bleed forest band, rounded at the base.
+  hero: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: space.lg,
+    paddingBottom: space.xl,
+    borderBottomLeftRadius: 34,
+    borderBottomRightRadius: 34,
+    overflow: 'hidden',
+    ...shadow.card,
+  },
+  heroGlow: {
+    position: 'absolute',
+    right: -60,
+    top: -40,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    backgroundColor: colors.primarySoft,
+    opacity: 0.5,
+  },
   heroTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  loc: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-  locTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
-  hi: { fontFamily: font.teBold, fontSize: type.small, color: colors.accent, marginTop: space.sm, letterSpacing: 0.2 },
+  loc: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  locMk: { width: 24, height: 24, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' },
+  locTxt: { fontFamily: font.display, fontSize: type.h3, color: colors.onDark, letterSpacing: -0.2 },
+
+  greetRow: { flexDirection: 'row', alignItems: 'center', minHeight: 34, marginTop: space.xl },
+  hi: { fontFamily: font.teBold, fontSize: type.body, color: '#8FE3AB', letterSpacing: 0.2 },
+  coin: {
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    backgroundColor: 'rgba(207,138,60,0.16)',
+    borderWidth: 1,
+    borderColor: 'rgba(207,138,60,0.5)',
+    borderRadius: radius.pill,
+    paddingVertical: 5,
+    paddingLeft: 6,
+    paddingRight: 12,
+  },
+  coinDisc: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center' },
+  coinDiscTxt: { fontFamily: font.displayBold, fontSize: 12, color: '#241703' },
+  coinTxt: { fontFamily: font.semibold, fontSize: 10, lineHeight: 12, color: colors.tintGold, letterSpacing: 0.2 },
+
   headline: {
     fontFamily: font.displayBold,
     fontSize: type.display,
-    lineHeight: type.display + 3,
-    letterSpacing: -0.5,
-    color: colors.ink,
-    marginTop: 2,
+    lineHeight: type.display + 2,
+    letterSpacing: -0.6,
+    color: colors.onDark,
+    marginTop: space.md,
     maxWidth: '92%',
   },
 
@@ -207,29 +260,44 @@ const styles = StyleSheet.create({
     gap: space.sm,
     backgroundColor: colors.surface,
     borderRadius: radius.pill,
-    paddingVertical: space.sm,
-    paddingHorizontal: space.lg,
-    ...shadow.soft,
+    paddingVertical: 7,
+    paddingLeft: space.lg,
+    paddingRight: 7,
+    marginTop: space.xl,
+    ...shadow.card,
   },
   searchPh: { flex: 1, fontFamily: font.regular, fontSize: type.body, color: colors.inkMuted },
   mic: {
-    width: 34,
-    height: 34,
+    width: 38,
+    height: 38,
     borderRadius: radius.pill,
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  earn: { backgroundColor: colors.primary, borderRadius: radius.card, padding: space.xl, ...shadow.card },
+  body: { padding: space.lg, gap: space.lg },
+
+  earn: { backgroundColor: colors.primary, borderRadius: radius.card, padding: space.xl, overflow: 'hidden', ...shadow.card },
+  earnGlow: {
+    position: 'absolute',
+    left: -40,
+    bottom: -60,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: colors.gold,
+    opacity: 0.14,
+  },
   earnLbl: { fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
   earnNum: {
     fontFamily: font.displayBold,
-    fontSize: 38,
-    lineHeight: 44,
-    letterSpacing: -0.5,
+    fontSize: 42,
+    lineHeight: 46,
+    letterSpacing: -1,
     color: colors.onDark,
-    marginTop: 2,
+    marginTop: 3,
+    fontVariant: ['tabular-nums'],
   },
   earnSub: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.xs },
   live: { flexDirection: 'row', alignItems: 'center', gap: 4 },
