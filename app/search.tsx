@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AppText from '../components/AppText';
 import CategoryArt from '../components/CategoryArt';
 import ProviderCard from '../components/ProviderCard';
-import { Empty } from '../components/StateView';
+import { Empty, ErrorState } from '../components/StateView';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
 import { getCategories, getAllProviders, categoryName, providerName, type Category } from '../lib/queries';
 import { categoryTint } from '../lib/categoryTint';
@@ -112,6 +112,15 @@ export default function Search() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {/* A dropped load must read as retryable, not as "no results". */}
+        {(cats.isError || pros.isError) && !cats.data && !pros.data && (
+          <ErrorState
+            onRetry={() => {
+              cats.refetch();
+              pros.refetch();
+            }}
+          />
+        )}
         {nothing && <Empty icon="search-outline" title={t('search.noneTitle')} sub={t('search.noneSub')} />}
 
         {hitCats.length > 0 && (

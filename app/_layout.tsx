@@ -21,6 +21,19 @@ import {
   NotoSansDevanagari_400Regular,
   NotoSansDevanagari_700Bold,
 } from '@expo-google-fonts/noto-sans-devanagari';
+// Indic DISPLAY faces — give Telugu/Hindi headlines the same character + weight
+// English gets from Bricolage (Noto Sans is body-grade only). Baloo superfamily:
+// warm, confident, multi-weight, one design across scripts.
+import {
+  BalooTammudu2_600SemiBold,
+  BalooTammudu2_700Bold,
+  BalooTammudu2_800ExtraBold,
+} from '@expo-google-fonts/baloo-tammudu-2';
+import {
+  Baloo2_600SemiBold,
+  Baloo2_700Bold,
+  Baloo2_800ExtraBold,
+} from '@expo-google-fonts/baloo-2';
 import {
   BricolageGrotesque_500Medium,
   BricolageGrotesque_600SemiBold,
@@ -52,6 +65,12 @@ function RootLayout() {
     NotoSansTelugu_700Bold,
     NotoSansDevanagari_400Regular,
     NotoSansDevanagari_700Bold,
+    BalooTammudu2_600SemiBold,
+    BalooTammudu2_700Bold,
+    BalooTammudu2_800ExtraBold,
+    Baloo2_600SemiBold,
+    Baloo2_700Bold,
+    Baloo2_800ExtraBold,
     BricolageGrotesque_500Medium,
     BricolageGrotesque_600SemiBold,
     BricolageGrotesque_700Bold,

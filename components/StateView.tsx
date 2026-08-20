@@ -35,7 +35,7 @@ export function Loading() {
   );
 }
 
-export function ErrorState({ message }: { message?: string }) {
+export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
   const { t } = useTranslation();
   return (
     <View style={styles.center}>
@@ -44,6 +44,15 @@ export function ErrorState({ message }: { message?: string }) {
       </View>
       <AppText style={styles.title}>{t('common.crashTitle')}</AppText>
       {message ? <AppText style={styles.sub}>{message}</AppText> : null}
+      {onRetry ? (
+        <Pressable
+          style={({ pressed: p }) => [styles.cta, p && pressed]}
+          onPress={onRetry}
+          accessibilityRole="button"
+        >
+          <AppText style={styles.ctaTxt}>{t('common.crashRetry')}</AppText>
+        </Pressable>
+      ) : null}
     </View>
   );
 }

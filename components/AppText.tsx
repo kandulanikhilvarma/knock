@@ -16,12 +16,16 @@ const FAM: Record<Lang, Record<Weight, string>> = {
   te: { r: 'NotoSansTelugu_400Regular', m: 'NotoSansTelugu_400Regular', s: 'NotoSansTelugu_400Regular', b: 'NotoSansTelugu_700Bold' },
   hi: { r: 'NotoSansDevanagari_400Regular', m: 'NotoSansDevanagari_400Regular', s: 'NotoSansDevanagari_400Regular', b: 'NotoSansDevanagari_700Bold' },
 };
-// Editorial serif is Latin-only. Telugu/Hindi display uses REGULAR Noto — the
-// bold face is too heavy for big headlines in these scripts; size carries it.
-const DISPLAY: Record<Lang, string> = {
-  en: '', // keep the Bricolage weight the style already set
-  te: 'NotoSansTelugu_400Regular',
-  hi: 'NotoSansDevanagari_400Regular',
+// Display faces per script + weight tier. English keeps its Bricolage weight
+// (null). Telugu/Hindi map to the Baloo superfamily so headlines carry the same
+// character AND weight English gets — plain Noto Sans is body-grade and reads
+// thin/flat at title sizes. The tier comes from the Bricolage weight the style
+// set: displayLight(500)→SemiBold, display(600)→Bold, displayBold(700)→ExtraBold
+// (Indic script needs one tier heavier than Latin to match its visual weight).
+const DISPLAY: Record<Lang, Record<'m' | 's' | 'b', string> | null> = {
+  en: null,
+  te: { m: 'BalooTammudu2_600SemiBold', s: 'BalooTammudu2_700Bold', b: 'BalooTammudu2_800ExtraBold' },
+  hi: { m: 'Baloo2_600SemiBold', s: 'Baloo2_700Bold', b: 'Baloo2_800ExtraBold' },
 };
 
 function weightOf(fam: string): Weight {
@@ -40,7 +44,11 @@ export default function AppText({ style, ...rest }: TextProps) {
   const isDisplay = fam ? /PlayfairDisplay|Fraunces|Bricolage/.test(fam) : false;
   if (fam && fam !== 'monospace') {
     if (isDisplay) {
-      if (DISPLAY[lang]) swap = { fontFamily: DISPLAY[lang] }; // en keeps Fraunces
+      const map = DISPLAY[lang]; // null for en → keep the Bricolage weight set
+      if (map) {
+        const w = weightOf(fam); // display styles set 500/600/700 → m/s/b
+        swap = { fontFamily: map[w === 'b' ? 'b' : w === 's' ? 's' : 'm'] };
+      }
     } else {
       swap = { fontFamily: FAM[lang][weightOf(fam)] };
     }
@@ -55,9 +63,10 @@ export default function AppText({ style, ...rest }: TextProps) {
     if (track) swap = { ...swap, letterSpacing: track };
   }
   // Telugu and Devanagari stack vowel signs above and below the baseline, so a
-  // Latin-tuned lineHeight clips them. Floor every line at 1.45x the size.
+  // Latin-tuned lineHeight clips them and reads cramped. Display (rounded Baloo,
+  // tall ascenders) wants the most air; body a little less. Floor accordingly.
   if (lang !== 'en' && typeof flat?.fontSize === 'number') {
-    const min = Math.ceil(flat.fontSize * 1.45);
+    const min = Math.ceil(flat.fontSize * (isDisplay ? 1.55 : 1.5));
     if (!flat.lineHeight || flat.lineHeight < min) swap = { ...swap, lineHeight: min };
   }
   return <RNText {...rest} style={[style, swap]} />;

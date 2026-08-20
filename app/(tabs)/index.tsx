@@ -29,18 +29,20 @@ import { Loading, ErrorState } from '../../components/StateView';
 export default function Home() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const { session } = useSession();
+  const { session, loading: sessLoading } = useSession();
   const myName = firstName(session?.user);
   const insets = useSafeAreaInsets();
 
-  // First launch goes to the language picker (§2-4), once.
+  // First launch goes to the language picker (§2-4), once. A signed-in user has
+  // already been through the app — don't bounce them to the picker on return.
   useEffect(() => {
+    if (sessLoading || session) return;
     AsyncStorage.getItem(SEEN_KEY)
       .then((seen) => {
         if (!seen) router.replace('/welcome');
       })
       .catch(() => {});
-  }, [router]);
+  }, [router, session, sessLoading]);
 
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const earnings = useQuery({ queryKey: ['earnings'], queryFn: getCityEarnings });
@@ -102,7 +104,7 @@ export default function Home() {
           </FadeIn>
 
           {cats.isLoading && <Loading />}
-          {cats.isError && <ErrorState message={(cats.error as Error)?.message} />}
+          {cats.isError && <ErrorState message={(cats.error as Error)?.message} onRetry={() => cats.refetch()} />}
 
           {/* The core task: pick a trade. */}
           {live.length > 0 && (
