@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { colors, space, radius, font, type, tap } from '../../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import {
   getCategories,
   getProvidersByCategory,
@@ -15,6 +15,8 @@ import ProviderCard from '../../components/ProviderCard';
 import Touchable from '../../components/Touchable';
 import CategoryArt from '../../components/CategoryArt';
 import { categoryTint } from '../../lib/categoryTint';
+import { useMyLocation } from '../../lib/useMyLocation';
+import { decodeGeohash, distanceKm } from '../../lib/geo';
 import { track } from '../../lib/analytics';
 import { Ionicons } from '@expo/vector-icons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
@@ -39,6 +41,19 @@ export default function CategoryScreen() {
     enabled: !!slug && isLive,
   });
 
+  // Nearest-first, the same ranking home + search use — distance is what matters.
+  const me = useMyLocation();
+  const located = useMemo(
+    () =>
+      (providers.data ?? [])
+        .map((p) => {
+          const at = decodeGeohash(p.area_geohash);
+          return { p, d: at ? distanceKm(me.coords, at) : null };
+        })
+        .sort((a, b) => (a.d ?? 1e9) - (b.d ?? 1e9)),
+    [providers.data, me.coords],
+  );
+
   return (
     <View style={styles.screen}>
       <Stack.Screen options={{ title }} />
@@ -51,17 +66,31 @@ export default function CategoryScreen() {
       {category && isLive && (
         <>
           {providers.isLoading && <Loading />}
-          {providers.isError && <ErrorState message={(providers.error as Error)?.message} />}
+          {providers.isError && (
+            <ErrorState message={(providers.error as Error)?.message} onRetry={() => providers.refetch()} />
+          )}
           {providers.data && (
             <FlatList
-              data={providers.data}
-              keyExtractor={(p) => p.user_id}
+              data={located}
+              keyExtractor={({ p }) => p.user_id}
               contentContainerStyle={styles.list}
-              renderItem={({ item }) => (
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={
+                located.length > 0 ? (
+                  <View style={styles.countHead}>
+                    <View style={styles.countDot} />
+                    <AppText style={styles.countTxt}>
+                      {t('nearby.count', { count: located.length })}
+                    </AppText>
+                  </View>
+                ) : null
+              }
+              renderItem={({ item: { p, d } }) => (
                 <ProviderCard
-                  provider={item}
+                  provider={p}
+                  distanceKm={d}
                   onPress={() =>
-                    router.push({ pathname: '/provider/[id]', params: { id: item.user_id } })
+                    router.push({ pathname: '/provider/[id]', params: { id: p.user_id } })
                   }
                 />
               )}
@@ -141,14 +170,18 @@ function Waitlist({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   list: { padding: space.lg, gap: space.md },
+  countHead: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingBottom: space.xs },
+  countDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
+  countTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.successInk },
   waitlist: { padding: space.lg, gap: space.md },
   hero: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    backgroundColor: colors.ink,
+    backgroundColor: colors.primary,
     borderRadius: radius.card,
     padding: space.lg,
+    ...shadow.card,
   },
   heroBadge: {
     alignSelf: 'flex-start',

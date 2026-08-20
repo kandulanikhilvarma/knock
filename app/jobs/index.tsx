@@ -19,7 +19,7 @@ export default function JobsScreen() {
     <View style={styles.screen}>
       <Stack.Screen options={{ title: t('jobs.title') }} />
       {q.isLoading && <Loading />}
-      {q.isError && <ErrorState message={(q.error as Error)?.message} />}
+      {q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
       {q.data && (
         <FlatList
           data={q.data}
