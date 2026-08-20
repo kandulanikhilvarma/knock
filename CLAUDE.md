@@ -17,11 +17,11 @@ Full spec: [services-app-master-plan.md](services-app-master-plan.md) — read i
 - **Zustand** (client state) + **React Query** (server state) — add when P2+ needs them.
 - **Supabase** only: Auth (phone OTP), Postgres + RLS on every table, Realtime, Storage, Edge Functions. No Firebase.
 
-## Design tokens — "Shifud" approved 2026-08-14, live in `theme/tokens.ts` (supersedes the 2026-08-13 "Proof on paper" ink/saffron system, which supersedes §5 blue)
-- Direction: **warm editorial** — cream paper ground, **deep forest-green as the ONE action** (pill CTAs), big serif display type, soft pastel blocks behind category items, peach price tags, organic single-stroke line motifs. Ref: Shifud Dine-In dribbble shot.
-- `primary/accent #1B3A2B` forest (dark surfaces + the one CTA, pill-shaped) · `success #3E7A54` (proof only — verified/available/paid) · `gold #C87A46` terracotta (₹0 coin ring / value) · pastels `pink #F0C9C4 · blue #BFD6DF · sage #C8D9B7 · peach #F1C6A6` (category blocks) · `bg #EAE5D9` cream · `surface #F6F2E9` · `ink #191811` warm-black type
-- Type: **Fraunces** serif for all display/titles/big numbers (Latin) · Inter for body/labels · Noto Sans Telugu/Devanagari for those scripts. `components/AppText` swaps family by active language at render (en→Inter/Fraunces, te→Noto Telugu, hi→Devanagari) — **author styles with `font.*`, never a raw family; wrap text in `AppText`, not `Text`.**
-- City-earnings = big serif ₹ number on a **forest-green block**. Category tiles = pastel glyph chip (`categoryTint(slug)`) + serif name. Organic motif = `components/OrganicLines`.
+## Design tokens — "Doorstep" approved 2026-08-20, live in `theme/tokens.ts` (supersedes "Shifud" cream/serif, which superseded "Proof on paper" ink/saffron, which superseded §5 blue)
+- Direction: **confident premium** — warm paper ground, **deep forest-green as the ONE action** (pill CTAs), a modern **grotesque display** (not serif), real layered depth, soft pastel blocks behind category items, ₹0 as a coin badge. Home hero = full-bleed forest band. Shifud's cream+Fraunces look was retired as too "AI-default".
+- `primary/accent #0F3A2C` forest (dark surfaces + the one CTA, pill-shaped) · `success #1E9E6A` emerald (proof only — verified/available/paid) · `gold #CF8A3C` (₹0 coin / value) · pastels `pink #F0C9C4 · blue #BFD6DF · sage #C8D9B7 · peach #F1C6A6` (category blocks) · `bg #ECE7DA` paper · `surface #FBF8F1` bright card · `ink #14150F` warm-black type
+- Type: **Bricolage Grotesque** for all display/titles/big numbers (Latin) · Inter for body/labels · Noto Sans Telugu/Devanagari for those scripts. `components/AppText` swaps family by active language at render (en→Inter/Bricolage, te→Noto Telugu, hi→Devanagari) — **author styles with `font.*`, never a raw family; wrap text in `AppText`, not `Text`.**
+- City-earnings = big tabular ₹ number on a **forest-green block**. Category tiles = pastel glyph chip (`categoryTint(slug)`) + grotesque name.
 - 22px card radius · **pill CTAs** · 48px min tap · bottom tabs Home · Bookings · Chat · Profile (active = forest).
 - **Re-theme the whole app = change `theme/tokens.ts` values only.** Screens reference token names, never raw hex. Test Telugu first — ~30% longer.
 
