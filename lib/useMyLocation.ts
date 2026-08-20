@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import * as Location from 'expo-location';
 import { CITY_CENTER, type LatLng } from './geo';
 
@@ -25,10 +26,16 @@ export function useMyLocation(): LocationState {
   const read = useCallback(async () => {
     setState((s) => ({ ...s, loading: true }));
     try {
-      const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true, canAskAgain });
-        return;
+      // Web never prompts from requestForegroundPermissionsAsync — that only
+      // queries the Permissions API. The browser dialog fires solely from
+      // getCurrentPositionAsync, so on web skip the gate and call it directly
+      // (a deny rejects → caught below). Native keeps the explicit ask.
+      if (Platform.OS !== 'web') {
+        const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setState({ coords: CITY_CENTER, precise: false, loading: false, denied: true, canAskAgain });
+          return;
+        }
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       setState({

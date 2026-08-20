@@ -7,7 +7,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useState } from 'react';
-import { useSession } from '../../lib/session';
+import { useSession, displayName } from '../../lib/session';
 import { signOut, deleteAccount } from '../../lib/auth';
 import { getMyProviderProfile, setAvailability, type Availability } from '../../lib/provider';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
@@ -113,8 +113,7 @@ export default function Profile() {
   // Anonymous users come back with email/phone as empty strings, not null, so
   // ?? would happily hand back "" and render a blank name and avatar.
   const email = user?.email || null;
-  const phone = user?.phone || null;
-  const identity = email ?? phone ?? t('profileTab.guestName');
+  const identity = displayName(user) ?? t('profileTab.guestName');
   const initial = identity.charAt(0).toUpperCase();
   const accountType = isGuest ? t('profileTab.typeGuest') : email ? t('profileTab.typeEmail') : t('profileTab.typePhone');
 

@@ -17,6 +17,7 @@ import {
   type Category,
 } from '../../lib/queries';
 import { categoryTint } from '../../lib/categoryTint';
+import { useSession, firstName } from '../../lib/session';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
@@ -29,6 +30,8 @@ import { Loading, ErrorState } from '../../components/StateView';
 export default function Home() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
+  const { session } = useSession();
+  const myName = firstName(session?.user);
 
   // First launch goes to the language picker (§2-4), once.
   useEffect(() => {
@@ -63,6 +66,7 @@ export default function Home() {
             </View>
             <LanguageSwitcher />
           </View>
+          {myName && <AppText style={styles.hi}>{t('home.hi', { name: myName })}</AppText>}
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
         </FadeIn>
 
@@ -186,13 +190,14 @@ const styles = StyleSheet.create({
   heroTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   loc: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   locTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
+  hi: { fontFamily: font.teBold, fontSize: type.small, color: colors.accent, marginTop: space.sm, letterSpacing: 0.2 },
   headline: {
     fontFamily: font.displayBold,
     fontSize: type.display,
     lineHeight: type.display + 3,
     letterSpacing: -0.5,
     color: colors.ink,
-    marginTop: space.sm,
+    marginTop: 2,
     maxWidth: '92%',
   },
 
