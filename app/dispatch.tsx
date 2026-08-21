@@ -118,7 +118,7 @@ export default function Dispatch() {
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.bar}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
           hitSlop={12}
           style={({ pressed: p }) => [styles.close, p && pressed]}
         >

@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Platform, View, Pressable, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
-import { Stack, type ErrorBoundaryProps } from 'expo-router';
+import { Stack, useRouter, type ErrorBoundaryProps } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -72,6 +73,25 @@ if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getEle
 
 const queryClient = new QueryClient();
 
+// One consistent, premium back control for every stack screen. Safe-back: if the
+// history is empty (deep link, web refresh, or a screen reached via replace) the
+// native arrow would be dead — fall back to home so "back" always goes somewhere.
+function HeaderBack() {
+  const router = useRouter();
+  const { t } = useTranslation();
+  return (
+    <Pressable
+      onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+      hitSlop={12}
+      style={({ pressed }) => [hb.back, pressed && { opacity: 0.6 }]}
+      accessibilityRole="button"
+      accessibilityLabel={t('a11y.back')}
+    >
+      <Ionicons name="chevron-back" size={22} color={colors.ink} />
+    </Pressable>
+  );
+}
+
 function RootLayout() {
   const { i18n } = useTranslation();
   const [fontsLoaded, fontError] = useFonts({
@@ -129,7 +149,12 @@ function RootLayout() {
             headerShadowVisible: false,
             headerTintColor: colors.ink,
             headerTitleStyle: { fontFamily: headerFont, color: colors.ink },
+            headerTitleAlign: 'center',
             contentStyle: { backgroundColor: colors.bg },
+            // Every stack header gets the same safe-back control (screens with
+            // headerShown:false — tabs, welcome, search, dispatch — bring their own).
+            headerBackVisible: false,
+            headerLeft: () => <HeaderBack />,
           }}
         >
           <Stack.Screen name="(tabs)" />
@@ -174,6 +199,19 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
     </View>
   );
 }
+
+const hb = StyleSheet.create({
+  back: {
+    width: 38,
+    height: 38,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 const eb = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },

@@ -373,6 +373,7 @@
   "a11y": {
     "send": "Send message",
     "removePhoto": "Remove photo",
-    "close": "Close"
+    "close": "Close",
+    "back": "Go back"
   }
 }

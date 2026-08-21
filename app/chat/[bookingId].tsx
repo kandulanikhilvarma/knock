@@ -65,6 +65,7 @@ export default function ChatThread() {
       <Stack.Screen options={{ title: t('chat.title') }} />
       <FlatList
         ref={listRef}
+        style={styles.fill}
         data={msgs}
         keyExtractor={(m) => m.id}
         contentContainerStyle={[styles.list, msgs.length === 0 && styles.listEmpty]}
@@ -116,6 +117,7 @@ export default function ChatThread() {
           phone keyboard; the four lines that get sent most are one tap. */}
       <ScrollView
         horizontal
+        style={styles.quickBar}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.quick}
         keyboardShouldPersistTaps="always"
@@ -156,6 +158,7 @@ export default function ChatThread() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
+  fill: { flex: 1 },
 
   list: { padding: space.lg, paddingBottom: space.md, flexGrow: 1 },
   listEmpty: { justifyContent: 'center' },
@@ -178,10 +181,14 @@ const styles = StyleSheet.create({
   },
   empty: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
 
-  quick: { paddingHorizontal: space.lg, paddingBottom: space.sm, gap: space.sm },
+  // Horizontal strip: pin its height so it never grows into the message area,
+  // and center the chips on the cross-axis so they stay pill-shaped, not ovals.
+  quickBar: { flexGrow: 0, flexShrink: 0 },
+  quick: { paddingHorizontal: space.lg, paddingBottom: space.sm, gap: space.sm, alignItems: 'center' },
   chip: {
+    height: 38,
+    justifyContent: 'center',
     paddingHorizontal: space.lg,
-    paddingVertical: space.sm,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
     borderWidth: 1,
