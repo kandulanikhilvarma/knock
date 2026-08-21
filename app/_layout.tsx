@@ -61,10 +61,15 @@ if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getEle
   const s = document.createElement('style');
   s.id = 'app-web-fixes';
   s.textContent = `
-    input, textarea { outline: none !important; }
-    input:focus-visible, textarea:focus-visible {
-      outline: 2px solid rgba(15,58,44,0.35) !important;
-      outline-offset: 2px;
+    /* No outline on the field itself, in any state. Most inputs sit inside a
+       rounded container and carry no radius of their own, so an outline on the
+       input draws a square box that cuts across the design. */
+    input, textarea, [contenteditable] { outline: none !important; box-shadow: none; }
+    /* Focus ring goes on the rounded PARENT instead, so it follows the real
+       corner radius. :has() degrades to no ring where unsupported. */
+    div:has(> input:focus-visible),
+    div:has(> textarea:focus-visible) {
+      box-shadow: 0 0 0 2px rgba(15,58,44,0.30) !important;
     }
     html, body, #root { overflow-x: hidden; max-width: 100%; }
   `;
