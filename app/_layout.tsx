@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { Platform, View, Pressable, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Stack, type ErrorBoundaryProps } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -51,6 +51,24 @@ import '../lib/i18n';
 
 initSentry();
 SplashScreen.preventAutoHideAsync();
+
+// Web only: RN-web draws the browser's black focus box on every <input>. Kill it
+// and give keyboard users a soft forest ring instead (focus-visible = keyboard,
+// not mouse, so a tap never shows a box). Also stop the mobile-first layout from
+// ever scrolling sideways on a wide desktop window.
+if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getElementById('app-web-fixes')) {
+  const s = document.createElement('style');
+  s.id = 'app-web-fixes';
+  s.textContent = `
+    input, textarea { outline: none !important; }
+    input:focus-visible, textarea:focus-visible {
+      outline: 2px solid rgba(15,58,44,0.35) !important;
+      outline-offset: 2px;
+    }
+    html, body, #root { overflow-x: hidden; max-width: 100%; }
+  `;
+  document.head.appendChild(s);
+}
 
 const queryClient = new QueryClient();
 
