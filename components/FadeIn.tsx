@@ -15,12 +15,24 @@ export default function FadeIn({
 }) {
   const t = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    Animated.timing(t, {
+    const anim = Animated.timing(t, {
       toValue: 1,
       duration: 380,
       delay,
       useNativeDriver: true,
-    }).start();
+    });
+    // Content must never depend on an animation finishing to become visible.
+    // requestAnimationFrame is paused in a hidden tab and throttled under low
+    // power, which would otherwise strand this subtree at opacity 0 forever.
+    // setTimeout still fires in those conditions, so it snaps to visible.
+    const safety = setTimeout(() => t.setValue(1), delay + 1200);
+    anim.start(({ finished }) => {
+      if (finished) clearTimeout(safety);
+    });
+    return () => {
+      clearTimeout(safety);
+      anim.stop();
+    };
   }, [t, delay]);
   return (
     <Animated.View

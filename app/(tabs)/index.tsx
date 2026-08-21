@@ -23,6 +23,7 @@ import CategoryArt from '../../components/CategoryArt';
 import TrustPillars from '../../components/TrustPillars';
 import HowItWorks from '../../components/HowItWorks';
 import NearbyProviders from '../../components/NearbyProviders';
+import DoorstepScene from '../../components/DoorstepScene';
 import FadeIn from '../../components/FadeIn';
 import { Loading, ErrorState } from '../../components/StateView';
 
@@ -94,6 +95,11 @@ export default function Home() {
               <Ionicons name="arrow-forward" size={16} color={colors.onDark} />
             </View>
           </Pressable>
+
+          {/* The band ends in a lit street — the promise, pictured. */}
+          <View style={styles.scene}>
+            <DoorstepScene />
+          </View>
         </FadeIn>
 
         <View style={styles.body}>
@@ -276,6 +282,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  // Full-bleed to the band edges: cancel the hero's own padding so the street
+  // runs corner to corner and the forest ends in a skyline.
+  scene: {
+    marginHorizontal: -space.lg,
+    marginBottom: -space.xl,
+    marginTop: space.xl,
   },
 
   body: { padding: space.lg, gap: space.lg },
