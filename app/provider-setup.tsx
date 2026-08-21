@@ -5,10 +5,10 @@ import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, space, radius, font, type, tap } from './../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
 import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
-import { pickImages, uploadGalleryPhotos } from '../lib/photos';
+import { pickImages, uploadGalleryPhotos, pickAvatar, uploadAvatar } from '../lib/photos';
 import { useSession } from '../lib/session';
 import { Loading } from '../components/StateView';
 import VoiceRecorder from '../components/VoiceRecorder';
@@ -28,6 +28,7 @@ export default function ProviderSetup() {
   const [bio, setBio] = useState('');
   const [workPhotos, setWorkPhotos] = useState<string[]>([]);
   const [voiceUrl, setVoiceUrl] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const p = mine.data;
@@ -39,8 +40,17 @@ export default function ProviderSetup() {
       setBio(p.bio ?? '');
       setWorkPhotos(p.work_photos ?? []);
       setVoiceUrl(p.voice_intro_url ?? null);
+      setPhotoUrl(p.photo_url ?? null);
     }
   }, [mine.data]);
+
+  const pickFace = useMutation({
+    mutationFn: async () => {
+      const picked = await pickAvatar();
+      return picked ? uploadAvatar(picked) : null;
+    },
+    onSuccess: (url) => url && setPhotoUrl(url),
+  });
 
   // Pick → upload to the public gallery bucket → append the returned URLs.
   const pick = useMutation({
@@ -59,6 +69,7 @@ export default function ProviderSetup() {
         city: city.trim(),
         visitingCharge: charge ? parseInt(charge, 10) : null,
         bio: bio.trim(),
+        photoUrl,
         workPhotos,
         voiceIntroUrl: voiceUrl,
       }),
@@ -70,7 +81,8 @@ export default function ProviderSetup() {
   const toggle = (slug: string) =>
     setServices((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
 
-  const valid = services.length > 0 && upiId.includes('@');
+  // The face is mandatory: customers open the door to this person. No photo, no listing.
+  const valid = services.length > 0 && upiId.includes('@') && !!photoUrl;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -82,6 +94,37 @@ export default function ProviderSetup() {
         </View>
         <AppText style={styles.bannerTxt}>{t('providerSetup.lead')}</AppText>
       </View>
+
+      {/* The face comes first — it's what a customer judges before opening a door. */}
+      <View style={styles.faceCard}>
+        <Pressable
+          style={styles.faceWrap}
+          disabled={pickFace.isPending}
+          onPress={() => pickFace.mutate()}
+          accessibilityRole="button"
+          accessibilityLabel={t('providerSetup.photoCta')}
+        >
+          {photoUrl ? (
+            <Image source={{ uri: photoUrl }} style={styles.face} />
+          ) : (
+            <View style={[styles.face, styles.faceEmpty]}>
+              <Ionicons name="person-outline" size={30} color={colors.primary} />
+            </View>
+          )}
+          <View style={styles.faceBadge}>
+            <Ionicons name={photoUrl ? 'checkmark' : 'camera'} size={13} color={colors.onDark} />
+          </View>
+        </Pressable>
+        <View style={{ flex: 1 }}>
+          <AppText style={styles.faceTitle}>
+            {t('providerSetup.photoTitle')} <AppText style={styles.req}>*</AppText>
+          </AppText>
+          <AppText style={styles.faceSub}>
+            {pickFace.isPending ? t('providerSetup.uploading') : t('providerSetup.photoSub')}
+          </AppText>
+        </View>
+      </View>
+      {pickFace.isError && <AppText style={styles.err}>{(pickFace.error as Error).message}</AppText>}
 
       <AppText style={styles.label}>{t('providerSetup.services')}</AppText>
       <View style={styles.chips}>
@@ -151,6 +194,26 @@ const styles = StyleSheet.create({
   coinTxt: { fontFamily: font.bold, fontSize: 14, color: colors.gold },
   bannerTxt: { flex: 1, fontFamily: font.te, fontSize: type.small, color: colors.onDark, lineHeight: 19 },
   label: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm },
+
+  faceCard: {
+    flexDirection: 'row', alignItems: 'center', gap: space.lg,
+    backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg,
+    ...shadow.soft,
+  },
+  faceWrap: { position: 'relative' },
+  face: { width: 76, height: 76, borderRadius: radius.pill, backgroundColor: colors.line2 },
+  faceEmpty: {
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: colors.tintSuccess, borderWidth: 1.5, borderColor: colors.line, borderStyle: 'dashed',
+  },
+  faceBadge: {
+    position: 'absolute', right: -2, bottom: -2, width: 26, height: 26, borderRadius: 13,
+    backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center',
+    borderWidth: 2, borderColor: colors.surface,
+  },
+  faceTitle: { fontFamily: font.displayBold, fontSize: type.h3, color: colors.ink },
+  req: { color: colors.danger },
+  faceSub: { fontFamily: font.te, fontSize: type.small, lineHeight: 18, color: colors.inkMuted, marginTop: 3 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
   chip: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, paddingVertical: space.xs, paddingHorizontal: space.md, backgroundColor: colors.surface },
   chipOn: { backgroundColor: colors.ink, borderColor: colors.ink },

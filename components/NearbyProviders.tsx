@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import AppText from './AppText';
+import Avatar from './Avatar';
 import LiveMap, { type MapPin } from './LiveMap';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
 import { getAllProviders, providerName } from '../lib/queries';
@@ -24,11 +25,23 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
       .filter((p) => p.availability_status === 'available')
       .map((p) => {
         const at = decodeGeohash(p.area_geohash);
-        return at ? { id: p.user_id, name: providerName(p).split(' ')[0] || 'Pro', ...at, km: distanceKm(me.coords, at) } : null;
+        return at
+          ? {
+              id: p.user_id,
+              name: providerName(p).split(' ')[0] || 'Pro',
+              photo: p.photo_url ?? null,
+              verified: p.verify_tier === 'verified',
+              ...at,
+              km: distanceKm(me.coords, at),
+            }
+          : null;
       })
       .filter((r): r is NonNullable<typeof r> => r !== null)
       .sort((a, b) => a.km - b.km);
   }, [pros.data, me.coords]);
+
+  const faces = located.slice(0, 5);
+  const verifiedCount = located.filter((r) => r.verified).length;
 
   const pins: MapPin[] = located.slice(0, 6).map((r) => ({
     id: r.id,
@@ -51,6 +64,25 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
           </View>
         )}
       </View>
+
+      {/* Real faces of the people who'd actually come — the trust signal, before
+          any map or button. Falls back to initials until a photo is uploaded. */}
+      {faces.length > 0 && (
+        <View style={styles.faceRow}>
+          <View style={styles.pile}>
+            {faces.map((f, i) => (
+              <View key={f.id} style={[styles.pileItem, i > 0 && { marginLeft: -12 }]}>
+                <Avatar name={f.name} photoUrl={f.photo} size={38} />
+              </View>
+            ))}
+          </View>
+          <AppText style={styles.faceTxt} numberOfLines={2}>
+            {verifiedCount > 0
+              ? t('nearby.facesVerified', { count: verifiedCount })
+              : t('nearby.faces', { count: located.length })}
+          </AppText>
+        </View>
+      )}
 
       <View style={styles.mapWrap}>
         <LiveMap center={me.coords} pins={pins} youLabel={t('dispatch.you')} height={210} insetX={32} zoom={13} />
@@ -106,6 +138,11 @@ const styles = StyleSheet.create({
   },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.success },
   pillTxt: { fontFamily: font.semibold, fontSize: type.chip, color: colors.successInk },
+
+  faceRow: { flexDirection: 'row', alignItems: 'center', gap: space.md },
+  pile: { flexDirection: 'row' },
+  pileItem: { borderWidth: 2, borderColor: colors.bg, borderRadius: radius.pill },
+  faceTxt: { flex: 1, fontFamily: font.medium, fontSize: type.small, lineHeight: 18, color: colors.ink2 },
 
   mapWrap: { position: 'relative' },
   gate: {

@@ -23,6 +23,7 @@ export type ProviderInput = {
   city: string;
   visitingCharge: number | null;
   bio: string;
+  photoUrl?: string | null;
   workPhotos?: string[];
   voiceIntroUrl?: string | null;
 };
@@ -45,6 +46,7 @@ export async function saveProviderProfile(input: ProviderInput) {
       city: input.city || null,
       visiting_charge: input.visitingCharge,
       bio: input.bio || null,
+      ...(input.photoUrl !== undefined ? { photo_url: input.photoUrl } : {}),
       ...(input.workPhotos ? { work_photos: input.workPhotos } : {}),
       ...(input.voiceIntroUrl !== undefined ? { voice_intro_url: input.voiceIntroUrl } : {}),
     },

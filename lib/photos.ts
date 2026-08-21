@@ -21,6 +21,41 @@ export async function pickImages(limit = 5): Promise<PickedPhoto[]> {
     .map((a) => ({ uri: a.uri, base64: a.base64! }));
 }
 
+// One square profile photo. Editing is forced on so the crop is a real 1:1 head
+// shot — a provider's face is the trust signal customers judge before booking.
+// ponytail: library only; add a camera branch when providers ask for it.
+export async function pickAvatar(): Promise<PickedPhoto | null> {
+  const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!perm.granted) throw new Error('Photo access denied');
+  const res = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'],
+    allowsEditing: true,
+    aspect: [1, 1],
+    quality: 0.6,
+    base64: true,
+  });
+  if (res.canceled) return null;
+  const a = res.assets[0];
+  return a?.base64 ? { uri: a.uri, base64: a.base64 } : null;
+}
+
+// Profile photo → public bucket, stable URL, stored on provider_profiles.photo_url.
+// upsert:true so re-uploading replaces the old face instead of orphaning files.
+export async function uploadAvatar(photo: PickedPhoto): Promise<string> {
+  const { data: auth } = await supabase.auth.getUser();
+  const uid = auth.user?.id;
+  if (!uid) throw new Error('Not signed in');
+  const bytes = Uint8Array.from(atob(photo.base64), (c) => c.charCodeAt(0));
+  const path = `${uid}/avatar.jpg`;
+  const { error } = await supabase.storage
+    .from('provider-gallery')
+    .upload(path, bytes, { contentType: 'image/jpeg', upsert: true });
+  if (error) throw error;
+  // Cache-bust so a replaced photo shows immediately instead of the stale one.
+  const base = supabase.storage.from('provider-gallery').getPublicUrl(path).data.publicUrl;
+  return `${base}?v=${Date.now()}`;
+}
+
 // Upload picked photos under job-photos/<uid>/<folder>/<ts>.jpg. Returns storage
 // paths (store these in bookings.photos / provider_profiles work gallery).
 export async function uploadPhotos(folder: string, photos: PickedPhoto[]): Promise<string[]> {
