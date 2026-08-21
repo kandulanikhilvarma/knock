@@ -35,7 +35,7 @@ export default function LanguageSwitcher({ onDark = false }: { onDark?: boolean 
               onDark ? styles.chipDark : styles.chip,
               on && (onDark ? styles.chipOnDark : styles.chipOn),
             ]}
-            hitSlop={8}
+            hitSlop={14}
             accessibilityRole="button"
             accessibilityLabel={l.name}
             accessibilityState={{ selected: on }}
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
   // onDark: one translucent pill housing the chips, matching the forest hero.
   rowDark: { gap: 2, padding: 3, borderRadius: radius.pill, backgroundColor: 'rgba(255,255,255,0.1)' },
   chip: {
-    minWidth: 40,
-    height: 32,
+    minWidth: 44,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: space.sm,
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
   txt: { fontFamily: font.semibold, fontSize: type.small, color: colors.inkMuted },
   txtOn: { color: colors.surface },
   chipDark: {
-    minWidth: 36,
-    height: 28,
+    minWidth: 42,
+    height: 34,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 9,
