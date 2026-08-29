@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="1096" viewBox="0 0 390 1096" role="img" aria-label="Knock home screen: forest hero with the zero-commission promise, live map of nearby pros, service tiles, and the city earnings counter.">
+  <defs>
+    <clipPath id="screen"><rect x="12" y="12" width="366" height="1072" rx="34"/></clipPath>
+    <clipPath id="mapclip"><rect x="34" y="370" width="322" height="196" rx="24"/></clipPath>
+    <radialGradient id="glow" cx="30%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#1E9E6A" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#1E9E6A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="goldglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#CF8A3C" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#CF8A3C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- phone body -->
+  <rect x="4" y="4" width="382" height="1088" rx="44" fill="#0c0d0a"/>
+
+  <g clip-path="url(#screen)">
+    <rect x="12" y="12" width="366" height="1072" fill="#F4F0E6"/>
+
+    <!-- ============ forest hero band ============ -->
+    <path d="M12 12 H378 V278 A34 34 0 0 1 344 312 H46 A34 34 0 0 1 12 278 Z" fill="#0F3A2C"/>
+    <circle cx="360" cy="40" r="110" fill="url(#glow)"/>
+
+    <!-- location -->
+    <circle cx="45" cy="46" r="11" fill="#ffffff" fill-opacity="0.12"/>
+    <circle cx="45" cy="44" r="3.4" fill="#F3EFE4"/>
+    <path d="M45 47 L42.4 43 H47.6 Z" fill="#F3EFE4"/>
+    <text x="63" y="43" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#F3EFE4">Vijayawada</text>
+    <text x="63" y="57" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#A9BDA9">Governorpet &#183; 500m</text>
+
+    <!-- language chips -->
+    <rect x="266" y="32" width="90" height="26" rx="13" fill="#ffffff" fill-opacity="0.10"/>
+    <rect x="269" y="35" width="30" height="20" rx="10" fill="#F4F0E6"/>
+    <text x="284" y="49" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F3A2C">EN</text>
+    <text x="315" y="49" text-anchor="middle" font-family="Noto Sans Telugu, Nirmala UI, sans-serif" font-size="11" font-weight="600" fill="#A9BDA9">&#3108;&#3142;</text>
+    <text x="343" y="49" text-anchor="middle" font-family="Noto Sans Devanagari, Nirmala UI, sans-serif" font-size="11" font-weight="600" fill="#A9BDA9">&#2361;&#2367;</text>
+
+    <!-- greeting + the zero-commission coin -->
+    <text x="34" y="101" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1E9E6A">Hi, Nikhil</text>
+    <rect x="228" y="79" width="128" height="36" rx="18" fill="#CF8A3C" fill-opacity="0.16" stroke="#CF8A3C" stroke-opacity="0.5"/>
+    <circle cx="249" cy="97" r="13" fill="#CF8A3C"/>
+    <text x="249" y="102" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="800" fill="#241703">&#8377;0</text>
+    <text x="268" y="94" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#F1E3CF">zero</text>
+    <text x="268" y="107" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="600" fill="#F1E3CF">commission</text>
+
+    <!-- headline -->
+    <text x="34" y="158" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-1.1" fill="#F3EFE4">What needs</text>
+    <text x="34" y="193" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-1.1" fill="#F3EFE4">fixing today?</text>
+
+    <!-- search pill -->
+    <rect x="34" y="212" width="322" height="52" rx="26" fill="#FBF8F1"/>
+    <circle cx="59" cy="238" r="6.4" fill="none" stroke="#767263" stroke-width="2"/>
+    <path d="M64 243 L69 248" stroke="#767263" stroke-width="2" stroke-linecap="round"/>
+    <text x="79" y="243" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13.5" fill="#767263">Fan, tap, AC, geyser&#8230;</text>
+    <circle cx="330" cy="238" r="19" fill="#0F3A2C"/>
+    <path d="M324 238 H336 M331 233 L336 238 L331 243" stroke="#F3EFE4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- ============ pros near you ============ -->
+    <text x="34" y="352" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="-0.4" fill="#14150F">Pros near you</text>
+    <rect x="242" y="335" width="114" height="23" rx="11.5" fill="#DCEBE1"/>
+    <circle cx="256" cy="346.5" r="3.4" fill="#1E9E6A"/>
+    <text x="266" y="350" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#186B49">6 within 3km</text>
+
+    <!-- live map -->
+    <rect x="34" y="370" width="322" height="196" rx="24" fill="#E7EBDD"/>
+    <g clip-path="url(#mapclip)">
+      <path d="M34 430 H356 M34 500 H356 M120 370 V566 M250 370 V566" stroke="#0F3A2C" stroke-opacity="0.09" stroke-width="1.5"/>
+      <path d="M20 520 Q140 450 220 490 T380 455" stroke="#1E9E6A" stroke-opacity="0.35" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <!-- you -->
+      <circle cx="195" cy="478" r="13" fill="#1E9E6A" fill-opacity="0.22"/>
+      <circle cx="195" cy="478" r="7" fill="#1E9E6A" stroke="#ffffff" stroke-width="3"/>
+      <!-- pins -->
+      <g>
+        <path d="M112 434 L107 424 h10 z" fill="#0F3A2C"/>
+        <circle cx="112" cy="412" r="16" fill="#FBF8F1" stroke="#0F3A2C" stroke-width="2"/>
+        <text x="112" y="417" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0F3A2C">S</text>
+        <rect x="78.0" y="438" width="68" height="16" rx="6" fill="#14150F" fill-opacity="0.82"/>
+        <text x="112" y="449" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#ffffff">Suresh &#183; 0.4km</text>
+      </g>
+      <g>
+        <path d="M252 460 L247 450 h10 z" fill="#0F3A2C"/>
+        <circle cx="252" cy="438" r="16" fill="#FBF8F1" stroke="#0F3A2C" stroke-width="2"/>
+        <text x="252" y="443" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0F3A2C">K</text>
+        <rect x="221.0" y="464" width="62" height="16" rx="6" fill="#14150F" fill-opacity="0.82"/>
+        <text x="252" y="475" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#ffffff">Kiran &#183; 1.1km</text>
+      </g>
+      <g>
+        <path d="M304 522 L299 512 h10 z" fill="#0F3A2C"/>
+        <circle cx="304" cy="500" r="16" fill="#FBF8F1" stroke="#0F3A2C" stroke-width="2"/>
+        <text x="304" y="505" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#0F3A2C">R</text>
+        <rect x="274.0" y="526" width="60" height="16" rx="6" fill="#14150F" fill-opacity="0.82"/>
+        <text x="304" y="537" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#ffffff">Ravi &#183; 2.3km</text>
+      </g>
+    </g>
+
+    <!-- primary CTA -->
+    <rect x="34" y="582" width="322" height="54" rx="27" fill="#0F3A2C"/>
+    <path d="M104 601 L97 612 h5 l-2 8 7 -11 h-5 z" fill="#CF8A3C"/>
+    <text x="116" y="614" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#F3EFE4">Book the nearest pro now</text>
+
+    <!-- ============ book a service ============ -->
+    <text x="34" y="684" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="-0.4" fill="#14150F">Book a service</text>
+
+    <!-- electrician tile -->
+    <rect x="34" y="700" width="155" height="158" rx="22" fill="#FBF8F1"/>
+    <rect x="52" y="718" width="52" height="52" rx="16" fill="#BFD6DF"/>
+    <path d="M82 730 L70 748 h7 l-2 12 12 -18 h-7 z" fill="#0F3A2C"/>
+    <text x="52" y="815" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.4" fill="#14150F">Electrician</text>
+    <circle cx="56" cy="835" r="3.6" fill="#1E9E6A"/>
+    <text x="66" y="839" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#186B49">Available now</text>
+
+    <!-- plumber tile -->
+    <rect x="201" y="700" width="155" height="158" rx="22" fill="#FBF8F1"/>
+    <rect x="219" y="718" width="52" height="52" rx="16" fill="#F0C9C4"/>
+    <path d="M232 736 h14 a5 5 0 0 1 5 5 v5" stroke="#0F3A2C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M251 752 c-3 3 -3 7 0 7 s3 -4 0 -7 z" fill="#0F3A2C"/>
+    <text x="219" y="815" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.4" fill="#14150F">Plumber</text>
+    <circle cx="223" cy="835" r="3.6" fill="#1E9E6A"/>
+    <text x="233" y="839" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#186B49">Available now</text>
+
+    <!-- ============ city earnings proof ============ -->
+    <rect x="34" y="882" width="322" height="118" rx="26" fill="#0F3A2C"/>
+    <circle cx="60" cy="1000" r="90" fill="url(#goldglow)"/>
+    <text x="58" y="912" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#A9BDA9">Paid to Vijayawada workers this week</text>
+    <text x="58" y="954" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.2" fill="#F3EFE4">&#8377;4,82,600</text>
+    <circle cx="62" cy="978" r="3.4" fill="#7EE2A6"/>
+    <text x="72" y="982" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#7EE2A6">LIVE</text>
+    <text x="108" y="982" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11.5" fill="#A9BDA9">100% kept by them &#8212; the app takes no cut.</text>
+
+    <!-- ============ tab bar ============ -->
+    <rect x="12" y="1014" width="366" height="70" fill="#F4F0E6"/>
+    <path d="M12 1014 H378" stroke="#E4DDCC" stroke-width="1"/>
+    <!-- home (active) -->
+    <path d="M57 1044 l10 -9 10 9 v11 h-20 z" fill="#0F3A2C"/>
+    <text x="67" y="1071" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#0F3A2C">Home</text>
+    <!-- bookings -->
+    <rect x="132" y="1036" width="20" height="18" rx="3" fill="none" stroke="#767263" stroke-width="2"/>
+    <path d="M136 1042 h12 M136 1047 h8" stroke="#767263" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="142" y="1071" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#767263">Bookings</text>
+    <!-- chat -->
+    <path d="M228 1036 h20 a3 3 0 0 1 3 3 v9 a3 3 0 0 1 -3 3 h-12 l-5 5 v-5 h-3 a3 3 0 0 1 -3 -3 v-9 a3 3 0 0 1 3 -3 z" fill="none" stroke="#767263" stroke-width="2"/>
+    <text x="240" y="1071" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#767263">Chat</text>
+    <!-- profile -->
+    <circle cx="320" cy="1041" r="5.4" fill="none" stroke="#767263" stroke-width="2"/>
+    <path d="M311 1055 a9 9 0 0 1 18 0" fill="none" stroke="#767263" stroke-width="2" stroke-linecap="round"/>
+    <text x="320" y="1071" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#767263">Profile</text>
+  </g>
+</svg>

@@ -14,6 +14,8 @@ India-first · Telugu-first · launching in **Vijayawada** and **Visakhapatnam**
 
 **Live preview → [knock-kandula.vercel.app](https://knock-kandula.vercel.app)** · tap **Continue as guest** to walk the whole flow.
 
+<img src="docs/knock-home.svg" width="300" alt="Knock home screen: forest hero carrying the zero-commission promise, a live map of nearby pros with distances, service tiles, and the city earnings counter.">
+
 </div>
 
 ---
