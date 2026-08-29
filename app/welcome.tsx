@@ -40,6 +40,7 @@ export default function Welcome() {
         <View style={styles.coin}>
           <AppText style={styles.coinTxt}>₹0</AppText>
         </View>
+        <AppText lockFont style={styles.brand}>{t('app.name')}</AppText>
         <AppText style={styles.title}>{t('welcome.title')}</AppText>
         <AppText style={styles.sub}>{t('welcome.sub')}</AppText>
       </View>
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: space.xl,
   },
   coinTxt: { fontFamily: font.displayBold, fontSize: 22, color: colors.goldDeep },
+  brand: { fontFamily: font.displayBold, fontSize: type.display, letterSpacing: -0.8, color: colors.primary, marginBottom: space.xs },
   title: {
     fontFamily: font.displayBold,
     fontSize: type.display,

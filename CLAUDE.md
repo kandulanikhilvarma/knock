@@ -1,4 +1,4 @@
-# CLAUDE.md — services-app (working name)
+# CLAUDE.md — Knock
 
 Zero-commission local-services app. India, Telugu-first. Launch Vijayawada/Visakhapatnam.
 Full spec: [services-app-master-plan.md](services-app-master-plan.md) — read it before any non-trivial work.

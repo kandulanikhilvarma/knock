@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "services-app",
-    "slug": "services-app",
-    "scheme": "servicesapp",
+    "name": "Knock",
+    "slug": "knock",
+    "scheme": "knock",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.servicesapp.app",
+      "bundleIdentifier": "com.knock.app",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Used to find professionals near you and to show the one on the way to your door.",
         "NSCameraUsageDescription": "Used to scan the QR code the professional shows at your door, so you can confirm who has arrived.",
@@ -17,7 +17,7 @@
       }
     },
     "android": {
-      "package": "com.servicesapp.app",
+      "package": "com.knock.app",
       "adaptiveIcon": {
         "backgroundColor": "#1B4B8F",
         "foregroundImage": "./assets/android-icon-foreground.png",

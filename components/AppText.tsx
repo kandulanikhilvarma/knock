@@ -35,9 +35,13 @@ function weightOf(fam: string): Weight {
   return 'r';
 }
 
-export default function AppText({ style, ...rest }: TextProps) {
+// `lockFont` opts a run of text out of the per-language family swap. Use it only
+// where the typeface is the identity rather than the language — the wordmark. A
+// brand mark that changes face between Telugu and English is not one mark.
+export default function AppText({ style, lockFont, ...rest }: TextProps & { lockFont?: boolean }) {
   const { i18n } = useTranslation();
   const lang = (['en', 'te', 'hi'].includes(i18n.language) ? i18n.language : 'en') as Lang;
+  if (lockFont) return <RNText {...rest} style={style} />;
   const flat = StyleSheet.flatten(style) as TextStyle | undefined;
   const fam = flat?.fontFamily;
   let swap: TextStyle | null = null;

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Doorstep
+# Knock
 
 ### A verified local tradesperson at your door in minutes — paid directly by you, over UPI. **Zero commission, from anyone, ever.**
 
@@ -26,9 +26,9 @@ India-first · Telugu-first · launching in **Vijayawada** and **Visakhapatnam**
 
 Every services marketplace in India skims the worker. A plumber does a ₹500 job; the platform keeps ₹100–150 of it and marks the customer up to cover the cut. The worker loses a fifth of every rupee, and the customer pays more so the middleman can hold the money.
 
-Doorstep takes **₹0**. The customer pays the tradesperson **directly over UPI** — the app never touches the payment, never sets the price, never calls the worker an "employee". The worker keeps **100%**.
+Knock takes **₹0**. The customer pays the tradesperson **directly over UPI** — the app never touches the payment, never sets the price, never calls the worker an "employee". The worker keeps **100%**.
 
-|                    | Typical marketplace | Doorstep       |
+|                    | Typical marketplace | Knock          |
 | ------------------ | ------------------- | -------------- |
 | Commission on a ₹500 job | ₹100–150 taken   | **₹0**         |
 | Who holds the money | The platform (escrow) | **Nobody** — UPI customer → pro |
@@ -142,7 +142,7 @@ A confident, premium look built on one rule: **forest green is the single action
 
 ### Typography that respects three scripts
 
-This is the part most apps get wrong. Doorstep gives **each language its own display face with real weight and character** — not a Latin font with the local script bolted on as an afterthought.
+This is the part most apps get wrong. Knock gives **each language its own display face with real weight and character** — not a Latin font with the local script bolted on as an afterthought.
 
 | Script     | Display face          | Body face            |
 | ---------- | --------------------- | -------------------- |
