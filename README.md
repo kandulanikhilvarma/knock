@@ -16,6 +16,8 @@ India-first · Telugu-first · launching in **Vijayawada** and **Visakhapatnam**
 
 <img src="docs/knock-home.svg" width="300" alt="Knock home screen: forest hero carrying the zero-commission promise, a live map of nearby pros with distances, service tiles, and the city earnings counter.">
 
+<sub>Interactive scrolling mockup → **[Knock Premium](https://claude.ai/code/artifact/9cfd2072-f1ff-4d33-a990-947366e5e106)** · private link, opens for the owner</sub>
+
 </div>
 
 ---
