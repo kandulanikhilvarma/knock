@@ -127,14 +127,14 @@ Or "Continue as guest" for an anonymous customer.
 ## P7 Harden · P8 Ship — remaining, mostly blocked on user
 - [ ] Telugu layout audit on a real device (screenshot-verify — not headless).
 - [ ] Push notifications (Expo tokens) · WhatsApp offer alerts · wave-2 escalation.
-- [ ] Expose customer name/phone to the assigned provider (RLS).
+- [x] Expose customer name/phone to the assigned provider (RLS) — shipped in `0014_provider_reads_assigned_customer.sql`; Call button lives in the provider panel of `app/booking/[id].tsx`.
 - Blocked on user: SMS provider (phone OTP) · Expo+Apple/Play accounts (builds) ·
-  KYC vendor · Sentry DSN · app name (locks bundle id).
+  KYC vendor · Sentry DSN.
 
 ## Blocked on user (batched — I surface once)
 - [ ] **SMS provider** (MSG91/2Factor account + key) + enable Supabase Phone auth → unblocks P1 login
 - [ ] **Expo account** → I run `eas login`, cut Android build, start 14-day Play clock
-- [ ] **App name** (§1) → locks bundle ID before first build
+- [x] **App name** — **Knock** (2026-08-21). Bundle id `com.knock.app`, scheme `knock`, slug `knock`. Verify on App Store Connect at first build; still changeable until first release.
 
 ## Apple-grade UI polish (2026-08-18)
 - [x] Borderless soft cards app-wide (surfaces float on `shadow.soft`, borders only on inputs/buttons/proof).
