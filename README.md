@@ -12,7 +12,7 @@ India-first · Telugu-first · launching in **Vijayawada** and **Visakhapatnam**
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres_+_RLS-1E9E6A?style=flat-square&logo=supabase&logoColor=white)
 ![Languages](https://img.shields.io/badge/languages-EN_·_తెలుగు_·_हिन्दी-CF8A3C?style=flat-square)
 
-**Live preview → [services-app-kandula.vercel.app](https://services-app-kandula.vercel.app)** · tap **Continue as guest** to walk the whole flow.
+**Live preview → [knock-kandula.vercel.app](https://knock-kandula.vercel.app)** · tap **Continue as guest** to walk the whole flow.
 
 </div>
 
