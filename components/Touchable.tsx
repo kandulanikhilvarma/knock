@@ -10,7 +10,7 @@ export default function Touchable({ style, disabled, accessibilityRole, ...rest 
       // Default to the button role + reflect disabled state for screen readers.
       // A caller can still override the role (e.g. "link", "tab").
       accessibilityRole={accessibilityRole ?? 'button'}
-      accessibilityState={{ disabled: !!disabled }}
+      aria-disabled={!!disabled}
       disabled={disabled}
       style={(state) => [
         typeof style === 'function' ? style(state) : style,

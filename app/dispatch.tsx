@@ -122,6 +122,8 @@ export default function Dispatch() {
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
           hitSlop={12}
           style={({ pressed: p }) => [styles.close, p && pressed]}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.close')}
         >
           <Ionicons name="close" size={20} color={colors.ink} />
         </Pressable>

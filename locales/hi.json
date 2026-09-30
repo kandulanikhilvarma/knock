@@ -392,6 +392,11 @@
     "openSettings": "सेटिंग्स खोलें"
   },
   "a11y": {
+    "deleteAddress": "पता हटाएँ",
+    "clearSearch": "खोज साफ़ करें",
+    "otpCode": "सत्यापन कोड",
+    "stars_one": "{{count}} तारा",
+    "stars_other": "{{count}} तारे",
     "send": "संदेश भेजें",
     "removePhoto": "फ़ोटो हटाएं",
     "close": "बंद करें",

@@ -150,6 +150,7 @@ function Waitlist({
         <TextInput
           style={styles.input}
           value={phone}
+          accessibilityLabel={t('category.phonePlaceholder')}
           onChangeText={setPhone}
           placeholder={t('category.phonePlaceholder')}
           placeholderTextColor={colors.inkMuted}

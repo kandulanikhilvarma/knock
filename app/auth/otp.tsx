@@ -50,6 +50,7 @@ export default function OtpScreen() {
         <TextInput
           style={styles.input}
           value={code}
+          accessibilityLabel={t('a11y.otpCode')}
           onChangeText={setCode}
           placeholder="––––––"
           placeholderTextColor={colors.line}

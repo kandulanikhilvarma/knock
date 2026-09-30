@@ -165,6 +165,7 @@ export default function ChatThread() {
         <TextInput
           style={styles.input}
           value={draft}
+          accessibilityLabel={t('chat.placeholder')}
           maxLength={2000}
           onChangeText={setDraft}
           placeholder={t('chat.placeholder')}

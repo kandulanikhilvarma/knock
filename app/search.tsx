@@ -89,7 +89,7 @@ export default function Search() {
     <SafeAreaView style={styles.screen} edges={['top']}>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.bar}>
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={12} style={styles.back}>
+        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={12} style={styles.back} accessibilityRole="button" accessibilityLabel={t('a11y.back')}>
           <Ionicons name="chevron-back" size={22} color={colors.ink} />
         </Pressable>
         <View style={styles.field}>
@@ -97,6 +97,7 @@ export default function Search() {
           <TextInput
             style={styles.input}
             value={q}
+            accessibilityLabel={t('home.searchPlaceholder')}
             onChangeText={setQ}
             placeholder={t('home.searchPlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -104,7 +105,7 @@ export default function Search() {
             returnKeyType="search"
           />
           {q.length > 0 && (
-            <Pressable onPress={() => setQ('')} hitSlop={14}>
+            <Pressable onPress={() => setQ('')} hitSlop={14} accessibilityRole="button" accessibilityLabel={t('a11y.clearSearch')}>
               <Ionicons name="close-circle" size={18} color={colors.inkMuted} />
             </Pressable>
           )}

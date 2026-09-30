@@ -43,6 +43,7 @@ export default function PhoneScreen() {
           <TextInput
             style={styles.input}
             value={phone}
+            accessibilityLabel={t('auth.phonePlaceholder')}
             onChangeText={setPhone}
             placeholder={t('auth.phonePlaceholder')}
             placeholderTextColor={colors.inkMuted}

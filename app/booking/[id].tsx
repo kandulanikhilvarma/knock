@@ -395,6 +395,7 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
       <TextInput
         style={styles.pinInput}
         value={pin}
+        accessibilityLabel={t('booking.verifyPlaceholder')}
         onChangeText={setPin}
         placeholder={t('booking.verifyPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -479,14 +480,21 @@ function ReviewPanel({ booking }: { booking: Booking }) {
       <AppText style={styles.cardTitle}>{t('booking.reviewTitle')}</AppText>
       <View style={styles.stars}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <Pressable key={n} onPress={() => setRating(n)} hitSlop={4}>
+          <Pressable
+            key={n}
+            onPress={() => setRating(n)}
+            hitSlop={4}
+            accessibilityRole="radio"
+            aria-selected={n === rating}
+            accessibilityLabel={t('a11y.stars', { count: n })}
+          >
             <AppText style={[styles.star, n <= rating && styles.starOn]}>★</AppText>
           </Pressable>
         ))}
       </View>
       <View style={styles.tags}>
         {REVIEW_TAGS.map((tag) => (
-          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)} hitSlop={{ top: 10, bottom: 10 }}>
+          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)} hitSlop={{ top: 10, bottom: 10 }} accessibilityRole="checkbox" aria-checked={tags.includes(tag)}>
             <AppText style={[styles.tagTxt, tags.includes(tag) && styles.tagTxtOn]}>{t(`booking.tag_${tag}`)}</AppText>
           </Pressable>
         ))}

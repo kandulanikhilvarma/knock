@@ -90,6 +90,7 @@ export default function EmailAuthScreen() {
       <TextInput
         style={styles.input}
         value={email}
+        accessibilityLabel={t('auth.emailPlaceholder')}
         onChangeText={setEmail}
         placeholder={t('auth.emailPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -100,6 +101,7 @@ export default function EmailAuthScreen() {
       <TextInput
         style={styles.input}
         value={password}
+        accessibilityLabel={t('auth.passwordPlaceholder')}
         onChangeText={setPassword}
         placeholder={t('auth.passwordPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -123,6 +125,7 @@ export default function EmailAuthScreen() {
           <TextInput
             style={styles.codeInput}
             value={code}
+            accessibilityLabel={t('auth.codePlaceholder')}
             onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
             placeholder={t('auth.codePlaceholder')}
             placeholderTextColor={colors.inkMuted}

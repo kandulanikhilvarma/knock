@@ -392,6 +392,11 @@
     "openSettings": "సెట్టింగ్‌లు తెరవండి"
   },
   "a11y": {
+    "deleteAddress": "చిరునామా తొలగించండి",
+    "clearSearch": "శోధన క్లియర్ చేయండి",
+    "otpCode": "ధృవీకరణ కోడ్",
+    "stars_one": "{{count}} నక్షత్రం",
+    "stars_other": "{{count}} నక్షత్రాలు",
     "send": "సందేశం పంపు",
     "removePhoto": "ఫోటో తీసివేయి",
     "close": "మూసివేయి",

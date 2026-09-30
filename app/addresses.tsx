@@ -59,6 +59,7 @@ export default function Addresses() {
           <TextInput
             style={styles.input}
             value={label}
+            accessibilityLabel={t('addresses.labelPlaceholder')}
             onChangeText={setLabel}
             placeholder={t('addresses.labelPlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -66,6 +67,7 @@ export default function Addresses() {
           <TextInput
             style={[styles.input, styles.multiline]}
             value={line}
+            accessibilityLabel={t('addresses.linePlaceholder')}
             onChangeText={setLine}
             placeholder={t('addresses.linePlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -109,7 +111,13 @@ export default function Addresses() {
                 </Pressable>
               )}
             </View>
-            <Pressable hitSlop={14} disabled={del.isPending} onPress={() => del.mutate(a.id)}>
+            <Pressable
+              hitSlop={14}
+              disabled={del.isPending}
+              onPress={() => del.mutate(a.id)}
+              accessibilityRole="button"
+              accessibilityLabel={t('a11y.deleteAddress')}
+            >
               <Ionicons name="trash-outline" size={18} color={colors.danger} />
             </Pressable>
           </View>

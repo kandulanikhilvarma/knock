@@ -54,6 +54,8 @@ export default function Welcome() {
               key={l.code}
               style={({ pressed: p }) => [styles.row, on && styles.rowOn, p && pressed]}
               onPress={() => pick(l.code)}
+              accessibilityRole="button"
+              aria-selected={on}
             >
               <View style={{ flex: 1 }}>
                 <AppText style={[styles.rowTxt, on && styles.rowTxtOn]}>{l.label}</AppText>

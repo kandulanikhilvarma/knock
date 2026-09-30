@@ -110,6 +110,8 @@ export default function NewBookingScreen() {
                   key={a}
                   style={[styles.chip, on && styles.chipOn]}
                   onPress={() => setAppliance(on ? null : a)}
+                  accessibilityRole="radio"
+                  aria-selected={on}
                 >
                   <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{t(`booking.appl_${a}`)}</AppText>
                 </Pressable>
@@ -123,6 +125,7 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={description}
+        accessibilityLabel={t('booking.descLabel')}
         maxLength={1000}
         onChangeText={setDescription}
         placeholder={t('booking.descPlaceholder')}
@@ -168,6 +171,7 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={address}
+        accessibilityLabel={t('booking.addressLabel')}
         maxLength={300}
         onChangeText={setAddress}
         placeholder={t('booking.addressPlaceholder')}

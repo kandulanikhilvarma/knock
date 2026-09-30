@@ -39,7 +39,7 @@ export default function LanguageSwitcher({ onDark = false }: { onDark?: boolean 
             hitSlop={{ top: 6, bottom: 6 }}
             accessibilityRole="button"
             accessibilityLabel={l.name}
-            accessibilityState={{ selected: on }}
+            aria-selected={on}
           >
             <AppText
               style={[

@@ -392,6 +392,11 @@
     "openSettings": "Open Settings"
   },
   "a11y": {
+    "deleteAddress": "Delete address",
+    "clearSearch": "Clear search",
+    "otpCode": "Verification code",
+    "stars_one": "{{count}} star",
+    "stars_other": "{{count}} stars",
     "send": "Send message",
     "removePhoto": "Remove photo",
     "close": "Close",

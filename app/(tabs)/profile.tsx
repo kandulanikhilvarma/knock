@@ -80,7 +80,14 @@ function ProviderSection() {
       <AppText style={styles.label}>{t('providerSetup.availability')}</AppText>
       <View style={styles.seg}>
         {STATES.map((s) => (
-          <Pressable key={s} style={[styles.segBtn, current === s && styles.segOn]} disabled={m.isPending} onPress={() => m.mutate(s)}>
+          <Pressable
+            key={s}
+            style={[styles.segBtn, current === s && styles.segOn]}
+            disabled={m.isPending}
+            onPress={() => m.mutate(s)}
+            accessibilityRole="radio"
+            aria-selected={current === s} aria-disabled={m.isPending}
+          >
             <AppText style={[styles.segTxt, current === s && styles.segTxtOn]}>{t(`providerSetup.status_${s}`)}</AppText>
           </Pressable>
         ))}

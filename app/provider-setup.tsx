@@ -140,7 +140,13 @@ export default function ProviderSetup() {
         {(cats.data ?? []).map((c) => {
           const on = services.includes(c.slug);
           return (
-            <Pressable key={c.id} style={[styles.chip, on && styles.chipOn]} onPress={() => toggle(c.slug)}>
+            <Pressable
+              key={c.id}
+              style={[styles.chip, on && styles.chipOn]}
+              onPress={() => toggle(c.slug)}
+              accessibilityRole="checkbox"
+              aria-checked={on}
+            >
               <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{categoryName(c, i18n.language)}</AppText>
             </Pressable>
           );
@@ -148,23 +154,23 @@ export default function ProviderSetup() {
       </View>
 
       <AppText style={styles.label}>{t('providerSetup.upi')}</AppText>
-      <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} maxLength={320} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.upi')} value={upiId} onChangeText={setUpiId} maxLength={320} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
 
       <AppText style={styles.label}>{t('providerSetup.city')}</AppText>
-      <TextInput style={styles.input} value={city} onChangeText={setCity} maxLength={60} placeholderTextColor={colors.inkMuted} />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.city')} value={city} onChangeText={setCity} maxLength={60} placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.charge')}</AppText>
-      <TextInput style={styles.input} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.charge')} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.bio')}</AppText>
-      <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} maxLength={1000} multiline placeholderTextColor={colors.inkMuted} />
+      <TextInput style={[styles.input, styles.multi]} accessibilityLabel={t('providerSetup.bio')} value={bio} onChangeText={setBio} maxLength={1000} multiline placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.gallery')}</AppText>
       <View style={styles.photoRow}>
         {workPhotos.map((u, i) => (
           <View key={u} style={styles.thumbWrap}>
             <Image source={{ uri: u }} style={styles.thumb} />
-            <Pressable style={styles.thumbX} hitSlop={14} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
+            <Pressable style={styles.thumbX} hitSlop={14} accessibilityRole="button" accessibilityLabel={t('a11y.removePhoto')} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
               <Ionicons name="close" size={12} color={colors.onDark} />
             </Pressable>
           </View>
