@@ -159,6 +159,10 @@
     "status_paused": "Paused"
   },
   "booking": {
+    "dispatchStuckTitle": "We could not reach pros yet",
+    "dispatchStuckSub": "Your request is saved. Tap to send it to nearby pros again.",
+    "dispatchRetry": "Try again",
+    "dispatchRetryFailed": "Still no connection to pros. Check your internet and try again.",
     "newTitle": "Request a pro",
     "signInFirst": "Sign in to request a pro.",
     "signInCta": "Sign in",

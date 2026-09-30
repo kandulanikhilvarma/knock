@@ -10,7 +10,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import {
-  getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
+  getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid, runDispatch,
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
 import { getProvider, getCategories, categoryName, providerName, getCustomerContact } from '../../lib/queries';
@@ -240,6 +240,7 @@ function CustomerPanel({ booking }: { booking: Booking }) {
   return (
     <View style={{ gap: space.md }}>
       {SEARCHING.includes(status) && <FindingPro slug={booking.category_slug} />}
+      {status === 'requested' && <DispatchRetry bookingId={booking.id} />}
 
       {status === 'assigned' && booking.assigned_provider_id && (
         <>
@@ -272,6 +273,33 @@ function CustomerPanel({ booking }: { booking: Booking }) {
             <AppText style={styles.ctaTxt}>{t('booking.browseCta')}</AppText>
           </Pressable>
         </View>
+      )}
+    </View>
+  );
+}
+
+// 'requested' means the dispatch call never went through (dispatch flips the
+// row to finding_pro or failed). Wait a moment first: swap passes through
+// 'requested' on its way back to finding_pro.
+function DispatchRetry({ bookingId }: { bookingId: string }) {
+  const { t } = useTranslation();
+  const refetch = useRefetchBooking(bookingId);
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(true), 6000);
+    return () => clearTimeout(timer);
+  }, []);
+  const m = useMutation({ mutationFn: () => runDispatch(bookingId), onSettled: refetch });
+  if (!show) return null;
+  return (
+    <View style={styles.verify}>
+      <AppText style={styles.cardTitle}>{t('booking.dispatchStuckTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.dispatchStuckSub')}</AppText>
+      <Touchable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
+        <AppText style={styles.ctaTxt}>{m.isPending ? '…' : t('booking.dispatchRetry')}</AppText>
+      </Touchable>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{t('booking.dispatchRetryFailed')}</AppText>
       )}
     </View>
   );
