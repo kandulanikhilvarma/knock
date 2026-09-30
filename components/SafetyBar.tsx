@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
   share: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line },
   shareTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.ink },
   sos: { backgroundColor: colors.danger },
-  sosArmed: { backgroundColor: '#8E2E1C' },
+  sosArmed: { backgroundColor: colors.dangerDeep },
   sosTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.onDark },
 });

@@ -32,7 +32,7 @@ export default function ProviderCard({
             </AppText>
             {verified && (
               <View style={styles.badge}>
-                <Ionicons name="checkmark" size={11} color={colors.ink} />
+                <Ionicons name="checkmark" size={11} color={colors.successInk} />
                 <AppText style={styles.badgeTxt}>{t('provider.verified')}</AppText>
               </View>
             )}
@@ -92,12 +92,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
-    backgroundColor: colors.gold,
+    backgroundColor: colors.tintSuccess,
     paddingHorizontal: space.sm,
     paddingVertical: 2,
     borderRadius: radius.pill,
   },
-  badgeTxt: { fontFamily: font.bold, fontSize: 10, color: colors.ink },
+  badgeTxt: { fontFamily: font.bold, fontSize: 10, color: colors.successInk },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   rating: { fontFamily: font.bold, fontSize: type.small, color: colors.goldDeep },
   meta: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },

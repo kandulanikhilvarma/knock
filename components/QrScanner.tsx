@@ -72,7 +72,7 @@ export default function QrScanner({
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000' },
+  root: { flex: 1, backgroundColor: colors.ink },
   perm: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
   permTitle: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.onDark },
   permSub: { fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted, textAlign: 'center' },

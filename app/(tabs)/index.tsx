@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   locTxt: { fontFamily: font.display, fontSize: type.h3, color: colors.onDark, letterSpacing: -0.2 },
 
   greetRow: { flexDirection: 'row', alignItems: 'center', minHeight: 34, marginTop: space.xl },
-  hi: { fontFamily: font.teBold, fontSize: type.body, color: '#8FE3AB', letterSpacing: 0.2 },
+  hi: { fontFamily: font.teBold, fontSize: type.body, color: colors.successOnDark, letterSpacing: 0.2 },
   coin: {
     marginLeft: 'auto',
     flexDirection: 'row',
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   coinDisc: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center' },
-  coinDiscTxt: { fontFamily: font.displayBold, fontSize: 12, color: '#241703' },
+  coinDiscTxt: { fontFamily: font.displayBold, fontSize: 12, color: colors.ink },
   coinTxt: { fontFamily: font.semibold, fontSize: 10, lineHeight: 12, color: colors.tintGold, letterSpacing: 0.2 },
 
   headline: {
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
   },
   earnSub: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.xs },
   live: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#8FE3AB' },
-  liveTxt: { fontFamily: font.bold, fontSize: 10, color: '#8FE3AB', letterSpacing: 0.5 },
+  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.successOnDark },
+  liveTxt: { fontFamily: font.bold, fontSize: 10, color: colors.successOnDark, letterSpacing: 0.5 },
   earnSubTxt: { flex: 1, fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
 
   section: { gap: space.md },

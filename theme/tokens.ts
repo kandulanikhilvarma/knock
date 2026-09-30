@@ -27,6 +27,8 @@ export const colors = {
   line: '#E4DDCC',
   line2: '#EDE7D8',
   danger: '#A33F29', // warm brick red — 5.15:1 on bg (AA)
+  dangerDeep: '#8E2E1C', // armed SOS — onDark on it 7.15:1
+  successOnDark: '#8FE3AB', // mint proof on forest (greeting, live dot) — 8.27:1 on primary
   onDark: '#F3EFE4', // cream text on forest surfaces
   onDarkMuted: '#A9BDA9', // muted cream-green on forest
   // pastel blocks behind category items
@@ -35,6 +37,11 @@ export const colors = {
   pastelSage: '#C8D9B7',
   pastelPeach: '#F1C6A6',
   peach: '#ECAF87', // price / tag pills
+  // initials ink on each pastel avatar tile (all ≥ 5:1 on their pastel)
+  inkOnPeach: '#7A4318',
+  inkOnBlue: '#26505E',
+  inkOnSage: '#3B5426',
+  inkOnPink: '#7C3B34',
   // flat tints of success/gold over the surface — pill and card grounds.
   // Flat, not alpha, so they never darken twice when stacked on a card.
   tintSuccess: '#DCEBE1',

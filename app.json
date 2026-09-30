@@ -19,7 +19,7 @@
     "android": {
       "package": "com.knock.app",
       "adaptiveIcon": {
-        "backgroundColor": "#1B4B8F",
+        "backgroundColor": "#0F3A2C",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

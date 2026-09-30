@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   linkTxt: { flex: 1, fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
   seg: { flexDirection: 'row', gap: space.xs, marginTop: space.xs },
   segBtn: { flex: 1, height: 40, borderRadius: radius.chip, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
-  segOn: { backgroundColor: colors.success, borderColor: colors.success },
+  segOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   segTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
   segTxtOn: { color: colors.surface },
   editLink: { marginTop: space.sm },
