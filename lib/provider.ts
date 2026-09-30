@@ -28,8 +28,8 @@ export type ProviderInput = {
   voiceIntroUrl?: string | null;
 };
 
-// Create or update the caller's provider profile, mark their role, and ensure a
-// stats row exists (dispatch joins it). Blocked for anonymous users by RLS.
+// Create or update the caller's provider profile and mark their role. Blocked
+// for anonymous users by RLS.
 export async function saveProviderProfile(input: ProviderInput) {
   const { data: auth } = await supabase.auth.getUser();
   const uid = auth.user?.id;
@@ -53,9 +53,8 @@ export async function saveProviderProfile(input: ProviderInput) {
     { onConflict: 'user_id' },
   );
   if (error) throw error;
-
-  // ensure a stats row (idempotent — neutral priors)
-  await supabase.from('provider_stats').upsert({ provider_id: uid }, { onConflict: 'provider_id' });
+  // The provider_stats row is created by a trigger (migration 0023); the client
+  // has no insert policy on that table.
 }
 
 export async function setAvailability(status: Availability) {
