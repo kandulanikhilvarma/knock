@@ -276,7 +276,7 @@ function CustomerPanel({ booking }: { booking: Booking }) {
         <View style={styles.fallback}>
           <AppText style={styles.fbTitle}>{t('booking.noProviders')}</AppText>
           <AppText style={styles.fbSub}>{t('booking.noProvidersSub')}</AppText>
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={styles.cta}
             onPress={() => router.replace({ pathname: '/category/[slug]', params: { slug: booking.category_slug } })}
           >
@@ -355,7 +355,7 @@ function CustomerCard({ customerId }: { customerId: string }) {
         {!phone && <AppText style={styles.custNo}>{t('booking.noPhone')}</AppText>}
       </View>
       {phone && (
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={({ pressed: p }) => [styles.callBtn, p && pressed]}
           onPress={() => Linking.openURL(`tel:${phone}`)}
         >

@@ -70,7 +70,7 @@ export default function ProviderScreen() {
           </View>
 
           {isOwnStorageUrl(data.voice_intro_url, process.env.EXPO_PUBLIC_SUPABASE_URL) ? (
-            <Pressable style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
+            <Pressable accessibilityRole="button" style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
               <View style={styles.voicePlay}>
                 <Ionicons name="play" size={13} color={colors.surface} />
               </View>
@@ -137,7 +137,7 @@ export default function ProviderScreen() {
 
       {/* Saffron request bar — the one action */}
       <SafeAreaView edges={['bottom']} style={styles.footer}>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={styles.cta}
           onPress={() =>
             router.push({ pathname: '/booking/new', params: { slug: data.services?.[0] ?? '' } })

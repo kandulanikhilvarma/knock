@@ -23,7 +23,7 @@ function DeleteAccount() {
   const m = useMutation({ mutationFn: deleteAccount });
   return (
     <>
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={styles.delete}
         disabled={m.isPending}
         onPress={() => (armed ? m.mutate() : setArmed(true))}
@@ -62,7 +62,7 @@ function ProviderSection() {
   // not a provider yet → invite
   if (!q.data) {
     return (
-      <Pressable style={styles.linkRow} onPress={() => router.push('/provider-setup')}>
+      <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/provider-setup')}>
         <View style={[styles.linkIcon, { backgroundColor: colors.pastelPeach }]}>
           <Ionicons name="briefcase-outline" size={18} color={colors.accent} />
         </View>
@@ -95,12 +95,12 @@ function ProviderSection() {
       {m.isError && (
         <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
       )}
-      <Pressable style={styles.editLink} onPress={() => router.push('/provider-setup')}>
+      <Pressable accessibilityRole="button" style={styles.editLink} onPress={() => router.push('/provider-setup')}>
         <AppText style={styles.editTxt}>{t('providerSetup.edit')}</AppText>
       </Pressable>
     </View>
 
-    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/earnings')}>
+    <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs/earnings')}>
       <View style={styles.linkIcon}>
         <Ionicons name="wallet-outline" size={18} color={colors.ink} />
       </View>
@@ -108,7 +108,7 @@ function ProviderSection() {
       <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
     </Pressable>
 
-    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/reviews')}>
+    <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs/reviews')}>
       <View style={styles.linkIcon}>
         <Ionicons name="star-outline" size={18} color={colors.ink} />
       </View>
@@ -117,7 +117,7 @@ function ProviderSection() {
     </Pressable>
 
     {!verified && (
-      <Pressable style={styles.linkRow} onPress={() => router.push('/verified')}>
+      <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/verified')}>
         <View style={[styles.linkIcon, { backgroundColor: colors.tintSuccess }]}>
           <Ionicons name="shield-checkmark-outline" size={18} color={colors.successInk} />
         </View>
@@ -182,21 +182,21 @@ export default function Profile() {
         {session ? (
           <>
             <ProviderSection />
-            <Pressable style={styles.linkRow} onPress={() => router.push('/jobs')}>
+            <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs')}>
               <View style={styles.linkIcon}>
                 <Ionicons name="albums-outline" size={18} color={colors.ink} />
               </View>
               <AppText style={styles.linkTxt}>{t('profileTab.myJobs')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
-            <Pressable style={styles.linkRow} onPress={() => router.push('/addresses')}>
+            <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/addresses')}>
               <View style={styles.linkIcon}>
                 <Ionicons name="location-outline" size={18} color={colors.ink} />
               </View>
               <AppText style={styles.linkTxt}>{t('profileTab.addresses')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
-            <Pressable style={styles.signout} onPress={() => signOut()}>
+            <Pressable accessibilityRole="button" style={styles.signout} onPress={() => signOut()}>
               <AppText style={styles.signoutTxt}>{t('profileTab.signOut')}</AppText>
             </Pressable>
             <DeleteAccount />

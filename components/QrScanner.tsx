@@ -42,7 +42,7 @@ export default function QrScanner({
             <Ionicons name="camera-outline" size={30} color={colors.onDark} />
             <AppText style={styles.permTitle}>{t('scan.permTitle')}</AppText>
             <AppText style={styles.permSub}>{t('scan.permSub')}</AppText>
-            <Pressable style={styles.allow} onPress={() => requestPerm()}>
+            <Pressable accessibilityRole="button" style={styles.allow} onPress={() => requestPerm()}>
               <AppText style={styles.allowTxt}>{t('scan.allow')}</AppText>
             </Pressable>
           </View>

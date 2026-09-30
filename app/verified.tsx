@@ -44,7 +44,7 @@ export default function VerifiedUpsell() {
       </View>
 
       {canLink ? (
-        <Pressable
+        <Pressable accessibilityRole="link"
           style={({ pressed: p }) => [styles.cta, p && pressed]}
           onPress={() => Linking.openURL(PORTAL)}
         >

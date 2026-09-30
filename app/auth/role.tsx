@@ -34,13 +34,13 @@ export default function RoleScreen() {
       <View style={styles.body}>
         <AppText style={styles.title}>{t('auth.roleTitle')}</AppText>
 
-        <Pressable style={styles.card} onPress={() => pick('customer')} disabled={busy}>
+        <Pressable accessibilityRole="button" style={styles.card} onPress={() => pick('customer')} disabled={busy}>
           <Ionicons name="search" size={28} color={colors.primary} />
           <AppText style={styles.cardTitle}>{t('auth.roleCustomer')}</AppText>
           <AppText style={styles.cardSub}>{t('auth.roleCustomerSub')}</AppText>
         </Pressable>
 
-        <Pressable style={styles.card} onPress={() => pick('provider')} disabled={busy}>
+        <Pressable accessibilityRole="button" style={styles.card} onPress={() => pick('provider')} disabled={busy}>
           <Ionicons name="construct" size={28} color={colors.primary} />
           <AppText style={styles.cardTitle}>{t('auth.roleProvider')}</AppText>
           <AppText style={styles.cardSub}>{t('auth.roleProviderSub')}</AppText>

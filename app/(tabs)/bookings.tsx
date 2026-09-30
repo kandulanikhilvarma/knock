@@ -50,7 +50,7 @@ export default function Bookings() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={styles.card}
               onPress={() => router.push({ pathname: '/booking/[id]', params: { id: item.id } })}
             >

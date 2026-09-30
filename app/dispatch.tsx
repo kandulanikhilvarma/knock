@@ -149,7 +149,7 @@ export default function Dispatch() {
         {failed ? (
           <View style={styles.failBox}>
             <AppText style={styles.failSub}>{t('dispatch.failedSub')}</AppText>
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={({ pressed: p }) => [styles.cta, p && pressed]}
               onPress={() => router.replace({ pathname: '/category/[slug]', params: { slug: categorySlug } })}
             >

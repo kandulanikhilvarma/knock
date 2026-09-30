@@ -44,7 +44,7 @@ export default function Chat() {
           </View>
           <AppText style={styles.soTitle}>{t('booking.signInFirst')}</AppText>
           <AppText style={styles.soSub}>{t('chat.noThreadsSub')}</AppText>
-          <Pressable style={styles.soCta} onPress={() => router.push('/auth/email')}>
+          <Pressable accessibilityRole="button" style={styles.soCta} onPress={() => router.push('/auth/email')}>
             <AppText style={styles.soCtaTxt}>{t('profileTab.signIn')}</AppText>
           </Pressable>
         </View>
@@ -58,7 +58,7 @@ export default function Chat() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={styles.card}
               onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: item.id } })}
             >

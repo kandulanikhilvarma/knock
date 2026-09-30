@@ -71,7 +71,7 @@ export default function VoiceRecorder({
 
   return (
     <View style={{ gap: space.xs }}>
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={[styles.btn, state.isRecording && styles.btnRec]}
         disabled={busy}
         onPress={state.isRecording ? stop : start}

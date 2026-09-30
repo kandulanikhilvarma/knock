@@ -99,7 +99,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
               <AppText style={styles.gateSub}>
                 {me.canAskAgain ? t('nearby.offSub') : t('nearby.offBlockedSub')}
               </AppText>
-              <Pressable
+              <Pressable accessibilityRole="button"
                 style={({ pressed: p }) => [styles.gateBtn, p && pressed]}
                 onPress={() => (me.canAskAgain ? me.request() : Linking.openSettings())}
               >
@@ -112,7 +112,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
         )}
       </View>
 
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.cta, p && pressed]}
         onPress={() => router.push({ pathname: '/dispatch', params: { slug: liveSlug, cid: liveCid ?? '' } })}
       >

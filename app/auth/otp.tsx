@@ -60,7 +60,7 @@ export default function OtpScreen() {
         />
         {err && <AppText style={styles.err}>{err}</AppText>}
 
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}

@@ -71,7 +71,7 @@ export default function EmailAuthScreen() {
       <AppText style={styles.sub}>{t('auth.emailSub')}</AppText>
 
       {/* One-tap Google — the frictionless primary path. */}
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.google, p && pressed, busy && styles.ctaOff]}
         disabled={busy}
         onPress={() => google.mutate()}
@@ -108,7 +108,7 @@ export default function EmailAuthScreen() {
         secureTextEntry
       />
 
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.cta, p && pressed, (!valid || busy) && styles.ctaOff]}
         disabled={!valid || busy}
         onPress={() => m.mutate()}
@@ -133,7 +133,7 @@ export default function EmailAuthScreen() {
             autoFocus
             maxLength={6}
           />
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.cta, p && pressed, (code.length < 6 || busy) && styles.ctaOff]}
             disabled={code.length < 6 || busy}
             onPress={() => verify.mutate()}
@@ -141,12 +141,12 @@ export default function EmailAuthScreen() {
             <AppText style={styles.ctaTxt}>{verify.isPending ? t('auth.verifying') : t('auth.verifyCode')}</AppText>
           </Pressable>
           {verify.isError && <AppText style={styles.err}>{errorMessage(verify.error, t)}</AppText>}
-          <Pressable disabled={busy} onPress={() => send.mutate()}>
+          <Pressable accessibilityRole="button" disabled={busy} onPress={() => send.mutate()}>
             <AppText style={styles.resend}>{send.isPending ? t('auth.sending') : t('auth.resend')}</AppText>
           </Pressable>
         </View>
       ) : (
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={({ pressed: p }) => [styles.linkBtn, p && pressed, (!emailValid || busy) && styles.ctaOff]}
           disabled={!emailValid || busy}
           onPress={() => send.mutate()}
@@ -156,7 +156,7 @@ export default function EmailAuthScreen() {
       )}
       {send.isError && !send.isSuccess && <AppText style={styles.err}>{errorMessage(send.error, t)}</AppText>}
 
-      <Pressable style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
+      <Pressable accessibilityRole="button" style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
         <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
       </Pressable>
       {guest.isError && <AppText style={styles.err}>{errorMessage(guest.error, t)}</AppText>}

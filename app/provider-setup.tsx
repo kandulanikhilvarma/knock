@@ -176,7 +176,7 @@ export default function ProviderSetup() {
           </View>
         ))}
         {workPhotos.length < 12 && (
-          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+          <Pressable accessibilityRole="button" style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
             <Ionicons name="camera-outline" size={22} color={colors.primary} />
             <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('providerSetup.addPhoto')}</AppText>
           </Pressable>
@@ -187,7 +187,7 @@ export default function ProviderSetup() {
       <AppText style={styles.label}>{t('providerSetup.voiceIntro')}</AppText>
       <VoiceRecorder value={voiceUrl} onChange={setVoiceUrl} />
 
-      <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
+      <Pressable accessibilityRole="button" style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
       {save.isError && <AppText style={styles.err}>{errorMessage(save.error, t)}</AppText>}

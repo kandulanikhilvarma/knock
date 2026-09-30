@@ -86,7 +86,7 @@ export default function Home() {
 
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
 
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.search, p && pressed]}
             onPress={() => router.push('/search')}
           >
@@ -131,7 +131,7 @@ export default function Home() {
               <AppText style={styles.sectionSub}>{t('home.nextUpSub')}</AppText>
               <View style={styles.grid}>
                 {soon.map((c) => (
-                  <Pressable
+                  <Pressable accessibilityRole="button"
                     key={c.id}
                     style={({ pressed: p }) => [
                       styles.soonTile,
@@ -186,7 +186,7 @@ function Grid({ cats, lang, onPick }: { cats: Category[]; lang: string; onPick: 
   return (
     <View style={styles.grid}>
       {cats.map((c) => (
-        <Pressable
+        <Pressable accessibilityRole="button"
           key={c.id}
           style={({ pressed: p }) => [styles.tile, p && pressed]}
           onPress={() => onPick(c)}

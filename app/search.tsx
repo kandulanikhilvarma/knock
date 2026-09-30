@@ -128,7 +128,7 @@ export default function Search() {
           <View style={styles.section}>
             <AppText style={styles.secTitle}>{term ? t('search.services') : t('search.popular')}</AppText>
             {hitCats.map((c) => (
-              <Pressable
+              <Pressable accessibilityRole="button"
                 key={c.id}
                 style={({ pressed: p }) => [styles.row, p && pressed]}
                 onPress={() => router.push({ pathname: '/category/[slug]', params: { slug: c.slug } })}

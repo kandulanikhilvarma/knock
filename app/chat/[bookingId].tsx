@@ -145,7 +145,7 @@ export default function ChatThread() {
         keyboardShouldPersistTaps="always"
       >
         {['onWay', 'reached', 'howLong', 'callMe'].map((k) => (
-          <Pressable
+          <Pressable accessibilityRole="button"
             key={k}
             style={({ pressed: p }) => [styles.chip, p && pressed]}
             hitSlop={{ top: 5, bottom: 5 }}

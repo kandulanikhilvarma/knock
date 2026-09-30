@@ -82,14 +82,14 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
       </View>
 
       <View style={styles.actions}>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.decline, m.isPending && styles.off]}
           disabled={m.isPending || expired}
           onPress={() => m.mutate('decline')}
         >
           <AppText style={styles.declineTxt}>{t('jobs.decline')}</AppText>
         </Pressable>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.accept, (m.isPending || expired) && styles.off]}
           disabled={m.isPending || expired}
           onPress={() => m.mutate('accept')}

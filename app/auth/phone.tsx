@@ -54,7 +54,7 @@ export default function PhoneScreen() {
         </View>
         {err && <AppText style={styles.err}>{err}</AppText>}
 
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}

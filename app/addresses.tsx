@@ -73,7 +73,7 @@ export default function Addresses() {
             placeholderTextColor={colors.inkMuted}
             multiline
           />
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.cta, p && pressed, (!valid || add.isPending) && styles.ctaOff]}
             disabled={!valid || add.isPending}
             onPress={() => add.mutate()}
@@ -106,7 +106,7 @@ export default function Addresses() {
                 {a.line}
               </AppText>
               {!a.is_default && (
-                <Pressable disabled={setDef.isPending} onPress={() => setDef.mutate(a.id)}>
+                <Pressable accessibilityRole="button" disabled={setDef.isPending} onPress={() => setDef.mutate(a.id)}>
                   <AppText style={styles.makeDefault}>{t('addresses.makeDefault')}</AppText>
                 </Pressable>
               )}

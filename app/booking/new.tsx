@@ -154,7 +154,7 @@ export default function NewBookingScreen() {
           </View>
         ))}
         {photos.length < 5 && (
-          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+          <Pressable accessibilityRole="button" style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
             <Ionicons name="camera-outline" size={22} color={colors.primary} />
             <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('booking.addPhotos')}</AppText>
           </Pressable>
@@ -166,7 +166,7 @@ export default function NewBookingScreen() {
       {(saved.data?.length ?? 0) > 0 && (
         <View style={styles.chips}>
           {saved.data!.map((a) => (
-            <Pressable key={a.id} style={styles.savedChip} onPress={() => setAddress(a.line)}>
+            <Pressable accessibilityRole="button" key={a.id} style={styles.savedChip} onPress={() => setAddress(a.line)}>
               <Ionicons name="location" size={13} color={colors.primary} />
               <AppText style={styles.savedChipTxt}>{a.label}</AppText>
             </Pressable>
