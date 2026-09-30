@@ -1,4 +1,5 @@
 import { View, FlatList, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -20,7 +21,7 @@ export default function MyReviews() {
   });
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   const rows = q.data ?? [];
   const avg = rows.length ? rows.reduce((s, r) => s + r.rating, 0) / rows.length : 0;

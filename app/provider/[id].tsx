@@ -1,4 +1,5 @@
 import { View, Image, ScrollView, Pressable, Linking, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -24,7 +25,7 @@ export default function ProviderScreen() {
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (isLoading) return <Loading />;
-  if (isError) return <ErrorState message={(error as Error)?.message} onRetry={() => refetch()} />;
+  if (isError) return <ErrorState message={errorMessage(error, t)} onRetry={() => refetch()} />;
   if (!data) return <Empty title={t('provider.notFound')} />;
 
   const name = providerName(data) || t('provider.unnamed');

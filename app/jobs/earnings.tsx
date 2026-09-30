@@ -1,4 +1,5 @@
 import { View, FlatList, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -19,7 +20,7 @@ export default function Earnings() {
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   const paid = (q.data ?? []).filter((b) => b.paid_at);
   const total = paid.reduce((s, b) => s + (b.price_agreed ?? 0), 0);

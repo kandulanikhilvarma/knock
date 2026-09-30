@@ -265,6 +265,12 @@
     "zeroNote": "Keep 100%. The app takes no commission."
   },
   "common": {
+    "errorGeneric": "Something went wrong. Please try again.",
+    "offline": "No internet connection. Check your network and try again.",
+    "tooMany": "Too many tries. Wait a minute, then try again.",
+    "codeWrong": "That code is wrong or has expired. Ask for a new one.",
+    "permission": "Permission is off. Allow it in your phone's Settings.",
+    "signedOut": "You are signed out. Sign in and try again.",
     "onboarding": "Onboarding pros",
     "crashTitle": "Something went wrong",
     "crashSub": "Try again — your data is safe.",

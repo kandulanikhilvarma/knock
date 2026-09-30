@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
@@ -132,7 +133,7 @@ export default function ProviderSetup() {
           </AppText>
         </View>
       </View>
-      {pickFace.isError && <AppText style={styles.err}>{(pickFace.error as Error).message}</AppText>}
+      {pickFace.isError && <AppText style={styles.err}>{errorMessage(pickFace.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('providerSetup.services')}</AppText>
       <View style={styles.chips}>
@@ -175,7 +176,7 @@ export default function ProviderSetup() {
           </Pressable>
         )}
       </View>
-      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+      {pick.isError && <AppText style={styles.err}>{errorMessage(pick.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('providerSetup.voiceIntro')}</AppText>
       <VoiceRecorder value={voiceUrl} onChange={setVoiceUrl} />
@@ -183,7 +184,7 @@ export default function ProviderSetup() {
       <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
-      {save.isError && <AppText style={styles.err}>{(save.error as Error).message}</AppText>}
+      {save.isError && <AppText style={styles.err}>{errorMessage(save.error, t)}</AppText>}
     </ScrollView>
   );
 }

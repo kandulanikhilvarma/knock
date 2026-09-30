@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -68,7 +69,7 @@ export default function CategoryScreen() {
         <>
           {providers.isLoading && <Loading />}
           {providers.isError && (
-            <ErrorState message={(providers.error as Error)?.message} onRetry={() => providers.refetch()} />
+            <ErrorState message={errorMessage(providers.error, t)} onRetry={() => providers.refetch()} />
           )}
           {providers.data && (
             <FlatList
@@ -163,7 +164,7 @@ function Waitlist({
       >
         <AppText style={styles.ctaTxt}>{t('category.notifyMe')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </ScrollView>
   );
 }

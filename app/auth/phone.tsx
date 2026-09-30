@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -24,7 +25,7 @@ export default function PhoneScreen() {
       await sendOtp(e164);
       router.push({ pathname: '/auth/otp', params: { phone: e164 } });
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }

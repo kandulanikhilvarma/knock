@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import {
   View, TextInput, Pressable, FlatList, ScrollView, KeyboardAvoidingView, Platform, StyleSheet,
 } from 'react-native';
@@ -75,7 +76,7 @@ export default function ChatThread() {
   };
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   return (
     <KeyboardAvoidingView

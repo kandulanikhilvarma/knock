@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,7 +34,7 @@ export default function OtpScreen() {
       if (!profile?.role) router.replace('/auth/role');
       else router.replace('/(tabs)');
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
@@ -19,7 +20,7 @@ export default function JobsScreen() {
     <View style={styles.screen}>
       <Stack.Screen options={{ title: t('jobs.title') }} />
       {q.isLoading && <Loading />}
-      {q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
+      {q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
       {q.data && (
         <FlatList
           data={q.data}

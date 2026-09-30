@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, Pressable, StyleSheet } from 'react-native';
 import {
   useAudioRecorder,
@@ -40,7 +41,7 @@ export default function VoiceRecorder({
       await recorder.prepareToRecordAsync();
       recorder.record();
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     }
   };
 
@@ -50,7 +51,7 @@ export default function VoiceRecorder({
       await recorder.stop();
       if (recorder.uri) onChange(await uploadVoiceIntro(recorder.uri));
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }

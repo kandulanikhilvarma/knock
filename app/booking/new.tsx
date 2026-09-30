@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -151,7 +152,7 @@ export default function NewBookingScreen() {
           </Pressable>
         )}
       </View>
-      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+      {pick.isError && <AppText style={styles.err}>{errorMessage(pick.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('booking.addressLabel')}</AppText>
       {(saved.data?.length ?? 0) > 0 && (
@@ -188,7 +189,7 @@ export default function NewBookingScreen() {
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </ScrollView>
   );
 }

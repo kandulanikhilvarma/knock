@@ -1,4 +1,5 @@
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -41,7 +42,7 @@ export default function Bookings() {
         <SignedOut cta={() => router.push('/auth/email')} />
       )}
       {session && q.isLoading && <Loading />}
-      {session && q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
+      {session && q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
       {session && q.data && (
         <FlatList
           data={q.data}

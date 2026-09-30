@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppText from '../../components/AppText';
@@ -110,7 +111,7 @@ export default function Home() {
           </FadeIn>
 
           {cats.isLoading && <Loading />}
-          {cats.isError && <ErrorState message={(cats.error as Error)?.message} onRetry={() => cats.refetch()} />}
+          {cats.isError && <ErrorState message={errorMessage(cats.error, t)} onRetry={() => cats.refetch()} />}
 
           {/* The core task: pick a trade. */}
           {live.length > 0 && (

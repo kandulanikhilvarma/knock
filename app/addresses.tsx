@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
@@ -77,11 +78,11 @@ export default function Addresses() {
           >
             <AppText style={styles.ctaTxt}>{add.isPending ? '…' : t('addresses.add')}</AppText>
           </Pressable>
-          {add.isError && <AppText style={styles.err}>{(add.error as Error).message}</AppText>}
+          {add.isError && <AppText style={styles.err}>{errorMessage(add.error, t)}</AppText>}
         </View>
 
         {q.isLoading && <Loading />}
-        {q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
+        {q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
         {q.data?.length === 0 && <Empty icon="location-outline" title={t('addresses.empty')} />}
 
         {q.data?.map((a) => (

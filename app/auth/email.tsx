@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import AppText from '../../components/AppText';
@@ -78,7 +79,7 @@ export default function EmailAuthScreen() {
         <Ionicons name="logo-google" size={18} color={colors.onDark} />
         <AppText style={styles.googleTxt}>{google.isPending ? t('auth.verifying') : t('auth.google')}</AppText>
       </Pressable>
-      {google.isError && <AppText style={styles.err}>{(google.error as Error).message}</AppText>}
+      {google.isError && <AppText style={styles.err}>{errorMessage(google.error, t)}</AppText>}
 
       <View style={styles.orRow}>
         <View style={styles.orLine} />
@@ -112,7 +113,7 @@ export default function EmailAuthScreen() {
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('auth.verifying') : t('auth.signInBtn')}</AppText>
       </Pressable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
 
       {/* Passwordless code — no password needed, just the email above. Works in
           Expo Go because there's no redirect: read the code, type it here. */}
@@ -136,7 +137,7 @@ export default function EmailAuthScreen() {
           >
             <AppText style={styles.ctaTxt}>{verify.isPending ? t('auth.verifying') : t('auth.verifyCode')}</AppText>
           </Pressable>
-          {verify.isError && <AppText style={styles.err}>{(verify.error as Error).message}</AppText>}
+          {verify.isError && <AppText style={styles.err}>{errorMessage(verify.error, t)}</AppText>}
           <Pressable disabled={busy} onPress={() => send.mutate()}>
             <AppText style={styles.resend}>{send.isPending ? t('auth.sending') : t('auth.resend')}</AppText>
           </Pressable>
@@ -150,12 +151,12 @@ export default function EmailAuthScreen() {
           <AppText style={styles.linkTxt}>{send.isPending ? t('auth.sending') : t('auth.emailCode')}</AppText>
         </Pressable>
       )}
-      {send.isError && !send.isSuccess && <AppText style={styles.err}>{(send.error as Error).message}</AppText>}
+      {send.isError && !send.isSuccess && <AppText style={styles.err}>{errorMessage(send.error, t)}</AppText>}
 
       <Pressable style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
         <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
       </Pressable>
-      {guest.isError && <AppText style={styles.err}>{(guest.error as Error).message}</AppText>}
+      {guest.isError && <AppText style={styles.err}>{errorMessage(guest.error, t)}</AppText>}
     </View>
   );
 }

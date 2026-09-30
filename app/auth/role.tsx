@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,7 +23,7 @@ export default function RoleScreen() {
       await setRole(role);
       router.replace('/(tabs)');
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
       setBusy(false);
     }
   }

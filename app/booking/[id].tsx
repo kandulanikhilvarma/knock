@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import {
   View, Text, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
 } from 'react-native';
@@ -86,7 +87,7 @@ export default function BookingStatusScreen() {
   const booking = q.data ?? null;
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
   if (!booking) return <ErrorState message={t('booking.notFound')} onRetry={() => q.refetch()} />;
 
   const isProvider = !!uid && uid === booking.assigned_provider_id;
@@ -478,7 +479,7 @@ function ReviewPanel({ booking }: { booking: Booking }) {
       <Touchable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
         <AppText style={styles.ctaTxt}>{t('booking.reviewSubmit')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </View>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, ScrollView, Pressable, StyleSheet, ActivityIndicator, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
@@ -41,7 +42,7 @@ export default function Dispatch() {
     started.current = true;
     startDemoBooking(cid ?? null, categorySlug, me.coords)
       .then(setResult)
-      .catch((e: Error) => setFailed(e.message));
+      .catch((e: unknown) => setFailed(errorMessage(e, t)));
   }, [cid, categorySlug, me.loading, me.coords]);
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import {
   useFonts,
   Inter_400Regular,
@@ -78,7 +78,13 @@ if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getEle
 
 // 30 s: screens remount often (tabs, back/forward); refetching every mount
 // wasted data on slow mobile networks.
-const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 30_000 } } });
+// Every failed query or mutation reaches Sentry here once; screens show only a
+// localized line (lib/errors.ts), never the raw text.
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: (e) => Sentry.captureException(e) }),
+  mutationCache: new MutationCache({ onError: (e) => Sentry.captureException(e) }),
+  defaultOptions: { queries: { staleTime: 30_000 } },
+});
 
 // One consistent, premium back control for every stack screen. Safe-back: if the
 // history is empty (deep link, web refresh, or a screen reached via replace) the
