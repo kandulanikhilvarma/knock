@@ -131,5 +131,17 @@ check('pro with a legacy bad UPI can still change availability', !(await throws(
 check('oversize booking description rejected', await throws(() =>
   as(C, `insert into public.bookings (customer_id, category_slug, description) values ('${C}', 'ac', repeat('x', 1001))`)));
 
+// COR-4 (0025): assigned pro reads the job photos; others do not.
+await db.exec(`grant usage on schema storage to authenticated; grant select, insert on storage.objects to authenticated;
+  insert into storage.objects (bucket_id, name) values
+    ('job-photos', '${C}/${b}/1.jpg'), ('job-photos', '${C}/not-a-uuid/2.jpg'), ('job-photos', '${P}/${b}/3.jpg');`);
+r = await as(Q, `select name from storage.objects where bucket_id = 'job-photos'`);
+check('assigned pro reads the booking photo', r.rows.some((x) => x.name === `${C}/${b}/1.jpg`));
+check('pro cannot read a photo under another user folder', !r.rows.some((x) => x.name === `${P}/${b}/3.jpg`));
+r = await as(P, `select name from storage.objects where name = '${C}/${b}/1.jpg'`);
+check('unrelated pro cannot read the booking photo', r.rows.length === 0);
+r = await as(C, `select name from storage.objects where bucket_id = 'job-photos'`);
+check('customer still reads own photos, bad path does not error', r.rows.length === 2);
+
 console.log(fails ? `${fails} FAILED` : 'ALL PASS');
 process.exit(fails ? 1 : 0);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { errorMessage } from '../../lib/errors';
 import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
@@ -11,7 +11,7 @@ import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { getSavedAddresses } from '../../lib/addresses';
 import { pickImages, uploadPhotos, type PickedPhoto } from '../../lib/photos';
-import { supabase } from '../../lib/supabase';
+import { uuidv4 } from '../../lib/ids';
 import { useSession } from '../../lib/session';
 import CategoryArt from '../../components/CategoryArt';
 import Touchable from '../../components/Touchable';
@@ -44,21 +44,26 @@ export default function NewBookingScreen() {
     onSuccess: (p) => p.length && setPhotos((prev) => [...prev, ...p].slice(0, 5)),
   });
 
+  // One id per draft. Photos upload under it before the row exists (RLS blocks a
+  // customer update of bookings.photos), and a retry reuses it: no second booking.
+  const draftId = useRef(uuidv4());
+  const uploaded = useRef<string[] | null>(null);
+  useEffect(() => {
+    uploaded.current = null;
+  }, [photos]);
+
   const m = useMutation({
     mutationFn: async () => {
       const desc = appliance ? `${t(`booking.appl_${appliance}`)}: ${description.trim()}` : description.trim();
-      const id = await createBooking({
+      if (photos.length && !uploaded.current) uploaded.current = await uploadPhotos(draftId.current, photos);
+      return createBooking({
+        id: draftId.current,
+        photos: uploaded.current ?? undefined,
         categoryId: category?.id ?? null,
         categorySlug: slug ?? '',
         description: desc,
         address: address.trim(),
       });
-      // Upload after the booking exists so photos live under this booking's folder.
-      if (photos.length) {
-        const paths = await uploadPhotos(id, photos);
-        await supabase.from('bookings').update({ photos: paths }).eq('id', id);
-      }
-      return id;
     },
     onSuccess: (id) => router.replace({ pathname: '/booking/[id]', params: { id } }),
   });
