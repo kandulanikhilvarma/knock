@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import AppText from './AppText';
 import { colors, font } from '../theme/tokens';
 
@@ -16,10 +16,10 @@ function initials(name: string | null): string {
 // single flat colour turns a list of pros into a wall of identical circles, so
 // each person gets a stable pastel from their name — a roster reads as people.
 const TILES = [
-  { bg: colors.pastelPeach, ink: '#7A4318' },
-  { bg: colors.pastelBlue, ink: '#26505E' },
-  { bg: colors.pastelSage, ink: '#3B5426' },
-  { bg: colors.pastelPink, ink: '#7C3B34' },
+  { bg: colors.pastelPeach, ink: colors.inkOnPeach },
+  { bg: colors.pastelBlue, ink: colors.inkOnBlue },
+  { bg: colors.pastelSage, ink: colors.inkOnSage },
+  { bg: colors.pastelPink, ink: colors.inkOnPink },
 ] as const;
 
 function tileFor(name: string | null) {

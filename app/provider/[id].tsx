@@ -1,33 +1,45 @@
 import { View, Image, ScrollView, Pressable, Linking, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
-import { getProvider, providerName } from '../../lib/queries';
+import { getProvider, providerName, getCategories, categoryName } from '../../lib/queries';
 import { getProviderReviews } from '../../lib/bookings';
+import { isOwnStorageUrl } from '../../lib/validate';
 import Avatar from '../../components/Avatar';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function ProviderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['provider', id],
     queryFn: () => getProvider(id!),
     enabled: !!id,
   });
+  const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (isLoading) return <Loading />;
-  if (isError) return <ErrorState message={(error as Error)?.message} />;
+  if (isError) return <ErrorState message={errorMessage(error, t)} onRetry={() => refetch()} />;
   if (!data) return <Empty title={t('provider.notFound')} />;
 
   const name = providerName(data) || t('provider.unnamed');
   const stats = data.provider_stats;
   const verified = data.verify_tier === 'verified';
+  // The pro's own trades, not a fixed line. Two at most, to fit the hero.
+  const trades = (data.services ?? [])
+    .map((slug) => cats.data?.find((c) => c.slug === slug))
+    .filter((c) => c != null)
+    .slice(0, 2)
+    .map((c) => categoryName(c, i18n.language));
+  const role = trades.length
+    ? t('provider.roleLine', { trades: trades.join(', ') })
+    : t('provider.roleIndependent');
 
   return (
     <View style={styles.screen}>
@@ -46,7 +58,7 @@ export default function ProviderScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <AppText style={styles.name}>{name}</AppText>
-              <AppText style={styles.role}>{t('provider.roleLine')}</AppText>
+              <AppText style={styles.role}>{role}</AppText>
               <View style={styles.rr}>
                 <AppText style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '·'}</AppText>
                 <AppText style={styles.rrMut}>
@@ -57,8 +69,8 @@ export default function ProviderScreen() {
             </View>
           </View>
 
-          {data.voice_intro_url ? (
-            <Pressable style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
+          {isOwnStorageUrl(data.voice_intro_url, process.env.EXPO_PUBLIC_SUPABASE_URL) ? (
+            <Pressable accessibilityRole="button" style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
               <View style={styles.voicePlay}>
                 <Ionicons name="play" size={13} color={colors.surface} />
               </View>
@@ -125,7 +137,7 @@ export default function ProviderScreen() {
 
       {/* Saffron request bar — the one action */}
       <SafeAreaView edges={['bottom']} style={styles.footer}>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={styles.cta}
           onPress={() =>
             router.push({ pathname: '/booking/new', params: { slug: data.services?.[0] ?? '' } })
@@ -276,7 +288,7 @@ const styles = StyleSheet.create({
   reviews: { gap: space.sm, marginTop: space.xs },
   reviewsTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   reviewRow: { backgroundColor: colors.surface, borderRadius: radius.chip, padding: space.md, gap: 3, ...shadow.soft },
-  reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.gold },
+  reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.goldDeep },
   reviewTags: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
   reviewBody: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
 

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from '../components/AppText';
 import CategoryArt from '../components/CategoryArt';
 import ProviderCard from '../components/ProviderCard';
@@ -89,7 +89,7 @@ export default function Search() {
     <SafeAreaView style={styles.screen} edges={['top']}>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.bar}>
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={12} style={styles.back}>
+        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={12} style={styles.back} accessibilityRole="button" accessibilityLabel={t('a11y.back')}>
           <Ionicons name="chevron-back" size={22} color={colors.ink} />
         </Pressable>
         <View style={styles.field}>
@@ -97,6 +97,7 @@ export default function Search() {
           <TextInput
             style={styles.input}
             value={q}
+            accessibilityLabel={t('home.searchPlaceholder')}
             onChangeText={setQ}
             placeholder={t('home.searchPlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -104,7 +105,7 @@ export default function Search() {
             returnKeyType="search"
           />
           {q.length > 0 && (
-            <Pressable onPress={() => setQ('')} hitSlop={10}>
+            <Pressable onPress={() => setQ('')} hitSlop={14} accessibilityRole="button" accessibilityLabel={t('a11y.clearSearch')}>
               <Ionicons name="close-circle" size={18} color={colors.inkMuted} />
             </Pressable>
           )}
@@ -127,7 +128,7 @@ export default function Search() {
           <View style={styles.section}>
             <AppText style={styles.secTitle}>{term ? t('search.services') : t('search.popular')}</AppText>
             {hitCats.map((c) => (
-              <Pressable
+              <Pressable accessibilityRole="button"
                 key={c.id}
                 style={({ pressed: p }) => [styles.row, p && pressed]}
                 onPress={() => router.push({ pathname: '/category/[slug]', params: { slug: c.slug } })}

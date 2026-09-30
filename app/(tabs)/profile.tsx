@@ -1,10 +1,10 @@
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useState } from 'react';
 import { useSession, displayName } from '../../lib/session';
@@ -13,6 +13,7 @@ import { getMyProviderProfile, setAvailability, type Availability } from '../../
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import Touchable from '../../components/Touchable';
 import { Loading } from '../../components/StateView';
+import { errorMessage } from '../../lib/errors';
 
 const STATES: Availability[] = ['available', 'busy', 'paused'];
 
@@ -21,15 +22,20 @@ function DeleteAccount() {
   const [armed, setArmed] = useState(false);
   const m = useMutation({ mutationFn: deleteAccount });
   return (
-    <Pressable
-      style={styles.delete}
-      disabled={m.isPending}
-      onPress={() => (armed ? m.mutate() : setArmed(true))}
-    >
-      <AppText style={styles.deleteTxt}>
-        {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
-      </AppText>
-    </Pressable>
+    <>
+      <Pressable accessibilityRole="button"
+        style={styles.delete}
+        disabled={m.isPending}
+        onPress={() => (armed ? m.mutate() : setArmed(true))}
+      >
+        <AppText style={styles.deleteTxt}>
+          {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
+        </AppText>
+      </Pressable>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
+    </>
   );
 }
 
@@ -41,10 +47,22 @@ function ProviderSection() {
 
   if (q.isLoading) return null;
 
+  // A failed load must not look like "not a provider yet".
+  if (q.isError) {
+    return (
+      <Pressable style={styles.linkRow} onPress={() => q.refetch()} accessibilityRole="button">
+        <View style={[styles.linkIcon, { backgroundColor: colors.pastelPink }]}>
+          <Ionicons name="refresh" size={18} color={colors.danger} />
+        </View>
+        <AppText style={styles.linkTxt}>{t('common.crashRetry')}</AppText>
+      </Pressable>
+    );
+  }
+
   // not a provider yet → invite
   if (!q.data) {
     return (
-      <Pressable style={styles.linkRow} onPress={() => router.push('/provider-setup')}>
+      <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/provider-setup')}>
         <View style={[styles.linkIcon, { backgroundColor: colors.pastelPeach }]}>
           <Ionicons name="briefcase-outline" size={18} color={colors.accent} />
         </View>
@@ -62,17 +80,27 @@ function ProviderSection() {
       <AppText style={styles.label}>{t('providerSetup.availability')}</AppText>
       <View style={styles.seg}>
         {STATES.map((s) => (
-          <Pressable key={s} style={[styles.segBtn, current === s && styles.segOn]} disabled={m.isPending} onPress={() => m.mutate(s)}>
+          <Pressable
+            key={s}
+            style={[styles.segBtn, current === s && styles.segOn]}
+            disabled={m.isPending}
+            onPress={() => m.mutate(s)}
+            accessibilityRole="radio"
+            aria-selected={current === s} aria-disabled={m.isPending}
+          >
             <AppText style={[styles.segTxt, current === s && styles.segTxtOn]}>{t(`providerSetup.status_${s}`)}</AppText>
           </Pressable>
         ))}
       </View>
-      <Pressable style={styles.editLink} onPress={() => router.push('/provider-setup')}>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
+      <Pressable accessibilityRole="button" style={styles.editLink} onPress={() => router.push('/provider-setup')}>
         <AppText style={styles.editTxt}>{t('providerSetup.edit')}</AppText>
       </Pressable>
     </View>
 
-    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/earnings')}>
+    <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs/earnings')}>
       <View style={styles.linkIcon}>
         <Ionicons name="wallet-outline" size={18} color={colors.ink} />
       </View>
@@ -80,7 +108,7 @@ function ProviderSection() {
       <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
     </Pressable>
 
-    <Pressable style={styles.linkRow} onPress={() => router.push('/jobs/reviews')}>
+    <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs/reviews')}>
       <View style={styles.linkIcon}>
         <Ionicons name="star-outline" size={18} color={colors.ink} />
       </View>
@@ -89,7 +117,7 @@ function ProviderSection() {
     </Pressable>
 
     {!verified && (
-      <Pressable style={styles.linkRow} onPress={() => router.push('/verified')}>
+      <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/verified')}>
         <View style={[styles.linkIcon, { backgroundColor: colors.tintSuccess }]}>
           <Ionicons name="shield-checkmark-outline" size={18} color={colors.successInk} />
         </View>
@@ -154,21 +182,21 @@ export default function Profile() {
         {session ? (
           <>
             <ProviderSection />
-            <Pressable style={styles.linkRow} onPress={() => router.push('/jobs')}>
+            <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/jobs')}>
               <View style={styles.linkIcon}>
                 <Ionicons name="albums-outline" size={18} color={colors.ink} />
               </View>
               <AppText style={styles.linkTxt}>{t('profileTab.myJobs')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
-            <Pressable style={styles.linkRow} onPress={() => router.push('/addresses')}>
+            <Pressable accessibilityRole="button" style={styles.linkRow} onPress={() => router.push('/addresses')}>
               <View style={styles.linkIcon}>
                 <Ionicons name="location-outline" size={18} color={colors.ink} />
               </View>
               <AppText style={styles.linkTxt}>{t('profileTab.addresses')}</AppText>
               <Ionicons name="chevron-forward" size={18} color={colors.inkMuted} />
             </Pressable>
-            <Pressable style={styles.signout} onPress={() => signOut()}>
+            <Pressable accessibilityRole="button" style={styles.signout} onPress={() => signOut()}>
               <AppText style={styles.signoutTxt}>{t('profileTab.signOut')}</AppText>
             </Pressable>
             <DeleteAccount />
@@ -225,10 +253,11 @@ const styles = StyleSheet.create({
   linkIcon: { width: 34, height: 34, borderRadius: radius.chip, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' },
   linkTxt: { flex: 1, fontFamily: font.teBold, fontSize: type.body, color: colors.ink },
   seg: { flexDirection: 'row', gap: space.xs, marginTop: space.xs },
-  segBtn: { flex: 1, height: 40, borderRadius: radius.chip, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
-  segOn: { backgroundColor: colors.success, borderColor: colors.success },
+  segBtn: { flex: 1, height: tap.min, borderRadius: radius.chip, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
+  segOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   segTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
   segTxtOn: { color: colors.surface },
+  err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger, marginTop: space.xs, textAlign: 'center' },
   editLink: { marginTop: space.sm },
   editTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.accent },
   cta: {

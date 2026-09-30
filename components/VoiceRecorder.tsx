@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, Pressable, StyleSheet } from 'react-native';
 import {
   useAudioRecorder,
@@ -7,7 +8,7 @@ import {
   AudioModule,
   setAudioModeAsync,
 } from 'expo-audio';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import AppText from './AppText';
 import { uploadVoiceIntro } from '../lib/audio';
@@ -40,7 +41,7 @@ export default function VoiceRecorder({
       await recorder.prepareToRecordAsync();
       recorder.record();
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     }
   };
 
@@ -50,7 +51,7 @@ export default function VoiceRecorder({
       await recorder.stop();
       if (recorder.uri) onChange(await uploadVoiceIntro(recorder.uri));
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -61,7 +62,7 @@ export default function VoiceRecorder({
       <View style={styles.done}>
         <Ionicons name="checkmark-circle" size={20} color={colors.success} />
         <AppText style={styles.doneTxt}>{t('voice.recorded')}</AppText>
-        <Pressable hitSlop={8} onPress={() => onChange(null)}>
+        <Pressable hitSlop={14} onPress={() => onChange(null)} accessibilityRole="button">
           <AppText style={styles.reTxt}>{t('voice.remove')}</AppText>
         </Pressable>
       </View>
@@ -70,7 +71,7 @@ export default function VoiceRecorder({
 
   return (
     <View style={{ gap: space.xs }}>
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={[styles.btn, state.isRecording && styles.btnRec]}
         disabled={busy}
         onPress={state.isRecording ? stop : start}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Modal, Pressable, StyleSheet } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import AppText from './AppText';
 import { colors, space, radius, font, type, tap } from '../theme/tokens';
@@ -42,7 +42,7 @@ export default function QrScanner({
             <Ionicons name="camera-outline" size={30} color={colors.onDark} />
             <AppText style={styles.permTitle}>{t('scan.permTitle')}</AppText>
             <AppText style={styles.permSub}>{t('scan.permSub')}</AppText>
-            <Pressable style={styles.allow} onPress={() => requestPerm()}>
+            <Pressable accessibilityRole="button" style={styles.allow} onPress={() => requestPerm()}>
               <AppText style={styles.allowTxt}>{t('scan.allow')}</AppText>
             </Pressable>
           </View>
@@ -72,7 +72,7 @@ export default function QrScanner({
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000' },
+  root: { flex: 1, backgroundColor: colors.ink },
   perm: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.sm },
   permTitle: { fontFamily: font.displayBold, fontSize: type.h2, color: colors.onDark },
   permSub: { fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted, textAlign: 'center' },

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
@@ -35,10 +35,11 @@ export default function LanguageSwitcher({ onDark = false }: { onDark?: boolean 
               onDark ? styles.chipDark : styles.chip,
               on && (onDark ? styles.chipOnDark : styles.chipOn),
             ]}
-            hitSlop={14}
+            // Vertical only: side slop overlapped the neighbouring chip.
+            hitSlop={{ top: 6, bottom: 6 }}
             accessibilityRole="button"
             accessibilityLabel={l.name}
-            accessibilityState={{ selected: on }}
+            aria-selected={on}
           >
             <AppText
               style={[
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
   txt: { fontFamily: font.semibold, fontSize: type.small, color: colors.inkMuted },
   txtOn: { color: colors.surface },
   chipDark: {
-    minWidth: 42,
+    minWidth: 44,
     height: 34,
     alignItems: 'center',
     justifyContent: 'center',

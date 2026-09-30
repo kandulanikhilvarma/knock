@@ -1,6 +1,6 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type, shadow } from '../theme/tokens';
 import { providerName, type ProviderCard as Provider } from '../lib/queries';
@@ -32,7 +32,7 @@ export default function ProviderCard({
             </AppText>
             {verified && (
               <View style={styles.badge}>
-                <Ionicons name="checkmark" size={11} color={colors.ink} />
+                <Ionicons name="checkmark" size={11} color={colors.successInk} />
                 <AppText style={styles.badgeTxt}>{t('provider.verified')}</AppText>
               </View>
             )}
@@ -55,16 +55,13 @@ export default function ProviderCard({
               </>
             )}
           </View>
-          <View style={styles.tags}>
-            <View style={styles.tag}>
-              <AppText style={styles.tagTxt}>{t('provider.speaksTelugu')}</AppText>
-            </View>
-            {provider.visiting_charge != null && (
+          {provider.visiting_charge != null && (
+            <View style={styles.tags}>
               <View style={styles.tag}>
                 <AppText style={styles.tagTxt}>{t('provider.visit', { amount: provider.visiting_charge })}</AppText>
               </View>
-            )}
-          </View>
+            </View>
+          )}
         </View>
       </View>
 
@@ -95,12 +92,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
-    backgroundColor: colors.gold,
+    backgroundColor: colors.tintSuccess,
     paddingHorizontal: space.sm,
     paddingVertical: 2,
     borderRadius: radius.pill,
   },
-  badgeTxt: { fontFamily: font.bold, fontSize: 10, color: colors.ink },
+  badgeTxt: { fontFamily: font.bold, fontSize: 10, color: colors.successInk },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   rating: { fontFamily: font.bold, fontSize: type.small, color: colors.goldDeep },
   meta: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },

@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from '../components/AppText';
 import { Loading, ErrorState, Empty } from '../components/StateView';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../theme/tokens';
@@ -58,6 +59,7 @@ export default function Addresses() {
           <TextInput
             style={styles.input}
             value={label}
+            accessibilityLabel={t('addresses.labelPlaceholder')}
             onChangeText={setLabel}
             placeholder={t('addresses.labelPlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -65,25 +67,29 @@ export default function Addresses() {
           <TextInput
             style={[styles.input, styles.multiline]}
             value={line}
+            accessibilityLabel={t('addresses.linePlaceholder')}
             onChangeText={setLine}
             placeholder={t('addresses.linePlaceholder')}
             placeholderTextColor={colors.inkMuted}
             multiline
           />
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.cta, p && pressed, (!valid || add.isPending) && styles.ctaOff]}
             disabled={!valid || add.isPending}
             onPress={() => add.mutate()}
           >
             <AppText style={styles.ctaTxt}>{add.isPending ? '…' : t('addresses.add')}</AppText>
           </Pressable>
-          {add.isError && <AppText style={styles.err}>{(add.error as Error).message}</AppText>}
+          {add.isError && <AppText style={styles.err}>{errorMessage(add.error, t)}</AppText>}
         </View>
 
         {q.isLoading && <Loading />}
-        {q.isError && <ErrorState message={(q.error as Error)?.message} />}
+        {q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
         {q.data?.length === 0 && <Empty icon="location-outline" title={t('addresses.empty')} />}
 
+        {(del.isError || setDef.isError) && (
+          <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(del.error ?? setDef.error, t)}</AppText>
+        )}
         {q.data?.map((a) => (
           <View key={a.id} style={styles.row}>
             <Ionicons name="location" size={20} color={colors.primary} />
@@ -100,12 +106,18 @@ export default function Addresses() {
                 {a.line}
               </AppText>
               {!a.is_default && (
-                <Pressable disabled={setDef.isPending} onPress={() => setDef.mutate(a.id)}>
+                <Pressable accessibilityRole="button" disabled={setDef.isPending} onPress={() => setDef.mutate(a.id)}>
                   <AppText style={styles.makeDefault}>{t('addresses.makeDefault')}</AppText>
                 </Pressable>
               )}
             </View>
-            <Pressable hitSlop={10} disabled={del.isPending} onPress={() => del.mutate(a.id)}>
+            <Pressable
+              hitSlop={14}
+              disabled={del.isPending}
+              onPress={() => del.mutate(a.id)}
+              accessibilityRole="button"
+              accessibilityLabel={t('a11y.deleteAddress')}
+            >
               <Ionicons name="trash-outline" size={18} color={colors.danger} />
             </Pressable>
           </View>

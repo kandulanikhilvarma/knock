@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import {
   View, TextInput, Pressable, FlatList, ScrollView, KeyboardAvoidingView, Platform, StyleSheet,
 } from 'react-native';
@@ -6,11 +7,12 @@ import AppText from '../../components/AppText';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import { getMessages, sendMessage, subscribeMessages, type Message } from '../../lib/chat';
 import { useSession } from '../../lib/session';
 import { Loading, ErrorState } from '../../components/StateView';
+import { Sentry } from '../../lib/sentry';
 
 // HH:MM, 24h — plain and unambiguous across scripts.
 function clock(iso: string | null): string {
@@ -26,7 +28,13 @@ export default function ChatThread() {
   const uid = session?.user?.id;
   const listRef = useRef<FlatList<Message>>(null);
 
-  const q = useQuery({ queryKey: ['messages', bookingId], queryFn: () => getMessages(bookingId!), enabled: !!bookingId });
+  // staleTime 0: realtime only listens while the thread is open.
+  const q = useQuery({
+    queryKey: ['messages', bookingId],
+    queryFn: () => getMessages(bookingId!),
+    enabled: !!bookingId,
+    staleTime: 0,
+  });
   const [msgs, setMsgs] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
 
@@ -41,20 +49,34 @@ export default function ChatThread() {
     });
   }, [bookingId]);
 
-  const sendBody = async (body: string) => {
-    if (!body.trim()) return;
-    await sendMessage(bookingId!, body.trim());
+  const [sendFailed, setSendFailed] = useState(false);
+
+  // Resolves false on failure so the caller can hand the text back.
+  const sendBody = async (body: string): Promise<boolean> => {
+    const text = body.trim();
+    if (!text) return false;
+    setSendFailed(false);
+    try {
+      const m = await sendMessage(bookingId!, text);
+      setMsgs((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
+      return true;
+    } catch (e) {
+      Sentry.captureException(e);
+      setSendFailed(true);
+      return false;
+    }
   };
 
   const send = async () => {
     const body = draft.trim();
     if (!body) return;
     setDraft('');
-    await sendBody(body);
+    // Put the text back unless the user already started a new one.
+    if (!(await sendBody(body))) setDraft((d) => d || body);
   };
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   return (
     <KeyboardAvoidingView
@@ -123,9 +145,10 @@ export default function ChatThread() {
         keyboardShouldPersistTaps="always"
       >
         {['onWay', 'reached', 'howLong', 'callMe'].map((k) => (
-          <Pressable
+          <Pressable accessibilityRole="button"
             key={k}
             style={({ pressed: p }) => [styles.chip, p && pressed]}
+            hitSlop={{ top: 5, bottom: 5 }}
             onPress={() => sendBody(t(`chat.quick_${k}`))}
           >
             <AppText style={styles.chipTxt}>{t(`chat.quick_${k}`)}</AppText>
@@ -133,10 +156,17 @@ export default function ChatThread() {
         ))}
       </ScrollView>
 
+      {sendFailed && (
+        <AppText style={styles.sendErr} accessibilityLiveRegion="polite">
+          {t('chat.sendFailed')}
+        </AppText>
+      )}
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
           value={draft}
+          accessibilityLabel={t('chat.placeholder')}
+          maxLength={2000}
           onChangeText={setDraft}
           placeholder={t('chat.placeholder')}
           placeholderTextColor={colors.inkMuted}
@@ -223,4 +253,8 @@ const styles = StyleSheet.create({
   },
   send: { width: tap.min, height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   sendOff: { opacity: 0.4 },
+  sendErr: {
+    fontFamily: font.regular, fontSize: type.small, color: colors.danger,
+    paddingHorizontal: space.lg, paddingBottom: space.xs,
+  },
 });

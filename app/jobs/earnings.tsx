@@ -1,13 +1,15 @@
 import { View, FlatList, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import AppText from '../../components/AppText';
 import CategoryArt from '../../components/CategoryArt';
-import { Loading, ErrorState, Empty } from '../../components/StateView';
+import { ErrorState, Empty } from '../../components/StateView';
 import { categoryTint } from '../../lib/categoryTint';
 import { getMyBookings } from '../../lib/bookings';
-import { getCategories, categoryName, formatINR } from '../../lib/queries';
+import { getCategories, categoryName } from '../../lib/queries';
+import { formatDate, formatINR } from '../../lib/format';
 import { colors, space, radius, font, type, shadow } from '../../theme/tokens';
 
 // §6 screen map: "Earnings log (self-reported)". The app never touches the
@@ -17,8 +19,22 @@ export default function Earnings() {
   const q = useQuery({ queryKey: ['my-bookings'], queryFn: getMyBookings });
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
-  if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
+  // Same shape as the loaded screen, so nothing jumps when the numbers land.
+  if (q.isLoading) {
+    return (
+      <View style={[styles.screen, styles.list]} aria-busy accessibilityLabel={t('earnings.title')}>
+        <Stack.Screen options={{ title: t('earnings.title') }} />
+        <View style={[styles.block, styles.skelBlock]} />
+        {[0, 1, 2].map((i) => (
+          <View key={i} style={styles.row}>
+            <View style={styles.skelIcon} />
+            <View style={styles.skelBar} />
+          </View>
+        ))}
+      </View>
+    );
+  }
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   const paid = (q.data ?? []).filter((b) => b.paid_at);
   const total = paid.reduce((s, b) => s + (b.price_agreed ?? 0), 0);
@@ -52,7 +68,7 @@ export default function Earnings() {
             <View style={{ flex: 1 }}>
               <AppText style={styles.rowTitle}>{label(item.category_slug)}</AppText>
               <AppText style={styles.rowSub}>
-                {new Date(item.paid_at!).toLocaleDateString()} ·{' '}
+                {formatDate(item.paid_at!, i18n.language)} ·{' '}
                 {t(`earnings.method_${item.pay_method === 'cash' ? 'cash' : 'upi'}`)}
               </AppText>
             </View>
@@ -101,4 +117,7 @@ const styles = StyleSheet.create({
   rowTitle: { fontFamily: font.semibold, fontSize: type.body, color: colors.ink },
   rowSub: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, marginTop: 1 },
   amount: { fontFamily: font.displayBold, fontSize: type.h3, color: colors.ink },
+  skelBlock: { height: 132 },
+  skelIcon: { width: 34, height: 34, borderRadius: radius.pill, backgroundColor: colors.line },
+  skelBar: { flex: 1, height: 14, borderRadius: radius.pill, backgroundColor: colors.line },
 });

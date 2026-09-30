@@ -14,7 +14,7 @@ export const colors = {
   accentWarm: '#155041',
   // warm value accent — the ₹0 coin ring / price emphasis
   gold: '#CF8A3C',
-  goldDeep: '#A65E31',
+  goldDeep: '#8F5029',
   // proof only — verified / available / paid (a living emerald, distinct from forest)
   success: '#1E9E6A',
   successInk: '#186B49',
@@ -23,10 +23,12 @@ export const colors = {
   surface: '#FBF8F1', // bright cream card — lifts off the ground
   ink: '#14150F', // warm near-black type
   ink2: '#3A3A30',
-  inkMuted: '#767263', // warm gray
+  inkMuted: '#67635A', // warm gray — 4.85:1 on bg (AA)
   line: '#E4DDCC',
   line2: '#EDE7D8',
-  danger: '#BE4A31', // warm brick red
+  danger: '#A33F29', // warm brick red — 5.15:1 on bg (AA)
+  dangerDeep: '#8E2E1C', // armed SOS — onDark on it 7.15:1
+  successOnDark: '#8FE3AB', // mint proof on forest (greeting, live dot) — 8.27:1 on primary
   onDark: '#F3EFE4', // cream text on forest surfaces
   onDarkMuted: '#A9BDA9', // muted cream-green on forest
   // pastel blocks behind category items
@@ -35,6 +37,11 @@ export const colors = {
   pastelSage: '#C8D9B7',
   pastelPeach: '#F1C6A6',
   peach: '#ECAF87', // price / tag pills
+  // initials ink on each pastel avatar tile (all ≥ 5:1 on their pastel)
+  inkOnPeach: '#7A4318',
+  inkOnBlue: '#26505E',
+  inkOnSage: '#3B5426',
+  inkOnPink: '#7C3B34',
   // flat tints of success/gold over the surface — pill and card grounds.
   // Flat, not alpha, so they never darken twice when stacked on a card.
   tintSuccess: '#DCEBE1',
@@ -44,7 +51,7 @@ export const colors = {
 // 4pt spacing scale.
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
 
-// Softer, larger radii — Shifud cards are generously rounded.
+// Softer, larger radii: 22px cards, pill CTAs.
 export const radius = { card: 22, chip: 16, pill: 999 } as const;
 
 // 48px minimum tap target.
@@ -93,11 +100,11 @@ export const font = {
   mono: 'monospace',
 } as const;
 
-// Mobile-tuned scale. Fraunces display is high-contrast, so it reads a size
+// Mobile-tuned scale. Bricolage display reads a size
 // larger than a sans at the same px — these are set for a ~390pt iPhone, where
 // the old 40/30/26 tier shouted. Telugu/Hindi line-height is floored in AppText.
 export const type = {
-  display: 33, // big editorial screen titles — Bricolage reads a touch smaller than the old serif
+  display: 33, // big screen titles
   hero: 25,
   h1: 20,
   h2: 18,

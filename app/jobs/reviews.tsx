@@ -1,4 +1,5 @@
 import { View, FlatList, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -6,11 +7,12 @@ import AppText from '../../components/AppText';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 import { getProviderReviews } from '../../lib/bookings';
 import { useSession } from '../../lib/session';
+import { formatDate } from '../../lib/format';
 import { colors, space, radius, font, type, shadow } from '../../theme/tokens';
 
 // §6 screen map: the pro's own reviews, the thing the whole rating loop feeds.
 export default function MyReviews() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { session } = useSession();
   const uid = session?.user?.id;
   const q = useQuery({
@@ -20,7 +22,7 @@ export default function MyReviews() {
   });
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
 
   const rows = q.data ?? [];
   const avg = rows.length ? rows.reduce((s, r) => s + r.rating, 0) / rows.length : 0;
@@ -47,7 +49,7 @@ export default function MyReviews() {
           <View style={styles.card}>
             <View style={styles.cardTop}>
               <AppText style={styles.cardStars}>{'★'.repeat(item.rating)}</AppText>
-              <AppText style={styles.date}>{new Date(item.created_at).toLocaleDateString()}</AppText>
+              <AppText style={styles.date}>{formatDate(item.created_at, i18n.language)}</AppText>
             </View>
             {item.body ? <AppText style={styles.body}>{item.body}</AppText> : null}
             {item.tags?.length ? (
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     ...shadow.soft,
   },
   avg: { fontFamily: font.displayBold, fontSize: 44, color: colors.ink },
-  stars: { fontFamily: font.bold, fontSize: type.h3, color: colors.gold },
+  stars: { fontFamily: font.bold, fontSize: type.h3, color: colors.goldDeep },
   headSub: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, marginTop: 2 },
   card: {
     padding: space.lg,
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   cardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  cardStars: { fontFamily: font.bold, fontSize: type.body, color: colors.gold },
+  cardStars: { fontFamily: font.bold, fontSize: type.body, color: colors.goldDeep },
   date: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
   body: { fontFamily: font.regular, fontSize: type.body, lineHeight: 22, color: colors.ink2 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },

@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { colors, space, radius, font, type, shadow } from '../theme/tokens';
 
@@ -10,7 +10,7 @@ const PILLARS: { icon: string; color: string; key: string }[] = [
   { icon: 'shield-checkmark', color: colors.success, key: 'idChecked' },
   { icon: 'qr-code', color: colors.accent, key: 'qrDoor' },
   { icon: 'cash-outline', color: colors.gold, key: 'directPay' },
-  { icon: 'ribbon-outline', color: colors.onDark, key: 'zeroComm' },
+  { icon: 'ribbon-outline', color: colors.goldDeep, key: 'zeroComm' },
 ];
 
 export default function TrustPillars() {

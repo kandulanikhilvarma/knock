@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import type { Database } from './database.types';
 import { track } from './analytics';
+import { Sentry } from './sentry';
 
 export type Booking = Database['public']['Tables']['bookings']['Row'];
 export type BookingStatus = Database['public']['Enums']['booking_status'];
@@ -14,9 +15,14 @@ export type NewBooking = {
   timePref?: string;
   custLat?: number | null;
   custLng?: number | null;
+  // Client-picked id (lib/ids): a retried submit sends the same id.
+  id?: string;
+  photos?: string[];
 };
 
-// Insert the booking, then kick the dispatch engine. Returns the booking id.
+// Insert the booking, then kick the dispatch engine. Returns the booking id even
+// if dispatch fails: the booking exists, and throwing here made the user retry
+// and create a second one. The booking screen offers a dispatch retry.
 export async function createBooking(input: NewBooking): Promise<string> {
   const { data: auth } = await supabase.auth.getUser();
   const uid = auth.user?.id;
@@ -25,6 +31,8 @@ export async function createBooking(input: NewBooking): Promise<string> {
   const { data, error } = await supabase
     .from('bookings')
     .insert({
+      ...(input.id ? { id: input.id } : {}),
+      ...(input.photos?.length ? { photos: input.photos } : {}),
       customer_id: uid,
       category_id: input.categoryId,
       category_slug: input.categorySlug,
@@ -36,10 +44,17 @@ export async function createBooking(input: NewBooking): Promise<string> {
     })
     .select('id')
     .single();
+  // Duplicate key on our own id: the first try saved but its reply was lost.
+  // The booking screen's dispatch retry covers a dispatch that never ran.
+  if (error?.code === '23505' && input.id) return input.id;
   if (error) throw error;
 
   track('booking_created', { booking_id: data.id, category: input.categorySlug });
-  await runDispatch(data.id);
+  try {
+    await runDispatch(data.id);
+  } catch (e) {
+    Sentry.captureException(e);
+  }
   return data.id;
 }
 

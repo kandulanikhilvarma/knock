@@ -1,7 +1,7 @@
 import { View, ScrollView, Pressable, Linking, Platform, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from '../components/AppText';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
 
@@ -44,7 +44,7 @@ export default function VerifiedUpsell() {
       </View>
 
       {canLink ? (
-        <Pressable
+        <Pressable accessibilityRole="link"
           style={({ pressed: p }) => [styles.cta, p && pressed]}
           onPress={() => Linking.openURL(PORTAL)}
         >

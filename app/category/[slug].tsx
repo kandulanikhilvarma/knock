@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
+import { View, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,7 @@ import { categoryTint } from '../../lib/categoryTint';
 import { useMyLocation } from '../../lib/useMyLocation';
 import { decodeGeohash, distanceKm } from '../../lib/geo';
 import { track } from '../../lib/analytics';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function CategoryScreen() {
@@ -58,6 +59,7 @@ export default function CategoryScreen() {
     <View style={styles.screen}>
       <Stack.Screen options={{ title }} />
       {!category && cats.isLoading && <Loading />}
+      {!category && cats.isError && <ErrorState onRetry={() => cats.refetch()} />}
 
       {category && !isLive && (
         <Waitlist categoryId={category.id} title={title} slug={category.slug} icon={category.icon} />
@@ -67,7 +69,7 @@ export default function CategoryScreen() {
         <>
           {providers.isLoading && <Loading />}
           {providers.isError && (
-            <ErrorState message={(providers.error as Error)?.message} onRetry={() => providers.refetch()} />
+            <ErrorState message={errorMessage(providers.error, t)} onRetry={() => providers.refetch()} />
           )}
           {providers.data && (
             <FlatList
@@ -148,6 +150,7 @@ function Waitlist({
         <TextInput
           style={styles.input}
           value={phone}
+          accessibilityLabel={t('category.phonePlaceholder')}
           onChangeText={setPhone}
           placeholder={t('category.phonePlaceholder')}
           placeholderTextColor={colors.inkMuted}
@@ -162,7 +165,7 @@ function Waitlist({
       >
         <AppText style={styles.ctaTxt}>{t('category.notifyMe')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </ScrollView>
   );
 }

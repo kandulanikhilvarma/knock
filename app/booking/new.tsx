@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';
 import { getSavedAddresses } from '../../lib/addresses';
 import { pickImages, uploadPhotos, type PickedPhoto } from '../../lib/photos';
-import { supabase } from '../../lib/supabase';
+import { uuidv4 } from '../../lib/ids';
 import { useSession } from '../../lib/session';
 import CategoryArt from '../../components/CategoryArt';
 import Touchable from '../../components/Touchable';
@@ -43,21 +44,26 @@ export default function NewBookingScreen() {
     onSuccess: (p) => p.length && setPhotos((prev) => [...prev, ...p].slice(0, 5)),
   });
 
+  // One id per draft. Photos upload under it before the row exists (RLS blocks a
+  // customer update of bookings.photos), and a retry reuses it: no second booking.
+  const draftId = useRef(uuidv4());
+  const uploaded = useRef<string[] | null>(null);
+  useEffect(() => {
+    uploaded.current = null;
+  }, [photos]);
+
   const m = useMutation({
     mutationFn: async () => {
       const desc = appliance ? `${t(`booking.appl_${appliance}`)}: ${description.trim()}` : description.trim();
-      const id = await createBooking({
+      if (photos.length && !uploaded.current) uploaded.current = await uploadPhotos(draftId.current, photos);
+      return createBooking({
+        id: draftId.current,
+        photos: uploaded.current ?? undefined,
         categoryId: category?.id ?? null,
         categorySlug: slug ?? '',
         description: desc,
         address: address.trim(),
       });
-      // Upload after the booking exists so photos live under this booking's folder.
-      if (photos.length) {
-        const paths = await uploadPhotos(id, photos);
-        await supabase.from('bookings').update({ photos: paths }).eq('id', id);
-      }
-      return id;
     },
     onSuccess: (id) => router.replace({ pathname: '/booking/[id]', params: { id } }),
   });
@@ -109,6 +115,8 @@ export default function NewBookingScreen() {
                   key={a}
                   style={[styles.chip, on && styles.chipOn]}
                   onPress={() => setAppliance(on ? null : a)}
+                  accessibilityRole="radio"
+                  aria-selected={on}
                 >
                   <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{t(`booking.appl_${a}`)}</AppText>
                 </Pressable>
@@ -122,6 +130,8 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={description}
+        accessibilityLabel={t('booking.descLabel')}
+        maxLength={1000}
         onChangeText={setDescription}
         placeholder={t('booking.descPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -134,7 +144,7 @@ export default function NewBookingScreen() {
             <Image source={{ uri: p.uri }} style={styles.thumb} />
             <Pressable
               style={styles.thumbX}
-              hitSlop={6}
+              hitSlop={14}
               onPress={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
               accessibilityRole="button"
               accessibilityLabel={t('a11y.removePhoto')}
@@ -144,19 +154,19 @@ export default function NewBookingScreen() {
           </View>
         ))}
         {photos.length < 5 && (
-          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+          <Pressable accessibilityRole="button" style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
             <Ionicons name="camera-outline" size={22} color={colors.primary} />
             <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('booking.addPhotos')}</AppText>
           </Pressable>
         )}
       </View>
-      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+      {pick.isError && <AppText style={styles.err}>{errorMessage(pick.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('booking.addressLabel')}</AppText>
       {(saved.data?.length ?? 0) > 0 && (
         <View style={styles.chips}>
           {saved.data!.map((a) => (
-            <Pressable key={a.id} style={styles.savedChip} onPress={() => setAddress(a.line)}>
+            <Pressable accessibilityRole="button" key={a.id} style={styles.savedChip} onPress={() => setAddress(a.line)}>
               <Ionicons name="location" size={13} color={colors.primary} />
               <AppText style={styles.savedChipTxt}>{a.label}</AppText>
             </Pressable>
@@ -166,6 +176,8 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={address}
+        accessibilityLabel={t('booking.addressLabel')}
+        maxLength={300}
         onChangeText={setAddress}
         placeholder={t('booking.addressPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -186,7 +198,8 @@ export default function NewBookingScreen() {
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {!valid && <AppText style={styles.hint}>{t('booking.needAddress')}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </ScrollView>
   );
 }
@@ -286,4 +299,5 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger, marginTop: space.sm },
+  hint: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm, textAlign: 'center' },
 });

@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Platform, View, Pressable, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Stack, useRouter, type ErrorBoundaryProps } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import {
   useFonts,
   Inter_400Regular,
@@ -46,7 +46,7 @@ import AppText from '../components/AppText';
 import { colors, font, space, radius, type, tap } from '../theme/tokens';
 
 import { initSentry, Sentry } from '../lib/sentry';
-import { setSessionFromUrl } from '../lib/auth';
+import { handleAuthRedirect } from '../lib/auth';
 
 import '../lib/i18n';
 
@@ -76,7 +76,15 @@ if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getEle
   document.head.appendChild(s);
 }
 
-const queryClient = new QueryClient();
+// 30 s: screens remount often (tabs, back/forward); refetching every mount
+// wasted data on slow mobile networks.
+// Every failed query or mutation reaches Sentry here once; screens show only a
+// localized line (lib/errors.ts), never the raw text.
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: (e) => Sentry.captureException(e) }),
+  mutationCache: new MutationCache({ onError: (e) => Sentry.captureException(e) }),
+  defaultOptions: { queries: { staleTime: 30_000 } },
+});
 
 // One consistent, premium back control for every stack screen. Safe-back: if the
 // history is empty (deep link, web refresh, or a screen reached via replace) the
@@ -123,14 +131,15 @@ function RootLayout() {
     if (fontsLoaded || fontError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontError]);
 
-  // Finish sign-in when a magic link / OAuth redirect deep-links back into the
-  // app — cold start (getInitialURL) and warm (the 'url' event) both.
+  // Finish a Google sign-in whose redirect arrives as a deep link instead of as
+  // the auth-session result (Android can do this). handleAuthRedirect ignores
+  // links unless that sign-in is in flight.
   useEffect(() => {
     const sub = Linking.addEventListener('url', ({ url }) => {
-      setSessionFromUrl(url).catch(() => {});
+      handleAuthRedirect(url).catch(() => {});
     });
     Linking.getInitialURL().then((url) => {
-      if (url) setSessionFromUrl(url).catch(() => {});
+      if (url) handleAuthRedirect(url).catch(() => {});
     });
     return () => sub.remove();
   }, []);

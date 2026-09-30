@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../lib/errors';
 import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
 import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
+import { isValidUpi } from '../lib/validate';
 import { pickImages, uploadGalleryPhotos, pickAvatar, uploadAvatar } from '../lib/photos';
 import { useSession } from '../lib/session';
 import { Loading } from '../components/StateView';
@@ -20,6 +22,7 @@ export default function ProviderSetup() {
 
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const mine = useQuery({ queryKey: ['my-provider'], queryFn: getMyProviderProfile, enabled: !!session });
+  const qc = useQueryClient();
 
   const [services, setServices] = useState<string[]>([]);
   const [upiId, setUpiId] = useState('');
@@ -73,7 +76,13 @@ export default function ProviderSetup() {
         workPhotos,
         voiceIntroUrl: voiceUrl,
       }),
-    onSuccess: () => router.back(),
+    onSuccess: () => {
+      // Profile (a mounted tab) and the provider lists would keep the old row.
+      for (const key of ['my-provider', 'provider', 'providers', 'all-providers']) {
+        qc.invalidateQueries({ queryKey: [key] });
+      }
+      router.back();
+    },
   });
 
   if (loading || cats.isLoading) return <Loading />;
@@ -82,7 +91,9 @@ export default function ProviderSetup() {
     setServices((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
 
   // The face is mandatory: customers open the door to this person. No photo, no listing.
-  const valid = services.length > 0 && upiId.includes('@') && !!photoUrl;
+  const valid = services.length > 0 && isValidUpi(upiId) && !!photoUrl;
+  // First missing item, in form order, shown under the disabled save.
+  const need = !photoUrl ? 'needPhoto' : !services.length ? 'needService' : !isValidUpi(upiId) ? 'needUpi' : null;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -124,14 +135,20 @@ export default function ProviderSetup() {
           </AppText>
         </View>
       </View>
-      {pickFace.isError && <AppText style={styles.err}>{(pickFace.error as Error).message}</AppText>}
+      {pickFace.isError && <AppText style={styles.err}>{errorMessage(pickFace.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('providerSetup.services')}</AppText>
       <View style={styles.chips}>
         {(cats.data ?? []).map((c) => {
           const on = services.includes(c.slug);
           return (
-            <Pressable key={c.id} style={[styles.chip, on && styles.chipOn]} onPress={() => toggle(c.slug)}>
+            <Pressable
+              key={c.id}
+              style={[styles.chip, on && styles.chipOn]}
+              onPress={() => toggle(c.slug)}
+              accessibilityRole="checkbox"
+              aria-checked={on}
+            >
               <AppText style={[styles.chipTxt, on && styles.chipTxtOn]}>{categoryName(c, i18n.language)}</AppText>
             </Pressable>
           );
@@ -139,43 +156,44 @@ export default function ProviderSetup() {
       </View>
 
       <AppText style={styles.label}>{t('providerSetup.upi')}</AppText>
-      <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.upi')} value={upiId} onChangeText={setUpiId} maxLength={320} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
 
       <AppText style={styles.label}>{t('providerSetup.city')}</AppText>
-      <TextInput style={styles.input} value={city} onChangeText={setCity} placeholderTextColor={colors.inkMuted} />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.city')} value={city} onChangeText={setCity} maxLength={60} placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.charge')}</AppText>
-      <TextInput style={styles.input} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
+      <TextInput style={styles.input} accessibilityLabel={t('providerSetup.charge')} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.bio')}</AppText>
-      <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} multiline placeholderTextColor={colors.inkMuted} />
+      <TextInput style={[styles.input, styles.multi]} accessibilityLabel={t('providerSetup.bio')} value={bio} onChangeText={setBio} maxLength={1000} multiline placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.gallery')}</AppText>
       <View style={styles.photoRow}>
         {workPhotos.map((u, i) => (
           <View key={u} style={styles.thumbWrap}>
             <Image source={{ uri: u }} style={styles.thumb} />
-            <Pressable style={styles.thumbX} hitSlop={6} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
+            <Pressable style={styles.thumbX} hitSlop={14} accessibilityRole="button" accessibilityLabel={t('a11y.removePhoto')} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
               <Ionicons name="close" size={12} color={colors.onDark} />
             </Pressable>
           </View>
         ))}
         {workPhotos.length < 12 && (
-          <Pressable style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
+          <Pressable accessibilityRole="button" style={styles.addPhoto} disabled={pick.isPending} onPress={() => pick.mutate()}>
             <Ionicons name="camera-outline" size={22} color={colors.primary} />
             <AppText style={styles.addPhotoTxt}>{pick.isPending ? '…' : t('providerSetup.addPhoto')}</AppText>
           </Pressable>
         )}
       </View>
-      {pick.isError && <AppText style={styles.err}>{(pick.error as Error).message}</AppText>}
+      {pick.isError && <AppText style={styles.err}>{errorMessage(pick.error, t)}</AppText>}
 
       <AppText style={styles.label}>{t('providerSetup.voiceIntro')}</AppText>
       <VoiceRecorder value={voiceUrl} onChange={setVoiceUrl} />
 
-      <Pressable style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
+      <Pressable accessibilityRole="button" style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
-      {save.isError && <AppText style={styles.err}>{(save.error as Error).message}</AppText>}
+      {need && <AppText style={styles.hint}>{t(`providerSetup.${need}`)}</AppText>}
+      {save.isError && <AppText style={styles.err}>{errorMessage(save.error, t)}</AppText>}
     </ScrollView>
   );
 }
@@ -240,4 +258,5 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger },
+  hint: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
 });

@@ -1,10 +1,11 @@
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, FlatList, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useSession } from '../../lib/session';
 import { getMyThreads } from '../../lib/chat';
@@ -43,13 +44,13 @@ export default function Chat() {
           </View>
           <AppText style={styles.soTitle}>{t('booking.signInFirst')}</AppText>
           <AppText style={styles.soSub}>{t('chat.noThreadsSub')}</AppText>
-          <Pressable style={styles.soCta} onPress={() => router.push('/auth/email')}>
+          <Pressable accessibilityRole="button" style={styles.soCta} onPress={() => router.push('/auth/email')}>
             <AppText style={styles.soCtaTxt}>{t('profileTab.signIn')}</AppText>
           </Pressable>
         </View>
       )}
       {session && q.isLoading && <Loading />}
-      {session && q.isError && <ErrorState message={(q.error as Error)?.message} />}
+      {session && q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
       {session && q.data && (
         <FlatList
           data={q.data}
@@ -57,7 +58,7 @@ export default function Chat() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={styles.card}
               onPress={() => router.push({ pathname: '/chat/[bookingId]', params: { bookingId: item.id } })}
             >

@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, pressed } from '../../theme/tokens';
 import { supabase } from '../../lib/supabase';
 import { signInWithGoogle, sendEmailCode, verifyEmailCode } from '../../lib/auth';
@@ -70,7 +71,7 @@ export default function EmailAuthScreen() {
       <AppText style={styles.sub}>{t('auth.emailSub')}</AppText>
 
       {/* One-tap Google — the frictionless primary path. */}
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.google, p && pressed, busy && styles.ctaOff]}
         disabled={busy}
         onPress={() => google.mutate()}
@@ -78,7 +79,7 @@ export default function EmailAuthScreen() {
         <Ionicons name="logo-google" size={18} color={colors.onDark} />
         <AppText style={styles.googleTxt}>{google.isPending ? t('auth.verifying') : t('auth.google')}</AppText>
       </Pressable>
-      {google.isError && <AppText style={styles.err}>{(google.error as Error).message}</AppText>}
+      {google.isError && <AppText style={styles.err}>{errorMessage(google.error, t)}</AppText>}
 
       <View style={styles.orRow}>
         <View style={styles.orLine} />
@@ -89,6 +90,7 @@ export default function EmailAuthScreen() {
       <TextInput
         style={styles.input}
         value={email}
+        accessibilityLabel={t('auth.emailPlaceholder')}
         onChangeText={setEmail}
         placeholder={t('auth.emailPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -99,20 +101,21 @@ export default function EmailAuthScreen() {
       <TextInput
         style={styles.input}
         value={password}
+        accessibilityLabel={t('auth.passwordPlaceholder')}
         onChangeText={setPassword}
         placeholder={t('auth.passwordPlaceholder')}
         placeholderTextColor={colors.inkMuted}
         secureTextEntry
       />
 
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.cta, p && pressed, (!valid || busy) && styles.ctaOff]}
         disabled={!valid || busy}
         onPress={() => m.mutate()}
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('auth.verifying') : t('auth.signInBtn')}</AppText>
       </Pressable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
 
       {/* Passwordless code — no password needed, just the email above. Works in
           Expo Go because there's no redirect: read the code, type it here. */}
@@ -122,6 +125,7 @@ export default function EmailAuthScreen() {
           <TextInput
             style={styles.codeInput}
             value={code}
+            accessibilityLabel={t('auth.codePlaceholder')}
             onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
             placeholder={t('auth.codePlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -129,20 +133,20 @@ export default function EmailAuthScreen() {
             autoFocus
             maxLength={6}
           />
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.cta, p && pressed, (code.length < 6 || busy) && styles.ctaOff]}
             disabled={code.length < 6 || busy}
             onPress={() => verify.mutate()}
           >
             <AppText style={styles.ctaTxt}>{verify.isPending ? t('auth.verifying') : t('auth.verifyCode')}</AppText>
           </Pressable>
-          {verify.isError && <AppText style={styles.err}>{(verify.error as Error).message}</AppText>}
-          <Pressable disabled={busy} onPress={() => send.mutate()}>
+          {verify.isError && <AppText style={styles.err}>{errorMessage(verify.error, t)}</AppText>}
+          <Pressable accessibilityRole="button" disabled={busy} onPress={() => send.mutate()}>
             <AppText style={styles.resend}>{send.isPending ? t('auth.sending') : t('auth.resend')}</AppText>
           </Pressable>
         </View>
       ) : (
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={({ pressed: p }) => [styles.linkBtn, p && pressed, (!emailValid || busy) && styles.ctaOff]}
           disabled={!emailValid || busy}
           onPress={() => send.mutate()}
@@ -150,12 +154,12 @@ export default function EmailAuthScreen() {
           <AppText style={styles.linkTxt}>{send.isPending ? t('auth.sending') : t('auth.emailCode')}</AppText>
         </Pressable>
       )}
-      {send.isError && !send.isSuccess && <AppText style={styles.err}>{(send.error as Error).message}</AppText>}
+      {send.isError && !send.isSuccess && <AppText style={styles.err}>{errorMessage(send.error, t)}</AppText>}
 
-      <Pressable style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
+      <Pressable accessibilityRole="button" style={styles.guest} disabled={busy} onPress={() => guest.mutate()}>
         <AppText style={styles.guestTxt}>{guest.isPending ? '…' : t('auth.guest')}</AppText>
       </Pressable>
-      {guest.isError && <AppText style={styles.err}>{(guest.error as Error).message}</AppText>}
+      {guest.isError && <AppText style={styles.err}>{errorMessage(guest.error, t)}</AppText>}
     </View>
   );
 }

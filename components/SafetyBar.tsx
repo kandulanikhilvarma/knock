@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Pressable, Share, Linking, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
 import { colors, space, radius, font, type, pressed } from '../theme/tokens';
 
@@ -32,7 +32,7 @@ export default function SafetyBar({ bookingId }: { bookingId: string }) {
 
   return (
     <View style={styles.wrap}>
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.btn, styles.share, p && pressed]}
         onPress={share}
       >
@@ -42,7 +42,7 @@ export default function SafetyBar({ bookingId }: { bookingId: string }) {
         </AppText>
       </Pressable>
 
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.btn, styles.sos, armed && styles.sosArmed, p && pressed]}
         onPress={sos}
       >
@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
   share: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line },
   shareTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.ink },
   sos: { backgroundColor: colors.danger },
-  sosArmed: { backgroundColor: '#8E2E1C' },
+  sosArmed: { backgroundColor: colors.dangerDeep },
   sosTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.onDark },
 });

@@ -10,6 +10,8 @@
     "profile": "प्रोफ़ाइल"
   },
   "home": {
+    "city": "विजयवाड़ा",
+    "live": "लाइव",
     "hi": "नमस्ते, {{name}}",
     "zeroCommission": "शून्य\nकमीशन",
     "greeting": "क्या ठीक करवाना है?",
@@ -29,8 +31,8 @@
   },
   "trust": {
     "title": "लोग हम पर भरोसा क्यों करते हैं",
-    "idChecked": "ID-जाँचे प्रो",
-    "idCheckedSub": "काम लेने से पहले Aadhaar + PAN वेरिफ़ाइड.",
+    "idChecked": "भरोसे का बैज",
+    "idCheckedSub": "ID जाँच पूरी होने के बाद ही Verified बैज दिखता है।",
     "qrDoor": "आपके दरवाज़े पर QR जाँच",
     "qrDoorSub": "कौन आया है, उनका कोड स्कैन कर पक्का करें.",
     "directPay": "आप सीधे उन्हें भुगतान करते हैं",
@@ -61,30 +63,35 @@
   },
   "provider": {
     "verified": "वेरिफ़ाइड",
-    "jobsDone": "{{count}} काम पूरे",
-    "yearsExp": "{{count}} साल का अनुभव",
+    "jobsDone_one": "{{count}} काम पूरे",
+    "jobsDone_other": "{{count}} काम पूरे",
+    "yearsExp_one": "{{count}} साल का अनुभव",
+    "yearsExp_other": "{{count}} साल का अनुभव",
     "ribbon": "₹0 कमीशन, आप जो देंगे उसका 100% उन्हीं को",
     "about": "परिचय",
     "visitCharge": "विज़िटिंग चार्ज",
     "request": "इस प्रो को रिक्वेस्ट करें",
     "ctaSoon": "पेशेवर जुड़ रहे हैं",
     "notFound": "प्रोवाइडर नहीं मिला",
-    "roleLine": "एसी और उपकरण विशेषज्ञ · स्वतंत्र प्रोफेशनल",
+    "roleLine": "{{trades}} · स्वतंत्र प्रोफेशनल",
+    "roleIndependent": "स्वतंत्र प्रोफेशनल",
     "voiceIntro": "20 सेकंड का परिचय",
-    "factKyc": "Aadhaar + PAN वेरिफ़ाइड",
+    "factKyc": "ID जाँच पूरी",
     "sealTitle": "आप जो भी देते हैं, 100% उन्हीं को।",
     "sealSub": "UPI से सीधे. ऐप कोई कमीशन नहीं लेता, कभी नहीं.",
     "priceLabel": "दाम, पहले से साफ़",
     "qrNote": "आने पर QR दिखाते हैं, दरवाज़ा खोलने से पहले स्कैन कर पहचान पक्की करें.",
     "reviewsTitle": "रिव्यू",
-    "speaksTelugu": "तेलुगु बोलते हैं",
-    "jobsShort": "{{count}} काम",
+    "jobsShort_one": "{{count}} काम",
+    "jobsShort_other": "{{count}} काम",
     "km": "{{km}} किमी",
-    "yearsShort": "{{count}} साल",
+    "yearsShort_one": "{{count}} साल",
+    "yearsShort_other": "{{count}} साल",
     "visit": "विज़िट ₹{{amount}}",
     "coinLine": "आप जो रुपया देते हैं, 100% उन्हीं का, कोई कमीशन नहीं.",
     "unnamed": "स्वतंत्र पेशेवर",
-    "factRatingReal": "{{rating}} · {{count}} काम",
+    "factRatingReal_one": "{{rating}} · {{count}} काम",
+    "factRatingReal_other": "{{rating}} · {{count}} काम",
     "newHere": "नए हैं"
   },
   "auth": {
@@ -154,9 +161,16 @@
     "availability": "उपलब्धता",
     "status_available": "उपलब्ध",
     "status_busy": "व्यस्त",
-    "status_paused": "रुका हुआ"
+    "status_paused": "रुका हुआ",
+    "needPhoto": "सेव करने के लिए अपनी फ़ोटो जोड़ें।",
+    "needService": "सेव करने के लिए कम से कम एक सेवा चुनें।",
+    "needUpi": "सेव करने के लिए सही UPI ID (जैसे name@bank) डालें।"
   },
   "booking": {
+    "dispatchStuckTitle": "अभी प्रो तक नहीं पहुँच पाए",
+    "dispatchStuckSub": "आपका अनुरोध सेव है। पास के प्रो को फिर से भेजने के लिए टैप करें।",
+    "dispatchRetry": "फिर से कोशिश करें",
+    "dispatchRetryFailed": "अभी भी प्रो तक नहीं पहुँचे। इंटरनेट देखकर फिर से कोशिश करें।",
     "newTitle": "प्रो का अनुरोध करें",
     "signInFirst": "प्रो का अनुरोध करने के लिए साइन इन करें.",
     "signInCta": "साइन इन",
@@ -232,7 +246,9 @@
     },
     "customerLbl": "ग्राहक",
     "call": "फ़ोन करें",
-    "noPhone": "नंबर उपलब्ध नहीं"
+    "noPhone": "नंबर उपलब्ध नहीं",
+    "needAddress": "अनुरोध भेजने के लिए अपना पता जोड़ें।",
+    "noUpiApp": "कोई UPI ऐप नहीं खुला। किसी भी UPI ऐप से QR कोड स्कैन करें, या नकद दें।"
   },
   "chat": {
     "title": "चैट",
@@ -244,7 +260,8 @@
     "quick_onWay": "निकल चुका हूँ",
     "quick_reached": "पहुँच गया हूँ",
     "quick_howLong": "कितना समय लगेगा?",
-    "quick_callMe": "कृपया कॉल करें"
+    "quick_callMe": "कृपया कॉल करें",
+    "sendFailed": "संदेश नहीं गया। फिर से कोशिश करें।"
   },
   "jobs": {
     "title": "काम के अनुरोध",
@@ -258,6 +275,12 @@
     "zeroNote": "100% अपने पास रखें. ऐप कोई कमीशन नहीं लेता."
   },
   "common": {
+    "errorGeneric": "कुछ गड़बड़ हो गई। कृपया फिर से कोशिश करें।",
+    "offline": "इंटरनेट कनेक्शन नहीं है। नेटवर्क जाँचकर फिर से कोशिश करें।",
+    "tooMany": "बहुत बार कोशिश हुई। एक मिनट रुककर फिर से कोशिश करें।",
+    "codeWrong": "यह कोड गलत है या इसकी समय-सीमा खत्म हो गई। नया कोड मँगाएँ।",
+    "permission": "अनुमति बंद है। फ़ोन की सेटिंग्स में अनुमति दें।",
+    "signedOut": "आप साइन आउट हैं। साइन इन करके फिर से कोशिश करें।",
     "onboarding": "पेशेवर जुड़ रहे हैं",
     "crashTitle": "कुछ गलत हो गया",
     "crashSub": "फिर से प्रयास करें — आपका डेटा सुरक्षित है।",
@@ -266,7 +289,8 @@
   "dispatch": {
     "title": "आपके लिए पेशेवर ढूंढ रहे हैं",
     "you": "आप",
-    "nearbyCount": "3 कि.मी. में {{count}} पेशेवर",
+    "nearbyCount_one": "3 कि.मी. में {{count}} पेशेवर",
+    "nearbyCount_other": "3 कि.मी. में {{count}} पेशेवर",
     "s1": "आपकी जगह पता कर रहे हैं",
     "s1sub": "बेंज़ सर्कल, विजयवाड़ा",
     "s2": "पास के पेशेवरों को क्रम दे रहे हैं",
@@ -305,7 +329,8 @@
   "earnings": {
     "title": "कमाई लॉग",
     "kept": "पूरा आपका",
-    "jobsLine": "{{count}} भुगतान वाले काम · इस माह {{month}}",
+    "jobsLine_one": "{{count}} भुगतान वाले काम · इस माह {{month}}",
+    "jobsLine_other": "{{count}} भुगतान वाले काम · इस माह {{month}}",
     "method_upi": "UPI",
     "method_cash": "नकद",
     "empty": "अभी कोई भुगतान नहीं",
@@ -313,7 +338,8 @@
   },
   "myReviews": {
     "title": "मेरे रिव्यू",
-    "count": "{{count}} रिव्यू",
+    "count_one": "{{count}} रिव्यू",
+    "count_other": "{{count}} रिव्यू",
     "empty": "अभी कोई रिव्यू नहीं",
     "emptySub": "काम पूरा होने के बाद ही ग्राहक रिव्यू दे सकते हैं."
   },
@@ -366,10 +392,13 @@
     "makeDefault": "डिफ़ॉल्ट बनाएं"
   },
   "nearby": {
+    "pinFallback": "प्रो",
     "title": "आपके पास पेशेवर",
     "count": "पास में {{count}} उपलब्ध",
-    "faces": "आज आपके दरवाज़े पर आने के लिए {{count}} पेशेवर तैयार हैं.",
-    "facesVerified": "आज आपके दरवाज़े पर आने के लिए {{count}} ID-सत्यापित पेशेवर तैयार हैं.",
+    "faces_one": "आज आपके दरवाज़े पर आने के लिए {{count}} पेशेवर तैयार हैं.",
+    "faces_other": "आज आपके दरवाज़े पर आने के लिए {{count}} पेशेवर तैयार हैं.",
+    "facesVerified_one": "आज आपके दरवाज़े पर आने के लिए {{count}} ID-सत्यापित पेशेवर तैयार हैं.",
+    "facesVerified_other": "आज आपके दरवाज़े पर आने के लिए {{count}} ID-सत्यापित पेशेवर तैयार हैं.",
     "cta": "अभी पेशेवर बुलाएं",
     "offTitle": "लोकेशन चालू करें",
     "offSub": "अपने आसपास के पेशेवर देखें और सीधे अपने दरवाज़े पर बुलाएं.",
@@ -378,6 +407,11 @@
     "openSettings": "सेटिंग्स खोलें"
   },
   "a11y": {
+    "deleteAddress": "पता हटाएँ",
+    "clearSearch": "खोज साफ़ करें",
+    "otpCode": "सत्यापन कोड",
+    "stars_one": "{{count}} तारा",
+    "stars_other": "{{count}} तारे",
     "send": "संदेश भेजें",
     "removePhoto": "फ़ोटो हटाएं",
     "close": "बंद करें",

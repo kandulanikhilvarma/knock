@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
+import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
@@ -33,7 +34,7 @@ export default function OtpScreen() {
       if (!profile?.role) router.replace('/auth/role');
       else router.replace('/(tabs)');
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -49,6 +50,7 @@ export default function OtpScreen() {
         <TextInput
           style={styles.input}
           value={code}
+          accessibilityLabel={t('a11y.otpCode')}
           onChangeText={setCode}
           placeholder="––––––"
           placeholderTextColor={colors.line}
@@ -58,7 +60,7 @@ export default function OtpScreen() {
         />
         {err && <AppText style={styles.err}>{err}</AppText>}
 
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}

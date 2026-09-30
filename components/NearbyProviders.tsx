@@ -3,11 +3,11 @@ import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
 import Avatar from './Avatar';
 import LiveMap, { type MapPin } from './LiveMap';
-import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow, pressed } from '../theme/tokens';
 import { getAllProviders, providerName } from '../lib/queries';
 import { useMyLocation } from '../lib/useMyLocation';
 import { decodeGeohash, distanceKm } from '../lib/geo';
@@ -28,7 +28,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
         return at
           ? {
               id: p.user_id,
-              name: providerName(p).split(' ')[0] || 'Pro',
+              name: providerName(p).split(' ')[0] || t('nearby.pinFallback'),
               photo: p.photo_url ?? null,
               verified: p.verify_tier === 'verified',
               ...at,
@@ -38,7 +38,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
       })
       .filter((r): r is NonNullable<typeof r> => r !== null)
       .sort((a, b) => a.km - b.km);
-  }, [pros.data, me.coords]);
+  }, [pros.data, me.coords, t]);
 
   const faces = located.slice(0, 5);
   const verifiedCount = located.filter((r) => r.verified).length;
@@ -99,7 +99,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
               <AppText style={styles.gateSub}>
                 {me.canAskAgain ? t('nearby.offSub') : t('nearby.offBlockedSub')}
               </AppText>
-              <Pressable
+              <Pressable accessibilityRole="button"
                 style={({ pressed: p }) => [styles.gateBtn, p && pressed]}
                 onPress={() => (me.canAskAgain ? me.request() : Linking.openSettings())}
               >
@@ -112,7 +112,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
         )}
       </View>
 
-      <Pressable
+      <Pressable accessibilityRole="button"
         style={({ pressed: p }) => [styles.cta, p && pressed]}
         onPress={() => router.push({ pathname: '/dispatch', params: { slug: liveSlug, cid: liveCid ?? '' } })}
       >
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   gateBtn: {
     marginTop: space.sm,
-    height: 42,
+    height: tap.min,
     paddingHorizontal: space.xl,
     borderRadius: radius.pill,
     backgroundColor: colors.accent,

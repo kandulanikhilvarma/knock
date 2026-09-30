@@ -1,0 +1,65 @@
+
+> knock@1.0.0 check
+> tsc --noEmit && npm test
+
+
+> knock@1.0.0 test
+> node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --test "lib/*.test.ts" "supabase/functions/_shared/*.test.ts"
+
+TAP version 13
+# errors: ok
+# Subtest: lib\\errors.test.ts
+ok 1 - lib\\errors.test.ts
+  ---
+  duration_ms: 236.3632
+  type: 'test'
+  ...
+# format: ok
+# Subtest: lib\\format.test.ts
+ok 2 - lib\\format.test.ts
+  ---
+  duration_ms: 279.7117
+  type: 'test'
+  ...
+# geo: ok
+# Subtest: lib\\geo.test.ts
+ok 3 - lib\\geo.test.ts
+  ---
+  duration_ms: 253.8586
+  type: 'test'
+  ...
+# Subtest: uuidv4 is a v4 uuid Postgres and the 0025 policy accept
+ok 4 - uuidv4 is a v4 uuid Postgres and the 0025 policy accept
+  ---
+  duration_ms: 6.2876
+  type: 'test'
+  ...
+# Subtest: uuidv4 does not repeat
+ok 5 - uuidv4 does not repeat
+  ---
+  duration_ms: 5.1826
+  type: 'test'
+  ...
+# validate: ok
+# Subtest: lib\\validate.test.ts
+ok 5 - lib\\validate.test.ts
+  ---
+  duration_ms: 226.1368
+  type: 'test'
+  ...
+# dispatch.test.ts — all assertions passed
+# Subtest: supabase\\functions\\_shared\\dispatch.test.ts
+ok 6 - supabase\\functions\\_shared\\dispatch.test.ts
+  ---
+  duration_ms: 261.7257
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 343.5432

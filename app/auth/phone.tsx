@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
+import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Stack } from 'expo-router';
@@ -24,7 +25,7 @@ export default function PhoneScreen() {
       await sendOtp(e164);
       router.push({ pathname: '/auth/otp', params: { phone: e164 } });
     } catch (e) {
-      setErr((e as Error).message);
+      setErr(errorMessage(e, t));
     } finally {
       setBusy(false);
     }
@@ -42,6 +43,7 @@ export default function PhoneScreen() {
           <TextInput
             style={styles.input}
             value={phone}
+            accessibilityLabel={t('auth.phonePlaceholder')}
             onChangeText={setPhone}
             placeholder={t('auth.phonePlaceholder')}
             placeholderTextColor={colors.inkMuted}
@@ -52,7 +54,7 @@ export default function PhoneScreen() {
         </View>
         {err && <AppText style={styles.err}>{err}</AppText>}
 
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.cta, (!valid || busy) && styles.ctaOff]}
           disabled={!valid || busy}
           onPress={submit}

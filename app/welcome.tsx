@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from '../components/AppText';
 import OrganicLines from '../components/OrganicLines';
 import { LANG_KEY } from '../components/LanguageSwitcher';
@@ -54,6 +54,8 @@ export default function Welcome() {
               key={l.code}
               style={({ pressed: p }) => [styles.row, on && styles.rowOn, p && pressed]}
               onPress={() => pick(l.code)}
+              accessibilityRole="button"
+              aria-selected={on}
             >
               <View style={{ flex: 1 }}>
                 <AppText style={[styles.rowTxt, on && styles.rowTxtOn]}>{l.label}</AppText>

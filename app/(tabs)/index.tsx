@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { errorMessage } from '../../lib/errors';
 import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppText from '../../components/AppText';
@@ -6,16 +7,16 @@ import { SEEN_KEY } from '../welcome';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {
   getCategories,
   getCityEarnings,
-  formatINR,
   categoryName,
   type Category,
 } from '../../lib/queries';
+import { formatINR } from '../../lib/format';
 import { categoryTint } from '../../lib/categoryTint';
 import { useSession, firstName } from '../../lib/session';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
@@ -68,7 +69,7 @@ export default function Home() {
               <View style={styles.locMk}>
                 <Ionicons name="location" size={13} color={colors.onDark} />
               </View>
-              <AppText style={styles.locTxt}>Vijayawada</AppText>
+              <AppText style={styles.locTxt}>{t('home.city')}</AppText>
             </View>
             <LanguageSwitcher onDark />
           </View>
@@ -85,7 +86,7 @@ export default function Home() {
 
           <AppText style={styles.headline}>{t('home.greeting')}</AppText>
 
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={({ pressed: p }) => [styles.search, p && pressed]}
             onPress={() => router.push('/search')}
           >
@@ -110,7 +111,7 @@ export default function Home() {
           </FadeIn>
 
           {cats.isLoading && <Loading />}
-          {cats.isError && <ErrorState message={(cats.error as Error)?.message} onRetry={() => cats.refetch()} />}
+          {cats.isError && <ErrorState message={errorMessage(cats.error, t)} onRetry={() => cats.refetch()} />}
 
           {/* The core task: pick a trade. */}
           {live.length > 0 && (
@@ -130,7 +131,7 @@ export default function Home() {
               <AppText style={styles.sectionSub}>{t('home.nextUpSub')}</AppText>
               <View style={styles.grid}>
                 {soon.map((c) => (
-                  <Pressable
+                  <Pressable accessibilityRole="button"
                     key={c.id}
                     style={({ pressed: p }) => [
                       styles.soonTile,
@@ -166,7 +167,7 @@ export default function Home() {
               {!!earnings.data && (
                 <View style={styles.live}>
                   <View style={styles.liveDot} />
-                  <AppText style={styles.liveTxt}>LIVE</AppText>
+                  <AppText style={styles.liveTxt}>{t('home.live')}</AppText>
                 </View>
               )}
               <AppText style={styles.earnSubTxt}>
@@ -185,7 +186,7 @@ function Grid({ cats, lang, onPick }: { cats: Category[]; lang: string; onPick: 
   return (
     <View style={styles.grid}>
       {cats.map((c) => (
-        <Pressable
+        <Pressable accessibilityRole="button"
           key={c.id}
           style={({ pressed: p }) => [styles.tile, p && pressed]}
           onPress={() => onPick(c)}
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
   locTxt: { fontFamily: font.display, fontSize: type.h3, color: colors.onDark, letterSpacing: -0.2 },
 
   greetRow: { flexDirection: 'row', alignItems: 'center', minHeight: 34, marginTop: space.xl },
-  hi: { fontFamily: font.teBold, fontSize: type.body, color: '#8FE3AB', letterSpacing: 0.2 },
+  hi: { fontFamily: font.teBold, fontSize: type.body, color: colors.successOnDark, letterSpacing: 0.2 },
   coin: {
     marginLeft: 'auto',
     flexDirection: 'row',
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   coinDisc: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center' },
-  coinDiscTxt: { fontFamily: font.displayBold, fontSize: 12, color: '#241703' },
+  coinDiscTxt: { fontFamily: font.displayBold, fontSize: 12, color: colors.ink },
   coinTxt: { fontFamily: font.semibold, fontSize: 10, lineHeight: 12, color: colors.tintGold, letterSpacing: 0.2 },
 
   headline: {
@@ -317,8 +318,8 @@ const styles = StyleSheet.create({
   },
   earnSub: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.xs },
   live: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#8FE3AB' },
-  liveTxt: { fontFamily: font.bold, fontSize: 10, color: '#8FE3AB', letterSpacing: 0.5 },
+  liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.successOnDark },
+  liveTxt: { fontFamily: font.bold, fontSize: 10, color: colors.successOnDark, letterSpacing: 0.5 },
   earnSubTxt: { flex: 1, fontFamily: font.regular, fontSize: type.small, color: colors.onDarkMuted },
 
   section: { gap: space.md },

@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
+import { errorMessage } from '../../lib/errors';
 import {
-  View, Text, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
+  View, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
 } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import QRCode from 'react-native-qrcode-svg';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import {
-  getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid,
+  getBooking, subscribeBooking, swapProvider, getJobToken, verifyArrival, markDone, markPaid, runDispatch,
   submitReview, getBookingReview, type Booking, type BookingStatus,
 } from '../../lib/bookings';
 import { getProvider, getCategories, categoryName, providerName, getCustomerContact } from '../../lib/queries';
@@ -26,6 +27,13 @@ import QrScanner from '../../components/QrScanner';
 import FindingPro from '../../components/FindingPro';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
+
+// After a status action, refetch the row too: realtime can drop on a weak
+// connection, and the screen must not sit on the old state.
+function useRefetchBooking(id: string) {
+  const qc = useQueryClient();
+  return () => qc.invalidateQueries({ queryKey: ['booking', id] });
+}
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
 
 // The customer-facing journey. `failed` has no place on the line — it shows the
@@ -55,18 +63,32 @@ export default function BookingStatusScreen() {
   const { session } = useSession();
   const uid = session?.user?.id;
 
-  const q = useQuery({ queryKey: ['booking', id], queryFn: () => getBooking(id!), enabled: !!id });
-  const [live, setLive] = useState<Booking | null>(null);
+  // staleTime 0: realtime only listens while this screen is open, so a cached
+  // row from an earlier visit may have missed status changes.
+  const q = useQuery({ queryKey: ['booking', id], queryFn: () => getBooking(id!), enabled: !!id, staleTime: 0 });
+  const qc = useQueryClient();
+  // Realtime writes into the query cache, so a later refetch (Retry, a
+  // mutation) is never hidden behind an older pushed row.
   useEffect(() => {
     if (!id) return;
-    return subscribeBooking(id, setLive);
-  }, [id]);
+    // The lists are mounted tabs that never refetch on their own; opening a
+    // booking (incl. one just created) or any change to it refreshes them.
+    const refreshLists = () => {
+      qc.invalidateQueries({ queryKey: ['my-bookings'] });
+      qc.invalidateQueries({ queryKey: ['threads'] });
+    };
+    refreshLists();
+    return subscribeBooking(id, (row) => {
+      qc.setQueryData(['booking', id], row);
+      refreshLists();
+    });
+  }, [id, qc]);
 
-  const booking = live ?? q.data ?? null;
+  const booking = q.data ?? null;
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
-  if (!booking) return <ErrorState message={t('booking.notFound')} />;
+  if (q.isError) return <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />;
+  if (!booking) return <ErrorState message={t('booking.notFound')} onRetry={() => q.refetch()} />;
 
   const isProvider = !!uid && uid === booking.assigned_provider_id;
   const canChat = !!booking.assigned_provider_id && ['assigned', 'in_progress', 'done'].includes(booking.status);
@@ -154,8 +176,9 @@ function ProviderPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const tok = useQuery({ queryKey: ['token', booking.id], queryFn: () => getJobToken(booking.id) });
 
-  const done = useMutation({ mutationFn: () => markDone(booking.id) });
-  const paid = useMutation({ mutationFn: () => markPaid(booking.id, 'upi') });
+  const refetch = useRefetchBooking(booking.id);
+  const done = useMutation({ mutationFn: () => markDone(booking.id), onSuccess: refetch });
+  const paid = useMutation({ mutationFn: () => markPaid(booking.id, 'upi'), onSuccess: refetch });
 
   return (
     <View style={{ gap: space.md }}>
@@ -189,15 +212,21 @@ function ProviderPanel({ booking }: { booking: Booking }) {
           <Touchable style={styles.cta} disabled={done.isPending} onPress={() => done.mutate()}>
             <AppText style={styles.ctaTxt}>{done.isPending ? '…' : t('booking.markDone')}</AppText>
           </Touchable>
+          {done.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(done.error, t)}</AppText>
+          )}
         </View>
       )}
 
       {booking.status === 'done' && !booking.paid_at && (
         <View style={styles.payCard}>
-          <AppText style={styles.codeTitle}>{t('booking.receivePayTitle')}</AppText>
+          <AppText style={styles.cardTitle}>{t('booking.receivePayTitle')}</AppText>
           <Touchable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
             <AppText style={styles.ctaTxt}>{t('booking.markReceived')}</AppText>
           </Touchable>
+          {paid.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(paid.error, t)}</AppText>
+          )}
         </View>
       )}
 
@@ -212,11 +241,13 @@ function CustomerPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const router = useRouter();
   const status = booking.status;
-  const swap = useMutation({ mutationFn: () => swapProvider(booking.id) });
+  const refetch = useRefetchBooking(booking.id);
+  const swap = useMutation({ mutationFn: () => swapProvider(booking.id), onSuccess: refetch });
 
   return (
     <View style={{ gap: space.md }}>
       {SEARCHING.includes(status) && <FindingPro slug={booking.category_slug} />}
+      {status === 'requested' && <DispatchRetry bookingId={booking.id} />}
 
       {status === 'assigned' && booking.assigned_provider_id && (
         <>
@@ -225,6 +256,9 @@ function CustomerPanel({ booking }: { booking: Booking }) {
             <Touchable style={styles.swap} disabled={swap.isPending} onPress={() => swap.mutate()}>
               <AppText style={styles.swapTxt}>{swap.isPending ? t('booking.swapping') : t('booking.swap')}</AppText>
             </Touchable>
+          )}
+          {swap.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(swap.error, t)}</AppText>
           )}
           <VerifyPanel bookingId={booking.id} />
         </>
@@ -242,13 +276,40 @@ function CustomerPanel({ booking }: { booking: Booking }) {
         <View style={styles.fallback}>
           <AppText style={styles.fbTitle}>{t('booking.noProviders')}</AppText>
           <AppText style={styles.fbSub}>{t('booking.noProvidersSub')}</AppText>
-          <Pressable
+          <Pressable accessibilityRole="button"
             style={styles.cta}
             onPress={() => router.replace({ pathname: '/category/[slug]', params: { slug: booking.category_slug } })}
           >
             <AppText style={styles.ctaTxt}>{t('booking.browseCta')}</AppText>
           </Pressable>
         </View>
+      )}
+    </View>
+  );
+}
+
+// 'requested' means the dispatch call never went through (dispatch flips the
+// row to finding_pro or failed). Wait a moment first: swap passes through
+// 'requested' on its way back to finding_pro.
+function DispatchRetry({ bookingId }: { bookingId: string }) {
+  const { t } = useTranslation();
+  const refetch = useRefetchBooking(bookingId);
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(true), 6000);
+    return () => clearTimeout(timer);
+  }, []);
+  const m = useMutation({ mutationFn: () => runDispatch(bookingId), onSettled: refetch });
+  if (!show) return null;
+  return (
+    <View style={styles.verify}>
+      <AppText style={styles.cardTitle}>{t('booking.dispatchStuckTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.dispatchStuckSub')}</AppText>
+      <Touchable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
+        <AppText style={styles.ctaTxt}>{m.isPending ? '…' : t('booking.dispatchRetry')}</AppText>
+      </Touchable>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{t('booking.dispatchRetryFailed')}</AppText>
       )}
     </View>
   );
@@ -294,7 +355,7 @@ function CustomerCard({ customerId }: { customerId: string }) {
         {!phone && <AppText style={styles.custNo}>{t('booking.noPhone')}</AppText>}
       </View>
       {phone && (
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={({ pressed: p }) => [styles.callBtn, p && pressed]}
           onPress={() => Linking.openURL(`tel:${phone}`)}
         >
@@ -311,13 +372,14 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
   const [pin, setPin] = useState('');
   const [scanOpen, setScanOpen] = useState(false);
   // Accepts the 4-digit PIN OR the scanned QR token — the edge fn checks both.
-  const m = useMutation({ mutationFn: (code: string) => verifyArrival(bookingId, code) });
+  const refetch = useRefetchBooking(bookingId);
+  const m = useMutation({ mutationFn: (code: string) => verifyArrival(bookingId, code), onSuccess: refetch });
   const wrong = m.data && !m.data.verified;
 
   return (
     <View style={styles.verify}>
-      <AppText style={styles.codeTitle}>{t('booking.verifyTitle')}</AppText>
-      <AppText style={styles.codeSub}>{t('booking.verifySub')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.verifyTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.verifySub')}</AppText>
 
       <Touchable style={styles.scanBtn} disabled={m.isPending} onPress={() => setScanOpen(true)}>
         <Ionicons name="qr-code-outline" size={20} color={colors.onDark} />
@@ -333,6 +395,7 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
       <TextInput
         style={styles.pinInput}
         value={pin}
+        accessibilityLabel={t('booking.verifyPlaceholder')}
         onChangeText={setPin}
         placeholder={t('booking.verifyPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -347,6 +410,9 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
         <AppText style={styles.ctaTxt}>{t('booking.verifyBtn')}</AppText>
       </Touchable>
       {wrong && <AppText style={styles.err}>{t('booking.verifyWrong')}</AppText>}
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
 
       <QrScanner visible={scanOpen} onClose={() => setScanOpen(false)} onScan={(v) => m.mutate(v.trim())} />
     </View>
@@ -356,7 +422,10 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
 function PaymentPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const p = useQuery({ queryKey: ['provider', booking.assigned_provider_id], queryFn: () => getProvider(booking.assigned_provider_id!) });
-  const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method) });
+  const refetch = useRefetchBooking(booking.id);
+  const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method), onSuccess: refetch });
+  // openURL rejects when no app handles upi:// (no UPI app installed).
+  const [noUpiApp, setNoUpiApp] = useState(false);
 
   const upi = p.data?.upi_id;
   const name = (p.data ? providerName(p.data) : '') || t('provider.unnamed');
@@ -367,8 +436,8 @@ function PaymentPanel({ booking }: { booking: Booking }) {
 
   return (
     <View style={styles.payCard}>
-      <AppText style={styles.codeTitle}>{t('booking.payTitle')}</AppText>
-      <AppText style={styles.codeSub}>{t('booking.paySub')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.payTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.paySub')}</AppText>
       {link && (
         <View style={styles.qrBox}>
           <QRCode value={link} size={150} />
@@ -378,16 +447,20 @@ function PaymentPanel({ booking }: { booking: Booking }) {
       {amount ? <AppText style={styles.amount}>₹{amount}</AppText> : null}
 
       {link && (
-        <Touchable style={styles.cta} onPress={() => Linking.openURL(link)}>
+        <Touchable style={styles.cta} onPress={() => Linking.openURL(link).then(() => setNoUpiApp(false), () => setNoUpiApp(true))}>
           <AppText style={styles.ctaTxt}>{t('booking.payInApp')}</AppText>
         </Touchable>
       )}
+      {noUpiApp && <AppText style={styles.err} accessibilityLiveRegion="polite">{t('booking.noUpiApp')}</AppText>}
       <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('upi')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidUpi')}</AppText>
       </Touchable>
       <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('cash')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidCash')}</AppText>
       </Touchable>
+      {pay.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(pay.error, t)}</AppText>
+      )}
     </View>
   );
 }
@@ -407,17 +480,24 @@ function ReviewPanel({ booking }: { booking: Booking }) {
   return (
     <View style={styles.review}>
       <Proof text={t('booking.paidDone')} />
-      <AppText style={styles.codeTitle}>{t('booking.reviewTitle')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.reviewTitle')}</AppText>
       <View style={styles.stars}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <Pressable key={n} onPress={() => setRating(n)}>
+          <Pressable
+            key={n}
+            onPress={() => setRating(n)}
+            hitSlop={4}
+            accessibilityRole="radio"
+            aria-selected={n === rating}
+            accessibilityLabel={t('a11y.stars', { count: n })}
+          >
             <AppText style={[styles.star, n <= rating && styles.starOn]}>★</AppText>
           </Pressable>
         ))}
       </View>
       <View style={styles.tags}>
         {REVIEW_TAGS.map((tag) => (
-          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)}>
+          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)} hitSlop={{ top: 10, bottom: 10 }} accessibilityRole="checkbox" aria-checked={tags.includes(tag)}>
             <AppText style={[styles.tagTxt, tags.includes(tag) && styles.tagTxtOn]}>{t(`booking.tag_${tag}`)}</AppText>
           </Pressable>
         ))}
@@ -425,7 +505,7 @@ function ReviewPanel({ booking }: { booking: Booking }) {
       <Touchable style={[styles.cta, m.isPending && styles.ctaOff]} disabled={m.isPending} onPress={() => m.mutate()}>
         <AppText style={styles.ctaTxt}>{t('booking.reviewSubmit')}</AppText>
       </Touchable>
-      {m.isError && <AppText style={styles.err}>{(m.error as Error).message}</AppText>}
+      {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </View>
   );
 }
@@ -500,7 +580,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    height: 40,
+    height: tap.min,
     paddingHorizontal: space.lg,
     borderRadius: radius.pill,
     backgroundColor: colors.accent,
@@ -510,6 +590,9 @@ const styles = StyleSheet.create({
   codeCard: { backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, alignItems: 'center', gap: space.sm },
   codeTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.onDark, textAlign: 'center' },
   codeSub: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, textAlign: 'center' },
+  // Same shape as codeTitle/codeSub, for the light surface cards (verify, pay, review).
+  cardTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
+  cardSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
   qrBox: { backgroundColor: colors.surface, padding: space.md, borderRadius: radius.chip, marginVertical: space.sm },
   pinLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted },
   pin: { fontFamily: font.mono, fontSize: 34, letterSpacing: 8, color: colors.gold, fontWeight: '700' },
@@ -534,8 +617,8 @@ const styles = StyleSheet.create({
 
   review: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: space.md, ...shadow.soft },
   stars: { flexDirection: 'row', gap: space.xs, justifyContent: 'center' },
-  star: { fontSize: 36, color: colors.line },
-  starOn: { color: colors.gold },
+  star: { fontSize: 36, color: colors.inkMuted },
+  starOn: { color: colors.goldDeep },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, justifyContent: 'center' },
   tag: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, paddingVertical: space.xs, paddingHorizontal: space.md },
   tagOn: { backgroundColor: colors.ink, borderColor: colors.ink },

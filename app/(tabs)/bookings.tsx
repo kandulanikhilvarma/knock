@@ -1,10 +1,11 @@
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, FlatList, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
 import AppText from '../../components/AppText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { useSession } from '../../lib/session';
 import { getMyBookings } from '../../lib/bookings';
@@ -41,7 +42,7 @@ export default function Bookings() {
         <SignedOut cta={() => router.push('/auth/email')} />
       )}
       {session && q.isLoading && <Loading />}
-      {session && q.isError && <ErrorState message={(q.error as Error)?.message} />}
+      {session && q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
       {session && q.data && (
         <FlatList
           data={q.data}
@@ -49,7 +50,7 @@ export default function Bookings() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={styles.card}
               onPress={() => router.push({ pathname: '/booking/[id]', params: { id: item.id } })}
             >

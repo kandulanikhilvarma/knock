@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { errorMessage } from '../../lib/errors';
+import { View, FlatList, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,7 @@ export default function JobsScreen() {
     <View style={styles.screen}>
       <Stack.Screen options={{ title: t('jobs.title') }} />
       {q.isLoading && <Loading />}
-      {q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
+      {q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
       {q.data && (
         <FlatList
           data={q.data}
@@ -81,14 +82,14 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
       </View>
 
       <View style={styles.actions}>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.decline, m.isPending && styles.off]}
           disabled={m.isPending || expired}
           onPress={() => m.mutate('decline')}
         >
           <AppText style={styles.declineTxt}>{t('jobs.decline')}</AppText>
         </Pressable>
-        <Pressable
+        <Pressable accessibilityRole="button"
           style={[styles.accept, (m.isPending || expired) && styles.off]}
           disabled={m.isPending || expired}
           onPress={() => m.mutate('accept')}
@@ -96,6 +97,9 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
           <AppText style={styles.acceptTxt}>{t('jobs.accept')}</AppText>
         </Pressable>
       </View>
+      {m.isError && (
+        <AppText style={styles.lost} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
       {m.data && !m.data.accepted && (
         <AppText style={styles.lost}>{m.data.taken ? t('jobs.taken') : t('jobs.expired')}</AppText>
       )}

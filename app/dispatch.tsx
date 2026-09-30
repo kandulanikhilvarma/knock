@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useReducedMotion } from '../lib/useReducedMotion';
+import { errorMessage } from '../lib/errors';
 import { View, ScrollView, Pressable, StyleSheet, ActivityIndicator, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from '../components/AppText';
 import LiveMap, { type MapPin } from '../components/LiveMap';
 import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
@@ -41,7 +43,7 @@ export default function Dispatch() {
     started.current = true;
     startDemoBooking(cid ?? null, categorySlug, me.coords)
       .then(setResult)
-      .catch((e: Error) => setFailed(e.message));
+      .catch((e: unknown) => setFailed(errorMessage(e, t)));
   }, [cid, categorySlug, me.loading, me.coords]);
 
   useEffect(() => {
@@ -121,6 +123,8 @@ export default function Dispatch() {
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
           hitSlop={12}
           style={({ pressed: p }) => [styles.close, p && pressed]}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.close')}
         >
           <Ionicons name="close" size={20} color={colors.ink} />
         </Pressable>
@@ -145,7 +149,7 @@ export default function Dispatch() {
         {failed ? (
           <View style={styles.failBox}>
             <AppText style={styles.failSub}>{t('dispatch.failedSub')}</AppText>
-            <Pressable
+            <Pressable accessibilityRole="button"
               style={({ pressed: p }) => [styles.cta, p && pressed]}
               onPress={() => router.replace({ pathname: '/category/[slug]', params: { slug: categorySlug } })}
             >
@@ -204,14 +208,15 @@ function Step({
   last: boolean;
 }) {
   const a = useRef(new Animated.Value(state === 'todo' ? 0 : 1)).current;
+  const still = useReducedMotion();
   useEffect(() => {
     Animated.timing(a, {
       toValue: state === 'todo' ? 0 : 1,
-      duration: 260,
+      duration: still ? 0 : 260,
       easing: Easing.bezier(0.23, 1, 0.32, 1),
       useNativeDriver: true,
     }).start();
-  }, [a, state]);
+  }, [a, state, still]);
 
   const done = state === 'done';
   const active = state === 'active';

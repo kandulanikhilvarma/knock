@@ -10,6 +10,8 @@
     "profile": "Profile"
   },
   "home": {
+    "city": "Vijayawada",
+    "live": "LIVE",
     "hi": "Hi, {{name}}",
     "zeroCommission": "zero\ncommission",
     "greeting": "What needs fixing?",
@@ -29,8 +31,8 @@
   },
   "trust": {
     "title": "Why people trust us",
-    "idChecked": "ID-checked pros",
-    "idCheckedSub": "Aadhaar + PAN verified before they take a job.",
+    "idChecked": "A badge you can trust",
+    "idCheckedSub": "The Verified badge shows only after an ID check is complete.",
     "qrDoor": "QR check at your door",
     "qrDoorSub": "Scan their code to confirm who's arrived.",
     "directPay": "You pay them directly",
@@ -61,30 +63,35 @@
   },
   "provider": {
     "verified": "Verified",
-    "jobsDone": "{{count}} jobs done",
-    "yearsExp": "{{count}} yrs experience",
+    "jobsDone_one": "{{count}} job done",
+    "jobsDone_other": "{{count}} jobs done",
+    "yearsExp_one": "{{count}} yr experience",
+    "yearsExp_other": "{{count}} yrs experience",
     "ribbon": "₹0 commission, keeps 100% of what you pay",
     "about": "About",
     "visitCharge": "Visiting charge",
     "request": "Request this pro",
     "ctaSoon": "Onboarding in progress",
     "notFound": "Provider not found",
-    "roleLine": "AC & appliance specialist · independent professional",
+    "roleLine": "{{trades}} · independent professional",
+    "roleIndependent": "Independent professional",
     "voiceIntro": "20-sec intro",
-    "factKyc": "Aadhaar + PAN verified",
+    "factKyc": "ID check completed",
     "sealTitle": "Every rupee you pay goes 100% to them.",
     "sealSub": "Direct by UPI. The app takes no commission, ever.",
     "priceLabel": "Prices, clear upfront",
     "qrNote": "They show a QR on arrival, scan it to confirm identity before you open the door.",
     "reviewsTitle": "Reviews",
-    "speaksTelugu": "Speaks Telugu",
-    "jobsShort": "{{count}} jobs",
+    "jobsShort_one": "{{count}} job",
+    "jobsShort_other": "{{count}} jobs",
     "km": "{{km}} km",
-    "yearsShort": "{{count}} yrs",
+    "yearsShort_one": "{{count}} yr",
+    "yearsShort_other": "{{count}} yrs",
     "visit": "Visit ₹{{amount}}",
     "coinLine": "Every rupee you pay is 100% theirs, no commission.",
     "unnamed": "Independent pro",
-    "factRatingReal": "{{rating}} · {{count}} jobs",
+    "factRatingReal_one": "{{rating}} · {{count}} job",
+    "factRatingReal_other": "{{rating}} · {{count}} jobs",
     "newHere": "New here"
   },
   "auth": {
@@ -154,9 +161,16 @@
     "availability": "Availability",
     "status_available": "Available",
     "status_busy": "Busy",
-    "status_paused": "Paused"
+    "status_paused": "Paused",
+    "needPhoto": "Add your photo to save.",
+    "needService": "Pick at least one service to save.",
+    "needUpi": "Enter a valid UPI ID (like name@bank) to save."
   },
   "booking": {
+    "dispatchStuckTitle": "We could not reach pros yet",
+    "dispatchStuckSub": "Your request is saved. Tap to send it to nearby pros again.",
+    "dispatchRetry": "Try again",
+    "dispatchRetryFailed": "Still no connection to pros. Check your internet and try again.",
     "newTitle": "Request a pro",
     "signInFirst": "Sign in to request a pro.",
     "signInCta": "Sign in",
@@ -232,7 +246,9 @@
     },
     "customerLbl": "Customer",
     "call": "Call",
-    "noPhone": "No number on file"
+    "noPhone": "No number on file",
+    "needAddress": "Add your address to send the request.",
+    "noUpiApp": "No UPI app opened. Scan the QR code with any UPI app, or pay cash."
   },
   "chat": {
     "title": "Chat",
@@ -244,7 +260,8 @@
     "quick_onWay": "On the way",
     "quick_reached": "I have reached",
     "quick_howLong": "How long will it take?",
-    "quick_callMe": "Please call me"
+    "quick_callMe": "Please call me",
+    "sendFailed": "Message not sent. Try again."
   },
   "jobs": {
     "title": "Job requests",
@@ -258,6 +275,12 @@
     "zeroNote": "Keep 100%. The app takes no commission."
   },
   "common": {
+    "errorGeneric": "Something went wrong. Please try again.",
+    "offline": "No internet connection. Check your network and try again.",
+    "tooMany": "Too many tries. Wait a minute, then try again.",
+    "codeWrong": "That code is wrong or has expired. Ask for a new one.",
+    "permission": "Permission is off. Allow it in your phone's Settings.",
+    "signedOut": "You are signed out. Sign in and try again.",
     "onboarding": "Onboarding pros",
     "crashTitle": "Something went wrong",
     "crashSub": "Try again — your data is safe.",
@@ -266,7 +289,8 @@
   "dispatch": {
     "title": "Finding you a pro",
     "you": "You",
-    "nearbyCount": "{{count}} pros within 3 km",
+    "nearbyCount_one": "{{count}} pro within 3 km",
+    "nearbyCount_other": "{{count}} pros within 3 km",
     "s1": "Locating you",
     "s1sub": "Benz Circle, Vijayawada",
     "s2": "Ranking pros nearby",
@@ -305,7 +329,8 @@
   "earnings": {
     "title": "Earnings log",
     "kept": "Kept by you, all of it",
-    "jobsLine": "{{count}} paid jobs · {{month}} this month",
+    "jobsLine_one": "{{count}} paid job · {{month}} this month",
+    "jobsLine_other": "{{count}} paid jobs · {{month}} this month",
     "method_upi": "UPI",
     "method_cash": "Cash",
     "empty": "No paid jobs yet",
@@ -313,7 +338,8 @@
   },
   "myReviews": {
     "title": "My reviews",
-    "count": "{{count}} reviews",
+    "count_one": "{{count}} review",
+    "count_other": "{{count}} reviews",
     "empty": "No reviews yet",
     "emptySub": "Customers can review you once a job is confirmed done."
   },
@@ -366,10 +392,13 @@
     "makeDefault": "Set as default"
   },
   "nearby": {
+    "pinFallback": "Pro",
     "title": "Pros near you",
     "count": "{{count}} available nearby",
-    "faces": "{{count}} tradespeople ready to come to your door today.",
-    "facesVerified": "{{count}} ID-verified pros ready to come to your door today.",
+    "faces_one": "{{count}} tradesperson ready to come to your door today.",
+    "faces_other": "{{count}} tradespeople ready to come to your door today.",
+    "facesVerified_one": "{{count}} ID-verified pro ready to come to your door today.",
+    "facesVerified_other": "{{count}} ID-verified pros ready to come to your door today.",
     "cta": "Get a pro now",
     "offTitle": "Turn on location",
     "offSub": "See the pros around you and send one to your exact door.",
@@ -378,6 +407,11 @@
     "openSettings": "Open Settings"
   },
   "a11y": {
+    "deleteAddress": "Delete address",
+    "clearSearch": "Clear search",
+    "otpCode": "Verification code",
+    "stars_one": "{{count}} star",
+    "stars_other": "{{count}} stars",
     "send": "Send message",
     "removePhoto": "Remove photo",
     "close": "Close",

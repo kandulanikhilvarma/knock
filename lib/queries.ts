@@ -95,20 +95,11 @@ export async function getProvider(id: string): Promise<ProviderCard | null> {
 // Real total paid to workers — the Home counter (public single-row cache).
 export async function getCityEarnings(): Promise<number> {
   const { data, error } = await supabase
-    .from('city_stats' as never)
+    .from('city_stats')
     .select('total_paid')
     .maybeSingle(); // no row yet on a fresh city → 0, not a thrown error
   if (error) throw error;
-  return (data as { total_paid?: number } | null)?.total_paid ?? 0;
-}
-
-// Indian digit grouping (1,23,456) — Hermes Intl can't be relied on for this.
-export function formatINR(n: number): string {
-  const s = Math.round(n).toString();
-  if (s.length <= 3) return s;
-  const last3 = s.slice(-3);
-  const rest = s.slice(0, -3);
-  return rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + last3;
+  return data?.total_paid ?? 0;
 }
 
 export async function joinWaitlist(categoryId: string, phone: string, city: string) {

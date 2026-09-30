@@ -1,23 +1,31 @@
 import { useEffect, useRef } from 'react';
 import { View, Animated, Easing, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import OrganicLines from './OrganicLines';
 import { colors, font, radius, space, type, tap, pressed } from '../theme/tokens';
+import { useReducedMotion } from '../lib/useReducedMotion';
 
 // Shared loading / error / empty states — every list screen ships all three (GATE 4→5).
 // The loader is the ₹0 coin, breathing — the wait still says zero-commission.
 export function Loading() {
   const a = useRef(new Animated.Value(0)).current;
+  const still = useReducedMotion();
   useEffect(() => {
-    Animated.loop(
+    if (still) {
+      a.setValue(1);
+      return;
+    }
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(a, { toValue: 1, duration: 750, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
         Animated.timing(a, { toValue: 0, duration: 750, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
       ]),
-    ).start();
-  }, [a]);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [a, still]);
   return (
     <View style={styles.center}>
       <Animated.View
