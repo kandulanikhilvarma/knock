@@ -18,7 +18,7 @@ export default function Earnings() {
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
+  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
 
   const paid = (q.data ?? []).filter((b) => b.paid_at);
   const total = paid.reduce((s, b) => s + (b.price_agreed ?? 0), 0);

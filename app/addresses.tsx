@@ -81,7 +81,7 @@ export default function Addresses() {
         </View>
 
         {q.isLoading && <Loading />}
-        {q.isError && <ErrorState message={(q.error as Error)?.message} />}
+        {q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
         {q.data?.length === 0 && <Empty icon="location-outline" title={t('addresses.empty')} />}
 
         {q.data?.map((a) => (

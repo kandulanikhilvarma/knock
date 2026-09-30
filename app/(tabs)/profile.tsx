@@ -41,6 +41,18 @@ function ProviderSection() {
 
   if (q.isLoading) return null;
 
+  // A failed load must not look like "not a provider yet".
+  if (q.isError) {
+    return (
+      <Pressable style={styles.linkRow} onPress={() => q.refetch()} accessibilityRole="button">
+        <View style={[styles.linkIcon, { backgroundColor: colors.pastelPink }]}>
+          <Ionicons name="refresh" size={18} color={colors.danger} />
+        </View>
+        <AppText style={styles.linkTxt}>{t('common.crashRetry')}</AppText>
+      </Pressable>
+    );
+  }
+
   // not a provider yet → invite
   if (!q.data) {
     return (

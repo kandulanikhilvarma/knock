@@ -41,7 +41,7 @@ export default function Bookings() {
         <SignedOut cta={() => router.push('/auth/email')} />
       )}
       {session && q.isLoading && <Loading />}
-      {session && q.isError && <ErrorState message={(q.error as Error)?.message} />}
+      {session && q.isError && <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />}
       {session && q.data && (
         <FlatList
           data={q.data}

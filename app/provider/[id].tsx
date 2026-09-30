@@ -15,7 +15,7 @@ export default function ProviderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['provider', id],
     queryFn: () => getProvider(id!),
     enabled: !!id,
@@ -23,7 +23,7 @@ export default function ProviderScreen() {
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (isLoading) return <Loading />;
-  if (isError) return <ErrorState message={(error as Error)?.message} />;
+  if (isError) return <ErrorState message={(error as Error)?.message} onRetry={() => refetch()} />;
   if (!data) return <Empty title={t('provider.notFound')} />;
 
   const name = providerName(data) || t('provider.unnamed');

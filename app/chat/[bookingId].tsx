@@ -69,7 +69,7 @@ export default function ChatThread() {
   };
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
+  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
 
   return (
     <KeyboardAvoidingView

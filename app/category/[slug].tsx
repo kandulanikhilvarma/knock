@@ -58,6 +58,7 @@ export default function CategoryScreen() {
     <View style={styles.screen}>
       <Stack.Screen options={{ title }} />
       {!category && cats.isLoading && <Loading />}
+      {!category && cats.isError && <ErrorState onRetry={() => cats.refetch()} />}
 
       {category && !isLive && (
         <Waitlist categoryId={category.id} title={title} slug={category.slug} icon={category.icon} />

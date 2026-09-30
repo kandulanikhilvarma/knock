@@ -65,8 +65,8 @@ export default function BookingStatusScreen() {
   const booking = live ?? q.data ?? null;
 
   if (q.isLoading) return <Loading />;
-  if (q.isError) return <ErrorState message={(q.error as Error)?.message} />;
-  if (!booking) return <ErrorState message={t('booking.notFound')} />;
+  if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
+  if (!booking) return <ErrorState message={t('booking.notFound')} onRetry={() => q.refetch()} />;
 
   const isProvider = !!uid && uid === booking.assigned_provider_id;
   const canChat = !!booking.assigned_provider_id && ['assigned', 'in_progress', 'done'].includes(booking.status);
