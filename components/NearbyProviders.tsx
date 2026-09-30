@@ -28,7 +28,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
         return at
           ? {
               id: p.user_id,
-              name: providerName(p).split(' ')[0] || 'Pro',
+              name: providerName(p).split(' ')[0] || t('nearby.pinFallback'),
               photo: p.photo_url ?? null,
               verified: p.verify_tier === 'verified',
               ...at,
@@ -38,7 +38,7 @@ export default function NearbyProviders({ liveSlug, liveCid }: { liveSlug: strin
       })
       .filter((r): r is NonNullable<typeof r> => r !== null)
       .sort((a, b) => a.km - b.km);
-  }, [pros.data, me.coords]);
+  }, [pros.data, me.coords, t]);
 
   const faces = located.slice(0, 5);
   const verifiedCount = located.filter((r) => r.verified).length;

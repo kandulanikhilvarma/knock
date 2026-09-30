@@ -68,7 +68,7 @@ export default function Home() {
               <View style={styles.locMk}>
                 <Ionicons name="location" size={13} color={colors.onDark} />
               </View>
-              <AppText style={styles.locTxt}>Vijayawada</AppText>
+              <AppText style={styles.locTxt}>{t('home.city')}</AppText>
             </View>
             <LanguageSwitcher onDark />
           </View>
@@ -166,7 +166,7 @@ export default function Home() {
               {!!earnings.data && (
                 <View style={styles.live}>
                   <View style={styles.liveDot} />
-                  <AppText style={styles.liveTxt}>LIVE</AppText>
+                  <AppText style={styles.liveTxt}>{t('home.live')}</AppText>
                 </View>
               )}
               <AppText style={styles.earnSubTxt}>

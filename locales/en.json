@@ -10,6 +10,8 @@
     "profile": "Profile"
   },
   "home": {
+    "city": "Vijayawada",
+    "live": "LIVE",
     "hi": "Hi, {{name}}",
     "zeroCommission": "zero\ncommission",
     "greeting": "What needs fixing?",
@@ -367,6 +369,7 @@
     "makeDefault": "Set as default"
   },
   "nearby": {
+    "pinFallback": "Pro",
     "title": "Pros near you",
     "count": "{{count}} available nearby",
     "faces": "{{count}} tradespeople ready to come to your door today.",
