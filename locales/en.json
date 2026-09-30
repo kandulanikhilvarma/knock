@@ -242,7 +242,8 @@
     "customerLbl": "Customer",
     "call": "Call",
     "noPhone": "No number on file",
-    "needAddress": "Add your address to send the request."
+    "needAddress": "Add your address to send the request.",
+    "noUpiApp": "No UPI app opened. Scan the QR code with any UPI app, or pay cash."
   },
   "chat": {
     "title": "Chat",

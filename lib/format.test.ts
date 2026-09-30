@@ -1,6 +1,6 @@
 // node --experimental-strip-types lib/format.test.ts
 import assert from 'node:assert';
-import { formatINR } from './format.ts';
+import { formatDate, formatINR } from './format.ts';
 
 const cases: [number, string][] = [
   [0, '0'],
@@ -18,4 +18,10 @@ const cases: [number, string][] = [
 ];
 for (const [n, want] of cases) assert.strictEqual(formatINR(n), want, `formatINR(${n})`);
 
+
+// Dates follow the app language.
+const iso = '2026-09-03T10:00:00Z';
+assert.match(formatDate(iso, 'en'), /^3 Sep/);
+assert.notEqual(formatDate(iso, 'te'), formatDate(iso, 'en'));
+assert.match(formatDate(iso, 'te'), /2026/);
 console.log('format: ok');

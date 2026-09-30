@@ -10,3 +10,9 @@ export function formatINR(n: number): string {
   const rest = s.slice(0, -3);
   return sign + rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + last3;
 }
+
+// Short date in the app language, e.g. "3 Sept 2026" / "3 సెప్టెం 2026".
+// Without Intl data the engine falls back to its default locale; still a date.
+export function formatDate(iso: string, lang: string): string {
+  return new Date(iso).toLocaleDateString(`${lang}-IN`, { day: 'numeric', month: 'short', year: 'numeric' });
+}

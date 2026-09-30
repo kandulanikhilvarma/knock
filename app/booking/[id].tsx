@@ -424,6 +424,8 @@ function PaymentPanel({ booking }: { booking: Booking }) {
   const p = useQuery({ queryKey: ['provider', booking.assigned_provider_id], queryFn: () => getProvider(booking.assigned_provider_id!) });
   const refetch = useRefetchBooking(booking.id);
   const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method), onSuccess: refetch });
+  // openURL rejects when no app handles upi:// (no UPI app installed).
+  const [noUpiApp, setNoUpiApp] = useState(false);
 
   const upi = p.data?.upi_id;
   const name = (p.data ? providerName(p.data) : '') || t('provider.unnamed');
@@ -445,10 +447,11 @@ function PaymentPanel({ booking }: { booking: Booking }) {
       {amount ? <AppText style={styles.amount}>₹{amount}</AppText> : null}
 
       {link && (
-        <Touchable style={styles.cta} onPress={() => Linking.openURL(link)}>
+        <Touchable style={styles.cta} onPress={() => Linking.openURL(link).then(() => setNoUpiApp(false), () => setNoUpiApp(true))}>
           <AppText style={styles.ctaTxt}>{t('booking.payInApp')}</AppText>
         </Touchable>
       )}
+      {noUpiApp && <AppText style={styles.err} accessibilityLiveRegion="polite">{t('booking.noUpiApp')}</AppText>}
       <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('upi')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidUpi')}</AppText>
       </Touchable>

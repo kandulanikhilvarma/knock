@@ -9,7 +9,7 @@ import { Loading, ErrorState, Empty } from '../../components/StateView';
 import { categoryTint } from '../../lib/categoryTint';
 import { getMyBookings } from '../../lib/bookings';
 import { getCategories, categoryName } from '../../lib/queries';
-import { formatINR } from '../../lib/format';
+import { formatDate, formatINR } from '../../lib/format';
 import { colors, space, radius, font, type, shadow } from '../../theme/tokens';
 
 // §6 screen map: "Earnings log (self-reported)". The app never touches the
@@ -54,7 +54,7 @@ export default function Earnings() {
             <View style={{ flex: 1 }}>
               <AppText style={styles.rowTitle}>{label(item.category_slug)}</AppText>
               <AppText style={styles.rowSub}>
-                {new Date(item.paid_at!).toLocaleDateString()} ·{' '}
+                {formatDate(item.paid_at!, i18n.language)} ·{' '}
                 {t(`earnings.method_${item.pay_method === 'cash' ? 'cash' : 'upi'}`)}
               </AppText>
             </View>

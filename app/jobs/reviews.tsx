@@ -7,11 +7,12 @@ import AppText from '../../components/AppText';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 import { getProviderReviews } from '../../lib/bookings';
 import { useSession } from '../../lib/session';
+import { formatDate } from '../../lib/format';
 import { colors, space, radius, font, type, shadow } from '../../theme/tokens';
 
 // §6 screen map: the pro's own reviews, the thing the whole rating loop feeds.
 export default function MyReviews() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { session } = useSession();
   const uid = session?.user?.id;
   const q = useQuery({
@@ -48,7 +49,7 @@ export default function MyReviews() {
           <View style={styles.card}>
             <View style={styles.cardTop}>
               <AppText style={styles.cardStars}>{'★'.repeat(item.rating)}</AppText>
-              <AppText style={styles.date}>{new Date(item.created_at).toLocaleDateString()}</AppText>
+              <AppText style={styles.date}>{formatDate(item.created_at, i18n.language)}</AppText>
             </View>
             {item.body ? <AppText style={styles.body}>{item.body}</AppText> : null}
             {item.tags?.length ? (
