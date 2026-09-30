@@ -5,7 +5,7 @@ import {
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import QRCode from 'react-native-qrcode-svg';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
@@ -26,6 +26,13 @@ import QrScanner from '../../components/QrScanner';
 import FindingPro from '../../components/FindingPro';
 
 const SEARCHING: BookingStatus[] = ['requested', 'finding_pro'];
+
+// After a status action, refetch the row too: realtime can drop on a weak
+// connection, and the screen must not sit on the old state.
+function useRefetchBooking(id: string) {
+  const qc = useQueryClient();
+  return () => qc.invalidateQueries({ queryKey: ['booking', id] });
+}
 const REVIEW_TAGS = ['on_time', 'fair_price', 'clean_work'];
 
 // The customer-facing journey. `failed` has no place on the line — it shows the
@@ -58,13 +65,25 @@ export default function BookingStatusScreen() {
   // staleTime 0: realtime only listens while this screen is open, so a cached
   // row from an earlier visit may have missed status changes.
   const q = useQuery({ queryKey: ['booking', id], queryFn: () => getBooking(id!), enabled: !!id, staleTime: 0 });
-  const [live, setLive] = useState<Booking | null>(null);
+  const qc = useQueryClient();
+  // Realtime writes into the query cache, so a later refetch (Retry, a
+  // mutation) is never hidden behind an older pushed row.
   useEffect(() => {
     if (!id) return;
-    return subscribeBooking(id, setLive);
-  }, [id]);
+    // The lists are mounted tabs that never refetch on their own; opening a
+    // booking (incl. one just created) or any change to it refreshes them.
+    const refreshLists = () => {
+      qc.invalidateQueries({ queryKey: ['my-bookings'] });
+      qc.invalidateQueries({ queryKey: ['threads'] });
+    };
+    refreshLists();
+    return subscribeBooking(id, (row) => {
+      qc.setQueryData(['booking', id], row);
+      refreshLists();
+    });
+  }, [id, qc]);
 
-  const booking = live ?? q.data ?? null;
+  const booking = q.data ?? null;
 
   if (q.isLoading) return <Loading />;
   if (q.isError) return <ErrorState message={(q.error as Error)?.message} onRetry={() => q.refetch()} />;
@@ -156,8 +175,9 @@ function ProviderPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const tok = useQuery({ queryKey: ['token', booking.id], queryFn: () => getJobToken(booking.id) });
 
-  const done = useMutation({ mutationFn: () => markDone(booking.id) });
-  const paid = useMutation({ mutationFn: () => markPaid(booking.id, 'upi') });
+  const refetch = useRefetchBooking(booking.id);
+  const done = useMutation({ mutationFn: () => markDone(booking.id), onSuccess: refetch });
+  const paid = useMutation({ mutationFn: () => markPaid(booking.id, 'upi'), onSuccess: refetch });
 
   return (
     <View style={{ gap: space.md }}>
@@ -214,7 +234,8 @@ function CustomerPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const router = useRouter();
   const status = booking.status;
-  const swap = useMutation({ mutationFn: () => swapProvider(booking.id) });
+  const refetch = useRefetchBooking(booking.id);
+  const swap = useMutation({ mutationFn: () => swapProvider(booking.id), onSuccess: refetch });
 
   return (
     <View style={{ gap: space.md }}>
@@ -313,7 +334,8 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
   const [pin, setPin] = useState('');
   const [scanOpen, setScanOpen] = useState(false);
   // Accepts the 4-digit PIN OR the scanned QR token — the edge fn checks both.
-  const m = useMutation({ mutationFn: (code: string) => verifyArrival(bookingId, code) });
+  const refetch = useRefetchBooking(bookingId);
+  const m = useMutation({ mutationFn: (code: string) => verifyArrival(bookingId, code), onSuccess: refetch });
   const wrong = m.data && !m.data.verified;
 
   return (
@@ -358,7 +380,8 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
 function PaymentPanel({ booking }: { booking: Booking }) {
   const { t } = useTranslation();
   const p = useQuery({ queryKey: ['provider', booking.assigned_provider_id], queryFn: () => getProvider(booking.assigned_provider_id!) });
-  const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method) });
+  const refetch = useRefetchBooking(booking.id);
+  const pay = useMutation({ mutationFn: (method: 'upi' | 'cash') => markPaid(booking.id, method), onSuccess: refetch });
 
   const upi = p.data?.upi_id;
   const name = (p.data ? providerName(p.data) : '') || t('provider.unnamed');
