@@ -85,8 +85,16 @@ Each item stops a step that this run must not do alone. Each item gives the inpu
 
 `bbzbiffpyuznlivbqmih.supabase.co` did not resolve during Phase 6. Cause: the project is paused (status INACTIVE). The live app has no backend until it is restored. Screens with live data show the offline state in the after screenshots.
 
-## BL-13 Merge to main (production web)
+## BL-13 Merge to main (production web) — CLOSED 2026-10-01
 
-- **Blocks:** Production web deploy. Vercel deploys production from `main`.
-- **Why blocked:** The merge of PR #1 was refused by the agent's permission check (merge without review).
-- **Input necessary:** Review and merge https://github.com/kandulanikhilvarma/knock/pull/1 yourself. CI and the Vercel preview pass.
+- The user merged PR #1 (`04a5cd6`). CI on main passed. Vercel deployed production.
+- `https://knock-kandula.vercel.app/` serves `entry-a7035f1f…js` with all six security headers and the meta description. The Telugu home loads live pros and categories, with 0 console errors.
+- The first bare request after the deploy was an old edge-cache hit. A cache-busted request, and then the bare URL, returned the new build.
+
+## BL-14 Supabase GitHub check fails on main (migration version drift)
+
+- **Symptom:** The "Supabase Preview" check on `04a5cd6` fails: "Remote migration versions not found in local migrations directory."
+- **Cause:** Prod records migrations by timestamp version (`20260812115340_init_core_schema`, …, 27 rows). The repo names files `0001_…` to `0025_…` (25 files), and some prod rows have no local file (for example `booking_dispatch_fix_search_path`). This drift is older than this run. The database itself is correct: 0023–0025 are applied and checked (BL-1).
+- **Why not fixed here:** A fix rewrites migration history (`supabase migration repair` on prod, or renaming every local file to the prod version). That changes how future merges deploy to the database.
+- **Input necessary:** Choose one. (a) Keep the MCP/manual apply flow and turn off the Supabase GitHub integration for this repo. (b) Align the history: pull the remote versions (`supabase db pull` / `migration repair`) and rename local files to match, then re-run the check.
+- **Resume:** `/enhance resume BL-14`
