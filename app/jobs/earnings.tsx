@@ -7,7 +7,8 @@ import CategoryArt from '../../components/CategoryArt';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 import { categoryTint } from '../../lib/categoryTint';
 import { getMyBookings } from '../../lib/bookings';
-import { getCategories, categoryName, formatINR } from '../../lib/queries';
+import { getCategories, categoryName } from '../../lib/queries';
+import { formatINR } from '../../lib/format';
 import { colors, space, radius, font, type, shadow } from '../../theme/tokens';
 
 // §6 screen map: "Earnings log (self-reported)". The app never touches the

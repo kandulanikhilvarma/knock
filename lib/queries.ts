@@ -102,15 +102,6 @@ export async function getCityEarnings(): Promise<number> {
   return (data as { total_paid?: number } | null)?.total_paid ?? 0;
 }
 
-// Indian digit grouping (1,23,456) — Hermes Intl can't be relied on for this.
-export function formatINR(n: number): string {
-  const s = Math.round(n).toString();
-  if (s.length <= 3) return s;
-  const last3 = s.slice(-3);
-  const rest = s.slice(0, -3);
-  return rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + last3;
-}
-
 export async function joinWaitlist(categoryId: string, phone: string, city: string) {
   const { error } = await supabase
     .from('waitlist_signups')

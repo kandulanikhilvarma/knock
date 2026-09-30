@@ -12,10 +12,10 @@ import { colors, space, radius, font, type, shadow, pressed } from '../../theme/
 import {
   getCategories,
   getCityEarnings,
-  formatINR,
   categoryName,
   type Category,
 } from '../../lib/queries';
+import { formatINR } from '../../lib/format';
 import { categoryTint } from '../../lib/categoryTint';
 import { useSession, firstName } from '../../lib/session';
 import LanguageSwitcher from '../../components/LanguageSwitcher';

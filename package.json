@@ -56,7 +56,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test:dispatch": "node --experimental-strip-types supabase/functions/_shared/dispatch.test.ts",
-    "check": "tsc --noEmit && npm run test:dispatch"
+    "test": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --test \"lib/*.test.ts\" \"supabase/functions/_shared/*.test.ts\"",
+    "check": "tsc --noEmit && npm test"
   },
   "private": true
 }
