@@ -194,7 +194,7 @@ function ProviderPanel({ booking }: { booking: Booking }) {
 
       {booking.status === 'done' && !booking.paid_at && (
         <View style={styles.payCard}>
-          <AppText style={styles.codeTitle}>{t('booking.receivePayTitle')}</AppText>
+          <AppText style={styles.cardTitle}>{t('booking.receivePayTitle')}</AppText>
           <Touchable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
             <AppText style={styles.ctaTxt}>{t('booking.markReceived')}</AppText>
           </Touchable>
@@ -316,8 +316,8 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
 
   return (
     <View style={styles.verify}>
-      <AppText style={styles.codeTitle}>{t('booking.verifyTitle')}</AppText>
-      <AppText style={styles.codeSub}>{t('booking.verifySub')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.verifyTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.verifySub')}</AppText>
 
       <Touchable style={styles.scanBtn} disabled={m.isPending} onPress={() => setScanOpen(true)}>
         <Ionicons name="qr-code-outline" size={20} color={colors.onDark} />
@@ -367,8 +367,8 @@ function PaymentPanel({ booking }: { booking: Booking }) {
 
   return (
     <View style={styles.payCard}>
-      <AppText style={styles.codeTitle}>{t('booking.payTitle')}</AppText>
-      <AppText style={styles.codeSub}>{t('booking.paySub')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.payTitle')}</AppText>
+      <AppText style={styles.cardSub}>{t('booking.paySub')}</AppText>
       {link && (
         <View style={styles.qrBox}>
           <QRCode value={link} size={150} />
@@ -407,7 +407,7 @@ function ReviewPanel({ booking }: { booking: Booking }) {
   return (
     <View style={styles.review}>
       <Proof text={t('booking.paidDone')} />
-      <AppText style={styles.codeTitle}>{t('booking.reviewTitle')}</AppText>
+      <AppText style={styles.cardTitle}>{t('booking.reviewTitle')}</AppText>
       <View style={styles.stars}>
         {[1, 2, 3, 4, 5].map((n) => (
           <Pressable key={n} onPress={() => setRating(n)}>
@@ -510,6 +510,9 @@ const styles = StyleSheet.create({
   codeCard: { backgroundColor: colors.ink, borderRadius: radius.card, padding: space.lg, alignItems: 'center', gap: space.sm },
   codeTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.onDark, textAlign: 'center' },
   codeSub: { fontFamily: font.te, fontSize: type.small, color: colors.onDarkMuted, textAlign: 'center' },
+  // Same shape as codeTitle/codeSub, for the light surface cards (verify, pay, review).
+  cardTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink, textAlign: 'center' },
+  cardSub: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
   qrBox: { backgroundColor: colors.surface, padding: space.md, borderRadius: radius.chip, marginVertical: space.sm },
   pinLbl: { fontFamily: font.te, fontSize: type.chip, color: colors.onDarkMuted },
   pin: { fontFamily: font.mono, fontSize: 34, letterSpacing: 8, color: colors.gold, fontWeight: '700' },
