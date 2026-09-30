@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { errorMessage } from '../../lib/errors';
-import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, FlatList, Pressable, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';

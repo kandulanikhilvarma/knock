@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { errorMessage } from '../../lib/errors';
 import {
-  View, Text, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
+  View, Pressable, ScrollView, ActivityIndicator, TextInput, Linking, StyleSheet,
 } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';

@@ -51,7 +51,7 @@ export const colors = {
 // 4pt spacing scale.
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
 
-// Softer, larger radii — Shifud cards are generously rounded.
+// Softer, larger radii: 22px cards, pill CTAs.
 export const radius = { card: 22, chip: 16, pill: 999 } as const;
 
 // 48px minimum tap target.
@@ -100,11 +100,11 @@ export const font = {
   mono: 'monospace',
 } as const;
 
-// Mobile-tuned scale. Fraunces display is high-contrast, so it reads a size
+// Mobile-tuned scale. Bricolage display reads a size
 // larger than a sans at the same px — these are set for a ~390pt iPhone, where
 // the old 40/30/26 tier shouted. Telugu/Hindi line-height is floored in AppText.
 export const type = {
-  display: 33, // big editorial screen titles — Bricolage reads a touch smaller than the old serif
+  display: 33, // big screen titles
   hero: 25,
   h1: 20,
   h2: 18,

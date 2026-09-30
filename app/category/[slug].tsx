@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { errorMessage } from '../../lib/errors';
-import { View, Text, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, FlatList, TextInput, Pressable, ScrollView, StyleSheet } from 'react-native';
 import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
