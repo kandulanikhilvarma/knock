@@ -2,21 +2,16 @@
 
 Each item stops a step that this run must not do alone. Each item gives the input that is necessary. To continue an item, give the input and run `/enhance resume <ID>`.
 
-## BL-1 Apply migrations 0023, 0024 and 0025 to production
+## BL-1 Apply migrations 0023, 0024 and 0025 to production — CLOSED 2026-10-01
 
-- **Blocks:** B02, B12, B25 (server side). The app code works without them. The security fixes do not start until you apply them.
-- **Why blocked:** A migration on the production database counts as a deploy. The run rules do not allow a deploy.
-- **Proof so far:** `.enhance/rls-check.mjs` runs all 25 migrations in PGlite. 22/22 checks pass.
-- **Status 2026-10-01:** The user asked for the deploy. The Supabase project `services-app` is INACTIVE (paused), so the migrations cannot run. The org already has two active projects (`chowk`, `todu`).
-- **Input necessary:** Restore `services-app` in the Supabase dashboard (on the free plan, pause another project first if Supabase asks). Then run `/enhance resume BL-1`.
-- **After apply:** Run the Supabase security advisor. Regenerate `lib/database.types.ts` (see BL-2).
-- **Resume:** `/enhance resume BL-1`
+- Applied with the Supabase MCP after the user restored `services-app`. The prod migration list now ends at 0025.
+- Preflight: 0 rows over the new length caps. 1 pro has an old bad UPI ID. The trigger fires only on writes to `upi_id`, so that pro still works.
+- Catalog check: 3 triggers, both public policies, the storage policy, 6 length checks. 7 of 7 pros have a `provider_stats` row (was 6).
+- Security advisor: no ERROR. The WARNs are the expected anonymous-access lints (guest mode) and "leaked password protection disabled" (turn it on in Auth settings).
 
-## BL-2 Supabase credential for types and live checks
+## BL-2 Supabase credential for types and live checks — CLOSED 2026-10-01
 
-- **Blocks:** ARCH-2 (stale DB types, `as never` casts), live RLS checks, advisor output.
-- **Input necessary:** A working Supabase MCP or CLI login for project `bbzbiffpyuznlivbqmih`. Do not paste the key into chat.
-- **Resume:** `/enhance resume BL-2`
+- `lib/database.types.ts` is regenerated from prod. It now has `analytics_events` and `saved_addresses`. The three `as never` casts are gone. tsc and tests pass.
 
 ## BL-3 Privacy policy, terms and grievance officer text
 

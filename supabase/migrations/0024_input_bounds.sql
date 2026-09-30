@@ -1,6 +1,5 @@
 -- SEC-9 (/enhance audit): the only UPI check was a client-side includes('@'),
--- and free-text columns had no size limit. NOT yet applied to prod — see
--- .enhance/BLOCKERS.md.
+-- and free-text columns had no size limit. Applied to prod 2026-10-01.
 
 -- UPI format, same rule as lib/validate.ts. A trigger on writes to upi_id, not
 -- a CHECK: a CHECK re-runs on every update of the row, so a pro with an old bad

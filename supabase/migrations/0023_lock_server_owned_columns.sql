@@ -1,5 +1,5 @@
 -- Close client write paths to server-owned columns (/enhance audit SEC-1, SEC-2,
--- SEC-12, SEC-11, RULE-8). NOT yet applied to prod — see .enhance/BLOCKERS.md.
+-- SEC-12, SEC-11, RULE-8). Applied to prod 2026-10-01.
 
 -- SEC-1: bookings_insert_own only checked customer_id, so a client could insert
 -- a booking that was already assigned / done / paid, then leave a review

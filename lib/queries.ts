@@ -95,11 +95,11 @@ export async function getProvider(id: string): Promise<ProviderCard | null> {
 // Real total paid to workers — the Home counter (public single-row cache).
 export async function getCityEarnings(): Promise<number> {
   const { data, error } = await supabase
-    .from('city_stats' as never)
+    .from('city_stats')
     .select('total_paid')
     .maybeSingle(); // no row yet on a fresh city → 0, not a thrown error
   if (error) throw error;
-  return (data as { total_paid?: number } | null)?.total_paid ?? 0;
+  return data?.total_paid ?? 0;
 }
 
 export async function joinWaitlist(categoryId: string, phone: string, city: string) {
