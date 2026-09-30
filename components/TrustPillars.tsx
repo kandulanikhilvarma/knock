@@ -10,7 +10,7 @@ const PILLARS: { icon: string; color: string; key: string }[] = [
   { icon: 'shield-checkmark', color: colors.success, key: 'idChecked' },
   { icon: 'qr-code', color: colors.accent, key: 'qrDoor' },
   { icon: 'cash-outline', color: colors.gold, key: 'directPay' },
-  { icon: 'ribbon-outline', color: colors.onDark, key: 'zeroComm' },
+  { icon: 'ribbon-outline', color: colors.goldDeep, key: 'zeroComm' },
 ];
 
 export default function TrustPillars() {
