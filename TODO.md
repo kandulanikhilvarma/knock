@@ -29,7 +29,7 @@ Phases per master-plan §9. One phase per session. App must run after every phas
 ## P1 — Auth + roles  ✅ UI built (verify once test-OTP enabled)
 - [x] Phone OTP flow: phone entry → OTP → role choice, Supabase signInWithOtp
 - [x] Profile tab drives sign in/out; non-gating (browse stays open signed-out)
-- [x] Schema recorded in-repo: `supabase/migrations/0001_init_core_schema.sql`
+- [x] Schema recorded in-repo: `supabase/migrations/20260812115340_init_core_schema.sql`
 - [x] build-guard agent review passed (RLS on profiles verified owner-only)
 - [ ] **BLOCKED to test:** Supabase → Auth → enable Phone provider + add a test number w/ fixed OTP (free, no SMS). Then login is testable on iPhone.
 - [ ] Production SMS: MSG91/2Factor account + Supabase SMS hook
@@ -127,7 +127,7 @@ Or "Continue as guest" for an anonymous customer.
 ## P7 Harden · P8 Ship — remaining, mostly blocked on user
 - [ ] Telugu layout audit on a real device (screenshot-verify — not headless).
 - [ ] Push notifications (Expo tokens) · WhatsApp offer alerts · wave-2 escalation.
-- [x] Expose customer name/phone to the assigned provider (RLS) — shipped in `0014_provider_reads_assigned_customer.sql`; Call button lives in the provider panel of `app/booking/[id].tsx`.
+- [x] Expose customer name/phone to the assigned provider (RLS) — shipped in `20260814095816_0014_provider_reads_assigned_customer.sql`; Call button lives in the provider panel of `app/booking/[id].tsx`.
 - Blocked on user: SMS provider (phone OTP) · Expo+Apple/Play accounts (builds) ·
   KYC vendor · Sentry DSN.
 
