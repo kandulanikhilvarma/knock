@@ -119,7 +119,7 @@ Offers go out in waves: **wave 1 = 3 pros / 90s**, **wave 2 = 5 pros / 120s** (p
 
 **Backend** — Supabase only. Postgres with **Row-Level Security on every table**, phone / email / anonymous Auth, Realtime (chat + live booking status), Storage (job photos, work galleries), and **Edge Functions for every state transition** — `dispatch`, `respond`, `verify-arrival`, `job-action`, `swap`, `submit-review`, `delete-account`. No `service_role` key in the client; anon key + RLS only.
 
-**Security model** — the crown jewels are uid-scoped. The door token is readable by the assigned pro alone; the customer's phone by the assigned pro only while the job is live; chat by the two participants only. 25 migrations; [`.enhance/rls-check.mjs`](.enhance/rls-check.mjs) runs them in PGlite and checks the key policies (22 checks). Migrations 0023–0025 are not yet applied to production.
+**Security model** — the crown jewels are uid-scoped. The door token is readable by the assigned pro alone; the customer's phone by the assigned pro only while the job is live; chat by the two participants only. 27 migrations, named by their production version; [`.enhance/rls-check.mjs`](.enhance/rls-check.mjs) runs them in PGlite and checks the key policies (22 checks). All of them are applied to production.
 
 ```
 app/           expo-router routes  ·  app/(tabs) is the customer tab shell

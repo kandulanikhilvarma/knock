@@ -51,7 +51,7 @@ create index dispatch_offers_booking_idx on public.dispatch_offers (booking_id);
 
 -- keep updated_at honest
 create or replace function public.touch_updated_at() returns trigger
-  language plpgsql set search_path = '' as $$ begin new.updated_at = now(); return new; end $$;
+  language plpgsql as $$ begin new.updated_at = now(); return new; end $$;
 create trigger bookings_touch before update on public.bookings
   for each row execute function public.touch_updated_at();
 

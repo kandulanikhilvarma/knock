@@ -85,8 +85,16 @@ Each item stops a step that this run must not do alone. Each item gives the inpu
 
 `bbzbiffpyuznlivbqmih.supabase.co` did not resolve during Phase 6. Cause: the project is paused (status INACTIVE). The live app has no backend until it is restored. Screens with live data show the offline state in the after screenshots.
 
-## BL-13 Merge to main (production web)
+## BL-13 Merge to main (production web) — CLOSED 2026-10-01
 
-- **Blocks:** Production web deploy. Vercel deploys production from `main`.
-- **Why blocked:** The merge of PR #1 was refused by the agent's permission check (merge without review).
-- **Input necessary:** Review and merge https://github.com/kandulanikhilvarma/knock/pull/1 yourself. CI and the Vercel preview pass.
+- The user merged PR #1 (`04a5cd6`). CI on main passed. Vercel deployed production.
+- `https://knock-kandula.vercel.app/` serves `entry-a7035f1f…js` with all six security headers and the meta description. The Telugu home loads live pros and categories, with 0 console errors.
+- The first bare request after the deploy was an old edge-cache hit. A cache-busted request, and then the bare URL, returned the new build.
+
+## BL-14 Supabase GitHub check fails on main (migration version drift) — CLOSED 2026-10-01 (option b)
+
+- **Symptom:** The "Supabase Preview" check on `04a5cd6` failed: "Remote migration versions not found in local migrations directory."
+- **Cause:** Prod records 27 migrations by timestamp version. The repo had 25 files named `0001_…` to `0025_…`. Two prod rows (`booking_dispatch_fix_search_path`, `dispatch_sweep_lockdown`) had been folded into local 0002 and 0003.
+- **Fix (user chose option b):** Local files are renamed to `<prod version>_<name>.sql`. The two follow-ups have their own files again, and 0002/0003 hold prod's original text. No change to the prod database or its history table.
+- **Proof:** All 27 files hash-match the SQL that prod recorded (comments and whitespace ignored). RLS harness: 27 files applied, 22/22 checks pass; on the pre-0023 schema (`upTo=20260821102216`) 10 checks fail, as expected.
+- **Rule from now on:** Name a new migration `<UTC timestamp>_<name>.sql` (the Supabase CLI default), so the version is later than `20260930190037`.

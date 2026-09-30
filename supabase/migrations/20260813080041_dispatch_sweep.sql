@@ -36,8 +36,5 @@ begin
 end;
 $$;
 
--- only cron (owner) may run it — never exposed to clients via RPC
-revoke execute on function public.sweep_dispatch() from public, anon, authenticated;
-
 -- run every 30s; falls to the fallback within ~a window of wave-1 timing out
 select cron.schedule('dispatch-sweep', '30 seconds', $$select public.sweep_dispatch()$$);

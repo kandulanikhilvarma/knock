@@ -1,7 +1,8 @@
 // RLS regression check for migration 0023 (/enhance B02). Not wired into npm:
 // it needs PGlite, which is not a project dependency. Run it from any folder:
 //   npm i @electric-sql/pglite@0.3 && node rls-check.mjs <repo-root> [upTo]
-// Pass upTo=0022 to see the checks fail on the old schema.
+// Files are named <prod version>_<name>.sql. Pass a version prefix as upTo
+// (e.g. 20260821102216, the last pre-0023 migration) to run the old schema.
 import { PGlite } from '@electric-sql/pglite';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -40,7 +41,7 @@ alter default privileges in schema public grant all on sequences to anon, authen
 `);
 
 for (const f of readdirSync(dir).filter((n) => n.endsWith('.sql')).sort()) {
-  if (f.slice(0, 4) > upTo) break;
+  if (f.slice(0, upTo.length) > upTo) break;
   const sql = readFileSync(join(dir, f), 'utf8').replace(/create extension if not exists pg_cron[^;]*;/gi, '');
   try {
     await db.exec(sql);
