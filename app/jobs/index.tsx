@@ -97,6 +97,9 @@ function OfferCard({ offer, onDone }: { offer: OfferWithBooking; onDone: () => v
           <AppText style={styles.acceptTxt}>{t('jobs.accept')}</AppText>
         </Pressable>
       </View>
+      {m.isError && (
+        <AppText style={styles.lost} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
       {m.data && !m.data.accepted && (
         <AppText style={styles.lost}>{m.data.taken ? t('jobs.taken') : t('jobs.expired')}</AppText>
       )}

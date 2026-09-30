@@ -13,6 +13,7 @@ import { getMyProviderProfile, setAvailability, type Availability } from '../../
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import Touchable from '../../components/Touchable';
 import { Loading } from '../../components/StateView';
+import { errorMessage } from '../../lib/errors';
 
 const STATES: Availability[] = ['available', 'busy', 'paused'];
 
@@ -21,15 +22,20 @@ function DeleteAccount() {
   const [armed, setArmed] = useState(false);
   const m = useMutation({ mutationFn: deleteAccount });
   return (
-    <Pressable
-      style={styles.delete}
-      disabled={m.isPending}
-      onPress={() => (armed ? m.mutate() : setArmed(true))}
-    >
-      <AppText style={styles.deleteTxt}>
-        {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
-      </AppText>
-    </Pressable>
+    <>
+      <Pressable
+        style={styles.delete}
+        disabled={m.isPending}
+        onPress={() => (armed ? m.mutate() : setArmed(true))}
+      >
+        <AppText style={styles.deleteTxt}>
+          {m.isPending ? '…' : armed ? t('profileTab.deleteConfirm') : t('profileTab.delete')}
+        </AppText>
+      </Pressable>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
+    </>
   );
 }
 
@@ -79,6 +85,9 @@ function ProviderSection() {
           </Pressable>
         ))}
       </View>
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
       <Pressable style={styles.editLink} onPress={() => router.push('/provider-setup')}>
         <AppText style={styles.editTxt}>{t('providerSetup.edit')}</AppText>
       </Pressable>
@@ -241,6 +250,7 @@ const styles = StyleSheet.create({
   segOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   segTxt: { fontFamily: font.medium, fontSize: type.small, color: colors.inkMuted },
   segTxtOn: { color: colors.surface },
+  err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger, marginTop: space.xs, textAlign: 'center' },
   editLink: { marginTop: space.sm },
   editTxt: { fontFamily: font.semibold, fontSize: type.small, color: colors.accent },
   cta: {

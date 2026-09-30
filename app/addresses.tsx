@@ -85,6 +85,9 @@ export default function Addresses() {
         {q.isError && <ErrorState message={errorMessage(q.error, t)} onRetry={() => q.refetch()} />}
         {q.data?.length === 0 && <Empty icon="location-outline" title={t('addresses.empty')} />}
 
+        {(del.isError || setDef.isError) && (
+          <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(del.error ?? setDef.error, t)}</AppText>
+        )}
         {q.data?.map((a) => (
           <View key={a.id} style={styles.row}>
             <Ionicons name="location" size={20} color={colors.primary} />

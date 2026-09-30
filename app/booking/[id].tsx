@@ -212,6 +212,9 @@ function ProviderPanel({ booking }: { booking: Booking }) {
           <Touchable style={styles.cta} disabled={done.isPending} onPress={() => done.mutate()}>
             <AppText style={styles.ctaTxt}>{done.isPending ? '…' : t('booking.markDone')}</AppText>
           </Touchable>
+          {done.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(done.error, t)}</AppText>
+          )}
         </View>
       )}
 
@@ -221,6 +224,9 @@ function ProviderPanel({ booking }: { booking: Booking }) {
           <Touchable style={styles.cta} disabled={paid.isPending} onPress={() => paid.mutate()}>
             <AppText style={styles.ctaTxt}>{t('booking.markReceived')}</AppText>
           </Touchable>
+          {paid.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(paid.error, t)}</AppText>
+          )}
         </View>
       )}
 
@@ -250,6 +256,9 @@ function CustomerPanel({ booking }: { booking: Booking }) {
             <Touchable style={styles.swap} disabled={swap.isPending} onPress={() => swap.mutate()}>
               <AppText style={styles.swapTxt}>{swap.isPending ? t('booking.swapping') : t('booking.swap')}</AppText>
             </Touchable>
+          )}
+          {swap.isError && (
+            <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(swap.error, t)}</AppText>
           )}
           <VerifyPanel bookingId={booking.id} />
         </>
@@ -400,6 +409,9 @@ function VerifyPanel({ bookingId }: { bookingId: string }) {
         <AppText style={styles.ctaTxt}>{t('booking.verifyBtn')}</AppText>
       </Touchable>
       {wrong && <AppText style={styles.err}>{t('booking.verifyWrong')}</AppText>}
+      {m.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(m.error, t)}</AppText>
+      )}
 
       <QrScanner visible={scanOpen} onClose={() => setScanOpen(false)} onScan={(v) => m.mutate(v.trim())} />
     </View>
@@ -442,6 +454,9 @@ function PaymentPanel({ booking }: { booking: Booking }) {
       <Touchable style={styles.ghostCta} disabled={pay.isPending} onPress={() => pay.mutate('cash')}>
         <AppText style={styles.ghostTxt}>{t('booking.markPaidCash')}</AppText>
       </Touchable>
+      {pay.isError && (
+        <AppText style={styles.err} accessibilityLiveRegion="polite">{errorMessage(pay.error, t)}</AppText>
+      )}
     </View>
   );
 }
