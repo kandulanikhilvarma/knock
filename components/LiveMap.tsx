@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
+import { useReducedMotion } from '../lib/useReducedMotion';
 import { View, Image, Animated, Easing, StyleSheet, useWindowDimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
@@ -15,13 +16,19 @@ const TILE_URL = (z: number, x: number, y: number) =>
 
 function Pulse({ color, size = 26 }: { color: string; size?: number }) {
   const a = useRef(new Animated.Value(0)).current;
+  const still = useReducedMotion();
   useEffect(() => {
+    // Still: no ring at all (the pin itself stays).
+    if (still) {
+      a.setValue(1);
+      return;
+    }
     const loop = Animated.loop(
       Animated.timing(a, { toValue: 1, duration: 2200, easing: Easing.out(Easing.ease), useNativeDriver: true }),
     );
     loop.start();
     return () => loop.stop();
-  }, [a]);
+  }, [a, still]);
   return (
     <Animated.View
       pointerEvents="none"

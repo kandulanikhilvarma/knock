@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Animated, type StyleProp, type ViewStyle } from 'react-native';
+import { useReducedMotion } from '../lib/useReducedMotion';
 
 // Gentle mount entrance: fade + a short rise. JS-driven Animated (works in Expo
 // Go, no Reanimated/dev-build needed). `delay` staggers a column of these. The
@@ -14,7 +15,12 @@ export default function FadeIn({
   style?: StyleProp<ViewStyle>;
 }) {
   const t = useRef(new Animated.Value(0)).current;
+  const still = useReducedMotion();
   useEffect(() => {
+    if (still) {
+      t.setValue(1);
+      return;
+    }
     const anim = Animated.timing(t, {
       toValue: 1,
       duration: 380,
@@ -33,7 +39,7 @@ export default function FadeIn({
       clearTimeout(safety);
       anim.stop();
     };
-  }, [t, delay]);
+  }, [t, delay, still]);
   return (
     <Animated.View
       style={[

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useReducedMotion } from '../lib/useReducedMotion';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -58,14 +59,21 @@ export default function FindingPro({ slug }: { slug: string }) {
 
   // Breathing dot next to the headline so the copy itself feels live.
   const pulse = useRef(new Animated.Value(0)).current;
+  const still = useReducedMotion();
   useEffect(() => {
-    Animated.loop(
+    if (still) {
+      pulse.setValue(1);
+      return;
+    }
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1, duration: 900, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
         Animated.timing(pulse, { toValue: 0, duration: 900, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
       ]),
-    ).start();
-  }, [pulse]);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pulse, still]);
 
   return (
     <View style={styles.wrap}>

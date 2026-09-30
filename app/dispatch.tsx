@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useReducedMotion } from '../lib/useReducedMotion';
 import { errorMessage } from '../lib/errors';
 import { View, ScrollView, Pressable, StyleSheet, ActivityIndicator, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -207,14 +208,15 @@ function Step({
   last: boolean;
 }) {
   const a = useRef(new Animated.Value(state === 'todo' ? 0 : 1)).current;
+  const still = useReducedMotion();
   useEffect(() => {
     Animated.timing(a, {
       toValue: state === 'todo' ? 0 : 1,
-      duration: 260,
+      duration: still ? 0 : 260,
       easing: Easing.bezier(0.23, 1, 0.32, 1),
       useNativeDriver: true,
     }).start();
-  }, [a, state]);
+  }, [a, state, still]);
 
   const done = state === 'done';
   const active = state === 'active';
