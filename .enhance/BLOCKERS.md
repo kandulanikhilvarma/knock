@@ -7,7 +7,8 @@ Each item stops a step that this run must not do alone. Each item gives the inpu
 - **Blocks:** B02, B12, B25 (server side). The app code works without them. The security fixes do not start until you apply them.
 - **Why blocked:** A migration on the production database counts as a deploy. The run rules do not allow a deploy.
 - **Proof so far:** `.enhance/rls-check.mjs` runs all 25 migrations in PGlite. 22/22 checks pass.
-- **Input necessary:** Write "apply 0023–0025 to prod". Alternatively, run `supabase db push` yourself.
+- **Status 2026-10-01:** The user asked for the deploy. The Supabase project `services-app` is INACTIVE (paused), so the migrations cannot run. The org already has two active projects (`chowk`, `todu`).
+- **Input necessary:** Restore `services-app` in the Supabase dashboard (on the free plan, pause another project first if Supabase asks). Then run `/enhance resume BL-1`.
 - **After apply:** Run the Supabase security advisor. Regenerate `lib/database.types.ts` (see BL-2).
 - **Resume:** `/enhance resume BL-1`
 
@@ -80,12 +81,17 @@ Each item stops a step that this run must not do alone. Each item gives the inpu
 - **Input necessary:** Permission to deploy Edge Functions, or a staging project (BL-6).
 - **Resume:** `/enhance resume BL-11`
 
-## BL-12 Confirm security headers live
+## BL-12 Confirm security headers live — CLOSED 2026-10-01
 
-- **Blocks:** Live proof for B11.
-- **Input necessary:** A Vercel deploy of this branch (a preview deploy is enough). Then run `curl -sI <preview-url>`.
-- **Resume:** `/enhance resume BL-12`
+- Preview deploy `https://knock-mj9857560-kandula.vercel.app` (commit 70dd6bc) returns all six headers: `Content-Security-Policy: frame-ancestors 'none'`, `Permissions-Policy`, `Referrer-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options: DENY`. The page has the new meta description.
+- Production gets them when this branch reaches `main`.
 
-## Note: network on 2026-09-30
+## Note: Supabase unreachable on 2026-09-30
 
-`bbzbiffpyuznlivbqmih.supabase.co` did not resolve from this machine during Phase 6. Screens with live data (providers, city total) show the offline state in the after screenshots. This is a local network fault, not a code fault.
+`bbzbiffpyuznlivbqmih.supabase.co` did not resolve during Phase 6. Cause: the project is paused (status INACTIVE). The live app has no backend until it is restored. Screens with live data show the offline state in the after screenshots.
+
+## BL-13 Merge to main (production web)
+
+- **Blocks:** Production web deploy. Vercel deploys production from `main`.
+- **Why blocked:** The merge of PR #1 was refused by the agent's permission check (merge without review).
+- **Input necessary:** Review and merge https://github.com/kandulanikhilvarma/knock/pull/1 yourself. CI and the Vercel preview pass.
