@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   reviews: { gap: space.sm, marginTop: space.xs },
   reviewsTitle: { fontFamily: font.teBold, fontSize: type.h3, color: colors.ink },
   reviewRow: { backgroundColor: colors.surface, borderRadius: radius.chip, padding: space.md, gap: 3, ...shadow.soft },
-  reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.gold },
+  reviewStars: { fontFamily: font.regular, fontSize: type.small, color: colors.goldDeep },
   reviewTags: { fontFamily: font.te, fontSize: type.small, color: colors.ink2 },
   reviewBody: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted },
 

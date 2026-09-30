@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     ...shadow.soft,
   },
   avg: { fontFamily: font.displayBold, fontSize: 44, color: colors.ink },
-  stars: { fontFamily: font.bold, fontSize: type.h3, color: colors.gold },
+  stars: { fontFamily: font.bold, fontSize: type.h3, color: colors.goldDeep },
   headSub: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, marginTop: 2 },
   card: {
     padding: space.lg,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   cardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  cardStars: { fontFamily: font.bold, fontSize: type.body, color: colors.gold },
+  cardStars: { fontFamily: font.bold, fontSize: type.body, color: colors.goldDeep },
   date: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted },
   body: { fontFamily: font.regular, fontSize: type.body, lineHeight: 22, color: colors.ink2 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },

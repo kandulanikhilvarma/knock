@@ -537,8 +537,8 @@ const styles = StyleSheet.create({
 
   review: { backgroundColor: colors.surface, borderRadius: radius.card, padding: space.lg, gap: space.md, ...shadow.soft },
   stars: { flexDirection: 'row', gap: space.xs, justifyContent: 'center' },
-  star: { fontSize: 36, color: colors.line },
-  starOn: { color: colors.gold },
+  star: { fontSize: 36, color: colors.inkMuted },
+  starOn: { color: colors.goldDeep },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, justifyContent: 'center' },
   tag: { borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, paddingVertical: space.xs, paddingHorizontal: space.md },
   tagOn: { backgroundColor: colors.ink, borderColor: colors.ink },

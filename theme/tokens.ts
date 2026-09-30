@@ -14,7 +14,7 @@ export const colors = {
   accentWarm: '#155041',
   // warm value accent — the ₹0 coin ring / price emphasis
   gold: '#CF8A3C',
-  goldDeep: '#A65E31',
+  goldDeep: '#8F5029',
   // proof only — verified / available / paid (a living emerald, distinct from forest)
   success: '#1E9E6A',
   successInk: '#186B49',
@@ -23,10 +23,10 @@ export const colors = {
   surface: '#FBF8F1', // bright cream card — lifts off the ground
   ink: '#14150F', // warm near-black type
   ink2: '#3A3A30',
-  inkMuted: '#767263', // warm gray
+  inkMuted: '#67635A', // warm gray — 4.85:1 on bg (AA)
   line: '#E4DDCC',
   line2: '#EDE7D8',
-  danger: '#BE4A31', // warm brick red
+  danger: '#A33F29', // warm brick red — 5.15:1 on bg (AA)
   onDark: '#F3EFE4', // cream text on forest surfaces
   onDarkMuted: '#A9BDA9', // muted cream-green on forest
   // pastel blocks behind category items
