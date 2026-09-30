@@ -9,6 +9,7 @@ India-first · Telugu-first · launching in **Vijayawada** and **Visakhapatnam**
 ![Expo SDK 57](https://img.shields.io/badge/Expo-SDK_57-0F3A2C?style=flat-square&logo=expo&logoColor=white)
 ![React Native 0.86](https://img.shields.io/badge/React_Native-0.86-155041?style=flat-square&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-155041?style=flat-square&logo=typescript&logoColor=white)
+[![CI](https://github.com/kandulanikhilvarma/knock/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kandulanikhilvarma/knock/actions/workflows/ci.yml)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres_+_RLS-1E9E6A?style=flat-square&logo=supabase&logoColor=white)
 ![Languages](https://img.shields.io/badge/languages-EN_·_తెలుగు_·_हिन्दी-CF8A3C?style=flat-square)
 
@@ -106,7 +107,7 @@ Offers go out in waves: **wave 1 = 3 pros / 90s**, **wave 2 = 5 pros / 120s** (p
 
 ## Trust and safety
 
-- **ID-checked pros** — Aadhaar + PAN before taking work. "Verified" is never shown without a completed check.
+- **ID-checked pros** — the Verified badge shows only after a completed ID check, and only the server can set it. The KYC vendor is not connected yet, so today no pro shows as Verified.
 - **QR-at-the-door** — the arrival handshake is a scanned token the server validates, not a claim.
 - **Safety rails** — from the moment someone is on the way until the job is finished, the booking screen carries a safety bar (share trip, emergency).
 - **Auto-pause** — a provider whose rating falls below the floor is paused, a separate and visible state.
@@ -114,11 +115,11 @@ Offers go out in waves: **wave 1 = 3 pros / 90s**, **wave 2 = 5 pros / 120s** (p
 
 ## Architecture
 
-**Client** — Expo SDK 57 · React Native 0.86 · TypeScript (strict) · expo-router · Zustand + React Query · i18next. One design system in [`theme/tokens.ts`](theme/tokens.ts): re-theme the whole app by editing token values.
+**Client** — Expo SDK 57 · React Native 0.86 · TypeScript (strict) · expo-router · React Query · i18next. One design system in [`theme/tokens.ts`](theme/tokens.ts): re-theme the whole app by editing token values.
 
 **Backend** — Supabase only. Postgres with **Row-Level Security on every table**, phone / email / anonymous Auth, Realtime (chat + live booking status), Storage (job photos, work galleries), and **Edge Functions for every state transition** — `dispatch`, `respond`, `verify-arrival`, `job-action`, `swap`, `submit-review`, `delete-account`. No `service_role` key in the client; anon key + RLS only.
 
-**Security model** — the crown jewels are uid-scoped. The door token is readable by the assigned pro alone; the customer's phone by the assigned pro only while the job is live; chat by the two participants only. 21 migrations, each policy verified against the Supabase security advisor.
+**Security model** — the crown jewels are uid-scoped. The door token is readable by the assigned pro alone; the customer's phone by the assigned pro only while the job is live; chat by the two participants only. 25 migrations; [`.enhance/rls-check.mjs`](.enhance/rls-check.mjs) runs them in PGlite and checks the key policies (22 checks). Migrations 0023–0025 are not yet applied to production.
 
 ```
 app/           expo-router routes  ·  app/(tabs) is the customer tab shell
@@ -164,10 +165,23 @@ This is the part most apps get wrong. Knock gives **each language its own displa
 npm install
 npm run web          # browser preview on localhost:8081
 npm run ios          # or android / start — needs Expo Go or a dev build
-npm run check        # tsc + the dispatch engine unit test
+npm run check        # tsc + unit tests (CI runs the same on every PR)
 ```
 
-Set `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` in `.env` (see `.env.example`). The anon key is client-safe by design; RLS protects the data.
+Copy `.env.example` to `.env` and fill it in:
+
+| Variable | Required | What it is |
+|---|---|---|
+| `EXPO_PUBLIC_SUPABASE_URL` | yes | Your Supabase project URL |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | yes | The anon key. Client-safe by design; RLS protects the data. Never put `service_role` here |
+| `EXPO_PUBLIC_SENTRY_DSN` | no | Sentry ingest DSN. Empty turns crash reporting off |
+
+| Script | What it does |
+|---|---|
+| `npm start` / `web` / `ios` / `android` | Expo dev server (web on localhost:8081) |
+| `npm test` | Unit tests in `lib/*.test.ts` and the dispatch engine, with Node's test runner |
+| `npm run check` | `tsc --noEmit`, then `npm test` |
+| `npm run test:dispatch` | The dispatch engine test alone |
 
 ## What works today
 
