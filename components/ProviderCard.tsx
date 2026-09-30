@@ -55,16 +55,13 @@ export default function ProviderCard({
               </>
             )}
           </View>
-          <View style={styles.tags}>
-            <View style={styles.tag}>
-              <AppText style={styles.tagTxt}>{t('provider.speaksTelugu')}</AppText>
-            </View>
-            {provider.visiting_charge != null && (
+          {provider.visiting_charge != null && (
+            <View style={styles.tags}>
               <View style={styles.tag}>
                 <AppText style={styles.tagTxt}>{t('provider.visit', { amount: provider.visiting_charge })}</AppText>
               </View>
-            )}
-          </View>
+            </View>
+          )}
         </View>
       </View>
 

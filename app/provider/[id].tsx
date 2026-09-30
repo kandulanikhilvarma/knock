@@ -6,20 +6,21 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
-import { getProvider, providerName } from '../../lib/queries';
+import { getProvider, providerName, getCategories, categoryName } from '../../lib/queries';
 import { getProviderReviews } from '../../lib/bookings';
 import Avatar from '../../components/Avatar';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function ProviderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['provider', id],
     queryFn: () => getProvider(id!),
     enabled: !!id,
   });
+  const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
 
   if (isLoading) return <Loading />;
   if (isError) return <ErrorState message={(error as Error)?.message} />;
@@ -28,6 +29,15 @@ export default function ProviderScreen() {
   const name = providerName(data) || t('provider.unnamed');
   const stats = data.provider_stats;
   const verified = data.verify_tier === 'verified';
+  // The pro's own trades, not a fixed line. Two at most, to fit the hero.
+  const trades = (data.services ?? [])
+    .map((slug) => cats.data?.find((c) => c.slug === slug))
+    .filter((c) => c != null)
+    .slice(0, 2)
+    .map((c) => categoryName(c, i18n.language));
+  const role = trades.length
+    ? t('provider.roleLine', { trades: trades.join(', ') })
+    : t('provider.roleIndependent');
 
   return (
     <View style={styles.screen}>
@@ -46,7 +56,7 @@ export default function ProviderScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <AppText style={styles.name}>{name}</AppText>
-              <AppText style={styles.role}>{t('provider.roleLine')}</AppText>
+              <AppText style={styles.role}>{role}</AppText>
               <View style={styles.rr}>
                 <AppText style={styles.star}>★ {stats?.rating_avg?.toFixed(1) ?? '·'}</AppText>
                 <AppText style={styles.rrMut}>
