@@ -76,7 +76,9 @@ if (Platform.OS === 'web' && typeof document !== 'undefined' && !document.getEle
   document.head.appendChild(s);
 }
 
-const queryClient = new QueryClient();
+// 30 s: screens remount often (tabs, back/forward); refetching every mount
+// wasted data on slow mobile networks.
+const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 30_000 } } });
 
 // One consistent, premium back control for every stack screen. Safe-back: if the
 // history is empty (deep link, web refresh, or a screen reached via replace) the

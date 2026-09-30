@@ -27,7 +27,13 @@ export default function ChatThread() {
   const uid = session?.user?.id;
   const listRef = useRef<FlatList<Message>>(null);
 
-  const q = useQuery({ queryKey: ['messages', bookingId], queryFn: () => getMessages(bookingId!), enabled: !!bookingId });
+  // staleTime 0: realtime only listens while the thread is open.
+  const q = useQuery({
+    queryKey: ['messages', bookingId],
+    queryFn: () => getMessages(bookingId!),
+    enabled: !!bookingId,
+    staleTime: 0,
+  });
   const [msgs, setMsgs] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
 

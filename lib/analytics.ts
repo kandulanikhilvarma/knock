@@ -21,12 +21,15 @@ export type EventName =
 export function track(name: EventName, props: Record<string, unknown> = {}) {
   void (async () => {
     try {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) return; // RLS only accepts rows owned by a signed-in user
+      // getSession reads local storage; getUser would add a network round trip
+      // per event. RLS still checks user_id = auth.uid() on insert.
+      const { data } = await supabase.auth.getSession();
+      const uid = data.session?.user.id;
+      if (!uid) return; // RLS only accepts rows owned by a signed-in user
       // insert-only table, so it is deliberately absent from the generated types
       await supabase
         .from('analytics_events' as never)
-        .insert({ user_id: data.user.id, name, props } as never);
+        .insert({ user_id: uid, name, props } as never);
     } catch {
       // dropped by design
     }

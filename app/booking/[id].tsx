@@ -55,7 +55,9 @@ export default function BookingStatusScreen() {
   const { session } = useSession();
   const uid = session?.user?.id;
 
-  const q = useQuery({ queryKey: ['booking', id], queryFn: () => getBooking(id!), enabled: !!id });
+  // staleTime 0: realtime only listens while this screen is open, so a cached
+  // row from an earlier visit may have missed status changes.
+  const q = useQuery({ queryKey: ['booking', id], queryFn: () => getBooking(id!), enabled: !!id, staleTime: 0 });
   const [live, setLive] = useState<Booking | null>(null);
   useEffect(() => {
     if (!id) return;

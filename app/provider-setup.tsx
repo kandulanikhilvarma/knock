@@ -3,7 +3,7 @@ import { View, Image, TextInput, Pressable, ScrollView, StyleSheet } from 'react
 import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
@@ -21,6 +21,7 @@ export default function ProviderSetup() {
 
   const cats = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const mine = useQuery({ queryKey: ['my-provider'], queryFn: getMyProviderProfile, enabled: !!session });
+  const qc = useQueryClient();
 
   const [services, setServices] = useState<string[]>([]);
   const [upiId, setUpiId] = useState('');
@@ -74,7 +75,13 @@ export default function ProviderSetup() {
         workPhotos,
         voiceIntroUrl: voiceUrl,
       }),
-    onSuccess: () => router.back(),
+    onSuccess: () => {
+      // Profile (a mounted tab) and the provider lists would keep the old row.
+      for (const key of ['my-provider', 'provider', 'providers', 'all-providers']) {
+        qc.invalidateQueries({ queryKey: [key] });
+      }
+      router.back();
+    },
   });
 
   if (loading || cats.isLoading) return <Loading />;
