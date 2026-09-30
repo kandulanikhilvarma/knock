@@ -105,7 +105,7 @@ export default function Addresses() {
                 </Pressable>
               )}
             </View>
-            <Pressable hitSlop={10} disabled={del.isPending} onPress={() => del.mutate(a.id)}>
+            <Pressable hitSlop={14} disabled={del.isPending} onPress={() => del.mutate(a.id)}>
               <Ionicons name="trash-outline" size={18} color={colors.danger} />
             </Pressable>
           </View>

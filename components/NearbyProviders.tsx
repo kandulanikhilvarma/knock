@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AppText from './AppText';
 import Avatar from './Avatar';
 import LiveMap, { type MapPin } from './LiveMap';
-import { colors, space, radius, font, type, shadow, pressed } from '../theme/tokens';
+import { colors, space, radius, font, type, tap, shadow, pressed } from '../theme/tokens';
 import { getAllProviders, providerName } from '../lib/queries';
 import { useMyLocation } from '../lib/useMyLocation';
 import { decodeGeohash, distanceKm } from '../lib/geo';
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   gateBtn: {
     marginTop: space.sm,
-    height: 42,
+    height: tap.min,
     paddingHorizontal: space.xl,
     borderRadius: radius.pill,
     backgroundColor: colors.accent,

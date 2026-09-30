@@ -141,6 +141,7 @@ export default function ChatThread() {
           <Pressable
             key={k}
             style={({ pressed: p }) => [styles.chip, p && pressed]}
+            hitSlop={{ top: 5, bottom: 5 }}
             onPress={() => sendBody(t(`chat.quick_${k}`))}
           >
             <AppText style={styles.chipTxt}>{t(`chat.quick_${k}`)}</AppText>

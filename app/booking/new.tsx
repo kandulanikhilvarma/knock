@@ -134,7 +134,7 @@ export default function NewBookingScreen() {
             <Image source={{ uri: p.uri }} style={styles.thumb} />
             <Pressable
               style={styles.thumbX}
-              hitSlop={6}
+              hitSlop={14}
               onPress={() => setPhotos((prev) => prev.filter((_, j) => j !== i))}
               accessibilityRole="button"
               accessibilityLabel={t('a11y.removePhoto')}

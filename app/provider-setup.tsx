@@ -155,7 +155,7 @@ export default function ProviderSetup() {
         {workPhotos.map((u, i) => (
           <View key={u} style={styles.thumbWrap}>
             <Image source={{ uri: u }} style={styles.thumb} />
-            <Pressable style={styles.thumbX} hitSlop={6} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
+            <Pressable style={styles.thumbX} hitSlop={14} onPress={() => setWorkPhotos((prev) => prev.filter((_, j) => j !== i))}>
               <Ionicons name="close" size={12} color={colors.onDark} />
             </Pressable>
           </View>

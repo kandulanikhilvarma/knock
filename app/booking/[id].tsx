@@ -410,14 +410,14 @@ function ReviewPanel({ booking }: { booking: Booking }) {
       <AppText style={styles.cardTitle}>{t('booking.reviewTitle')}</AppText>
       <View style={styles.stars}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <Pressable key={n} onPress={() => setRating(n)}>
+          <Pressable key={n} onPress={() => setRating(n)} hitSlop={4}>
             <AppText style={[styles.star, n <= rating && styles.starOn]}>★</AppText>
           </Pressable>
         ))}
       </View>
       <View style={styles.tags}>
         {REVIEW_TAGS.map((tag) => (
-          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)}>
+          <Pressable key={tag} style={[styles.tag, tags.includes(tag) && styles.tagOn]} onPress={() => toggle(tag)} hitSlop={{ top: 10, bottom: 10 }}>
             <AppText style={[styles.tagTxt, tags.includes(tag) && styles.tagTxtOn]}>{t(`booking.tag_${tag}`)}</AppText>
           </Pressable>
         ))}
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    height: 40,
+    height: tap.min,
     paddingHorizontal: space.lg,
     borderRadius: radius.pill,
     backgroundColor: colors.accent,

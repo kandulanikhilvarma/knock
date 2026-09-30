@@ -104,7 +104,7 @@ export default function Search() {
             returnKeyType="search"
           />
           {q.length > 0 && (
-            <Pressable onPress={() => setQ('')} hitSlop={10}>
+            <Pressable onPress={() => setQ('')} hitSlop={14}>
               <Ionicons name="close-circle" size={18} color={colors.inkMuted} />
             </Pressable>
           )}

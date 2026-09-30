@@ -61,7 +61,7 @@ export default function VoiceRecorder({
       <View style={styles.done}>
         <Ionicons name="checkmark-circle" size={20} color={colors.success} />
         <AppText style={styles.doneTxt}>{t('voice.recorded')}</AppText>
-        <Pressable hitSlop={8} onPress={() => onChange(null)}>
+        <Pressable hitSlop={14} onPress={() => onChange(null)}>
           <AppText style={styles.reTxt}>{t('voice.remove')}</AppText>
         </Pressable>
       </View>
