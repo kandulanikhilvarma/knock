@@ -246,7 +246,7 @@ Or "Continue as guest" for an anonymous customer.
 - [ ] Sentry project is `javascript-nextjs` — the org blocks project creation
       for members, so events land in the wrong project. Create a `services-app`
       React Native project in the Sentry UI and swap the DSN in `.env`.
-- [ ] Tiles: CARTO basemaps are fine for a prototype. Before launch traffic,
+- [ ] Tiles: OSM standard tiles (CARTO went key-only Sep 2026). Before launch traffic,
       move to a keyed tile provider (MapTiler/Mapbox) or self-host.
 
 ## Full master-plan audit (2026-08-14) — read §6 spec, not just this file
