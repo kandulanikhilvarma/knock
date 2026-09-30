@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow } from '../../theme/tokens';
 import { getProvider, providerName, getCategories, categoryName } from '../../lib/queries';
 import { getProviderReviews } from '../../lib/bookings';
+import { isOwnStorageUrl } from '../../lib/validate';
 import Avatar from '../../components/Avatar';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
@@ -67,7 +68,7 @@ export default function ProviderScreen() {
             </View>
           </View>
 
-          {data.voice_intro_url ? (
+          {isOwnStorageUrl(data.voice_intro_url, process.env.EXPO_PUBLIC_SUPABASE_URL) ? (
             <Pressable style={styles.voice} onPress={() => Linking.openURL(data.voice_intro_url!)}>
               <View style={styles.voicePlay}>
                 <Ionicons name="play" size={13} color={colors.surface} />

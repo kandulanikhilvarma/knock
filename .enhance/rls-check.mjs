@@ -68,7 +68,8 @@ const as = async (uid, sql) => {
 };
 let fails = 0;
 const check = (name, ok) => { console.log(ok ? 'PASS' : 'FAIL', name); if (!ok) fails++; };
-const throws = async (fn) => { try { await fn(); return false; } catch { return true; } };
+const throws = async (fn) => { try { await fn(); return false; } catch (e) { if (process.env.DEBUG) console.log('  err:', e.message); return true; } };
+const errOf = async (fn) => { try { await fn(); return ''; } catch (e) { return e.message; } };
 
 // SEC-1
 check('customer can insert a plain requested booking', !(await throws(() =>
@@ -116,6 +117,19 @@ check('phone hidden 2 days after done', r.rows.length === 0);
 await db.exec(`update public.bookings set updated_at = now() - interval '2 hours' where id = '${b}';`);
 r = await as(Q, `select phone from public.profiles where id = '${C}'`);
 check('phone visible 2 hours after done', r.rows.length === 1);
+
+// SEC-9 (0024)
+check('bad UPI id rejected', (await errOf(() =>
+  as(P, `update public.provider_profiles set upi_id = 'x@' where user_id = '${P}'`))).includes('invalid upi_id'));
+check('good UPI id accepted', !(await throws(() =>
+  as(P, `update public.provider_profiles set upi_id = 'ravi.k@okaxis' where user_id = '${P}'`))));
+await db.exec(`set session_replication_role = replica;
+  update public.provider_profiles set upi_id = 'legacy@' where user_id = '${Q}';
+  set session_replication_role = origin;`);
+check('pro with a legacy bad UPI can still change availability', !(await throws(() =>
+  as(Q, `update public.provider_profiles set availability_status = 'busy' where user_id = '${Q}'`))));
+check('oversize booking description rejected', await throws(() =>
+  as(C, `insert into public.bookings (customer_id, category_slug, description) values ('${C}', 'ac', repeat('x', 1001))`)));
 
 console.log(fails ? `${fails} FAILED` : 'ALL PASS');
 process.exit(fails ? 1 : 0);

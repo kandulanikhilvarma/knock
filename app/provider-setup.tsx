@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, space, radius, font, type, tap, shadow } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
 import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';
+import { isValidUpi } from '../lib/validate';
 import { pickImages, uploadGalleryPhotos, pickAvatar, uploadAvatar } from '../lib/photos';
 import { useSession } from '../lib/session';
 import { Loading } from '../components/StateView';
@@ -82,7 +83,7 @@ export default function ProviderSetup() {
     setServices((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
 
   // The face is mandatory: customers open the door to this person. No photo, no listing.
-  const valid = services.length > 0 && upiId.includes('@') && !!photoUrl;
+  const valid = services.length > 0 && isValidUpi(upiId) && !!photoUrl;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -139,16 +140,16 @@ export default function ProviderSetup() {
       </View>
 
       <AppText style={styles.label}>{t('providerSetup.upi')}</AppText>
-      <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
+      <TextInput style={styles.input} value={upiId} onChangeText={setUpiId} maxLength={320} placeholder="name@bank" placeholderTextColor={colors.inkMuted} autoCapitalize="none" />
 
       <AppText style={styles.label}>{t('providerSetup.city')}</AppText>
-      <TextInput style={styles.input} value={city} onChangeText={setCity} placeholderTextColor={colors.inkMuted} />
+      <TextInput style={styles.input} value={city} onChangeText={setCity} maxLength={60} placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.charge')}</AppText>
       <TextInput style={styles.input} value={charge} onChangeText={setCharge} keyboardType="number-pad" placeholder="₹" placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.bio')}</AppText>
-      <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} multiline placeholderTextColor={colors.inkMuted} />
+      <TextInput style={[styles.input, styles.multi]} value={bio} onChangeText={setBio} maxLength={1000} multiline placeholderTextColor={colors.inkMuted} />
 
       <AppText style={styles.label}>{t('providerSetup.gallery')}</AppText>
       <View style={styles.photoRow}>

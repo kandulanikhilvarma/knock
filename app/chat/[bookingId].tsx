@@ -158,6 +158,7 @@ export default function ChatThread() {
         <TextInput
           style={styles.input}
           value={draft}
+          maxLength={2000}
           onChangeText={setDraft}
           placeholder={t('chat.placeholder')}
           placeholderTextColor={colors.inkMuted}

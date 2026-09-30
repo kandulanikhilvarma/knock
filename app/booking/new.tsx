@@ -122,6 +122,7 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={description}
+        maxLength={1000}
         onChangeText={setDescription}
         placeholder={t('booking.descPlaceholder')}
         placeholderTextColor={colors.inkMuted}
@@ -166,6 +167,7 @@ export default function NewBookingScreen() {
       <TextInput
         style={[styles.input, styles.multiline]}
         value={address}
+        maxLength={300}
         onChangeText={setAddress}
         placeholder={t('booking.addressPlaceholder')}
         placeholderTextColor={colors.inkMuted}
