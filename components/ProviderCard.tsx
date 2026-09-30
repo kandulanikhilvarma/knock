@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { colors, font, radius, space, type, shadow } from '../theme/tokens';
 import { providerName, type ProviderCard as Provider } from '../lib/queries';

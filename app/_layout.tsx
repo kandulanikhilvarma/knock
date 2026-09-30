@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Platform, View, Pressable, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Stack, useRouter, type ErrorBoundaryProps } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';

@@ -7,7 +7,7 @@ import { SEEN_KEY } from '../welcome';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { colors, space, radius, font, type, shadow, pressed } from '../../theme/tokens';
 import {

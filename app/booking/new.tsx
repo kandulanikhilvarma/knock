@@ -5,7 +5,7 @@ import AppText from '../../components/AppText';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap } from '../../theme/tokens';
 import { getCategories, categoryName } from '../../lib/queries';
 import { createBooking } from '../../lib/bookings';

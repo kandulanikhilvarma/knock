@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { colors, space, radius, font, type, shadow } from '../theme/tokens';
 

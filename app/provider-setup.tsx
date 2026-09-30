@@ -5,7 +5,7 @@ import AppText from '../components/AppText';
 import { useRouter, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow } from './../theme/tokens';
 import { getCategories, categoryName } from '../lib/queries';
 import { getMyProviderProfile, saveProviderProfile } from '../lib/provider';

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import type { ColorValue } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { colors, font, type } from '../../theme/tokens';
 

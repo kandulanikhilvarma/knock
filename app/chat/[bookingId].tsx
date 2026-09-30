@@ -7,7 +7,7 @@ import AppText from '../../components/AppText';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, space, radius, font, type, tap, shadow, pressed } from '../../theme/tokens';
 import { getMessages, sendMessage, subscribeMessages, type Message } from '../../lib/chat';
 import { useSession } from '../../lib/session';

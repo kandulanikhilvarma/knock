@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { View, Animated, Easing, Pressable, StyleSheet } from 'react-native';
 import AppText from './AppText';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import OrganicLines from './OrganicLines';
 import { colors, font, radius, space, type, tap, pressed } from '../theme/tokens';

@@ -19,7 +19,7 @@ import { categoryTint } from '../../lib/categoryTint';
 import { useMyLocation } from '../../lib/useMyLocation';
 import { decodeGeohash, distanceKm } from '../../lib/geo';
 import { track } from '../../lib/analytics';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Loading, ErrorState, Empty } from '../../components/StateView';
 
 export default function CategoryScreen() {

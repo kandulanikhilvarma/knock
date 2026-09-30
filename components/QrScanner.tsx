@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Modal, Pressable, StyleSheet } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import AppText from './AppText';
 import { colors, space, radius, font, type, tap } from '../theme/tokens';

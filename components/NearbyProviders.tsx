@@ -3,7 +3,7 @@ import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
 import Avatar from './Avatar';
 import LiveMap, { type MapPin } from './LiveMap';

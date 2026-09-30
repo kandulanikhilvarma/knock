@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { View, Image, Animated, Easing, StyleSheet, useWindowDimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
 import { colors, space, radius, font, type, shadow } from '../theme/tokens';
 import { project, TILE, type LatLng } from '../lib/geo';

@@ -8,7 +8,7 @@ import {
   AudioModule,
   setAudioModeAsync,
 } from 'expo-audio';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import AppText from './AppText';
 import { uploadVoiceIntro } from '../lib/audio';
