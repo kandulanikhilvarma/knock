@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { supabase } from './supabase';
+import { isTrustedAuthRedirect } from './validate';
 
 // Phone OTP only (master-plan §159). Phone stored E.164: +91XXXXXXXXXX.
 export function toE164(tenDigits: string): string {
@@ -86,6 +87,22 @@ export async function setSessionFromUrl(url: string): Promise<boolean> {
   return false;
 }
 
+// A deep link carrying tokens is trusted only while a sign-in we started is in
+// flight, and only on the auth-callback path. Otherwise any link such as
+// knock://x#access_token=…&refresh_token=… could sign the user into someone
+// else's account (login CSRF) and collect their address and phone.
+// ponytail: in-memory window, so a cold start mid-sign-in drops the redirect;
+// the user taps Google again.
+let authPendingUntil = 0;
+const AUTH_WINDOW_MS = 10 * 60_000;
+
+export async function handleAuthRedirect(url: string): Promise<boolean> {
+  if (!isTrustedAuthRedirect(url, authPendingUntil, Date.now())) return false;
+  const ok = await setSessionFromUrl(url);
+  if (ok) authPendingUntil = 0;
+  return ok;
+}
+
 // One-tap Google sign-in for Expo Go AND device builds. Ask Supabase for the
 // Google consent URL (we open it ourselves, so skipBrowserRedirect), open it in
 // the system auth session, and lift the session out of the returned URL.
@@ -110,11 +127,13 @@ export async function signInWithGoogle(): Promise<void> {
   if (error) throw error;
   if (!data?.url) throw new Error('Could not start Google sign-in');
 
+  authPendingUntil = Date.now() + AUTH_WINDOW_MS;
   const res = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
   if (res.type === 'cancel' || res.type === 'dismiss') return; // user backed out
   if (res.type !== 'success' || !res.url) throw new Error('Google sign-in did not complete');
 
   const ok = await setSessionFromUrl(res.url);
+  authPendingUntil = 0;
   if (!ok) throw new Error('Google sign-in returned no session');
 }
 

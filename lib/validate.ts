@@ -16,3 +16,11 @@ export function isOwnStorageUrl(url: string | null | undefined, supabaseUrl: str
   if (!url || !supabaseUrl) return false;
   return url.startsWith(`${supabaseUrl.replace(/\/+$/, '')}/storage/v1/object/public/`);
 }
+
+// Accept a sign-in redirect only on the auth-callback path and only while a
+// sign-in we started is still in flight (see lib/auth.ts handleAuthRedirect).
+export function isTrustedAuthRedirect(url: string, pendingUntil: number, now: number): boolean {
+  if (now > pendingUntil) return false;
+  const path = url.split(/[?#]/)[0];
+  return /(^|[/:])auth-callback\/?$/.test(path);
+}

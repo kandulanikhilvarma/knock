@@ -46,7 +46,7 @@ import AppText from '../components/AppText';
 import { colors, font, space, radius, type, tap } from '../theme/tokens';
 
 import { initSentry, Sentry } from '../lib/sentry';
-import { setSessionFromUrl } from '../lib/auth';
+import { handleAuthRedirect } from '../lib/auth';
 
 import '../lib/i18n';
 
@@ -131,14 +131,15 @@ function RootLayout() {
     if (fontsLoaded || fontError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontError]);
 
-  // Finish sign-in when a magic link / OAuth redirect deep-links back into the
-  // app — cold start (getInitialURL) and warm (the 'url' event) both.
+  // Finish a Google sign-in whose redirect arrives as a deep link instead of as
+  // the auth-session result (Android can do this). handleAuthRedirect ignores
+  // links unless that sign-in is in flight.
   useEffect(() => {
     const sub = Linking.addEventListener('url', ({ url }) => {
-      setSessionFromUrl(url).catch(() => {});
+      handleAuthRedirect(url).catch(() => {});
     });
     Linking.getInitialURL().then((url) => {
-      if (url) setSessionFromUrl(url).catch(() => {});
+      if (url) handleAuthRedirect(url).catch(() => {});
     });
     return () => sub.remove();
   }, []);
