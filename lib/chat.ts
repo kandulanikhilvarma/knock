@@ -13,14 +13,18 @@ export async function getMessages(bookingId: string): Promise<Message[]> {
   return data ?? [];
 }
 
-export async function sendMessage(bookingId: string, body: string) {
+// Returns the stored row so the sender sees it without waiting for realtime.
+export async function sendMessage(bookingId: string, body: string): Promise<Message> {
   const { data: auth } = await supabase.auth.getUser();
   const uid = auth.user?.id;
   if (!uid) throw new Error('not signed in');
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('messages')
-    .insert({ booking_id: bookingId, sender_id: uid, body: body.trim() });
+    .insert({ booking_id: bookingId, sender_id: uid, body: body.trim() })
+    .select('*')
+    .single();
   if (error) throw error;
+  return data;
 }
 
 // Realtime: fire cb on every new message in this booking's thread.

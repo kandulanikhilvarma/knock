@@ -244,7 +244,8 @@
     "quick_onWay": "On the way",
     "quick_reached": "I have reached",
     "quick_howLong": "How long will it take?",
-    "quick_callMe": "Please call me"
+    "quick_callMe": "Please call me",
+    "sendFailed": "Message not sent. Try again."
   },
   "jobs": {
     "title": "Job requests",

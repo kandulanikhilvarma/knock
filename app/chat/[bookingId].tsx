@@ -11,6 +11,7 @@ import { colors, space, radius, font, type, tap, shadow, pressed } from '../../t
 import { getMessages, sendMessage, subscribeMessages, type Message } from '../../lib/chat';
 import { useSession } from '../../lib/session';
 import { Loading, ErrorState } from '../../components/StateView';
+import { Sentry } from '../../lib/sentry';
 
 // HH:MM, 24h — plain and unambiguous across scripts.
 function clock(iso: string | null): string {
@@ -41,16 +42,30 @@ export default function ChatThread() {
     });
   }, [bookingId]);
 
-  const sendBody = async (body: string) => {
-    if (!body.trim()) return;
-    await sendMessage(bookingId!, body.trim());
+  const [sendFailed, setSendFailed] = useState(false);
+
+  // Resolves false on failure so the caller can hand the text back.
+  const sendBody = async (body: string): Promise<boolean> => {
+    const text = body.trim();
+    if (!text) return false;
+    setSendFailed(false);
+    try {
+      const m = await sendMessage(bookingId!, text);
+      setMsgs((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
+      return true;
+    } catch (e) {
+      Sentry.captureException(e);
+      setSendFailed(true);
+      return false;
+    }
   };
 
   const send = async () => {
     const body = draft.trim();
     if (!body) return;
     setDraft('');
-    await sendBody(body);
+    // Put the text back unless the user already started a new one.
+    if (!(await sendBody(body))) setDraft((d) => d || body);
   };
 
   if (q.isLoading) return <Loading />;
@@ -133,6 +148,11 @@ export default function ChatThread() {
         ))}
       </ScrollView>
 
+      {sendFailed && (
+        <AppText style={styles.sendErr} accessibilityLiveRegion="polite">
+          {t('chat.sendFailed')}
+        </AppText>
+      )}
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
@@ -223,4 +243,8 @@ const styles = StyleSheet.create({
   },
   send: { width: tap.min, height: tap.min, borderRadius: radius.pill, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   sendOff: { opacity: 0.4 },
+  sendErr: {
+    fontFamily: font.regular, fontSize: type.small, color: colors.danger,
+    paddingHorizontal: space.lg, paddingBottom: space.xs,
+  },
 });

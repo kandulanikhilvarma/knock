@@ -244,7 +244,8 @@
     "quick_onWay": "निकल चुका हूँ",
     "quick_reached": "पहुँच गया हूँ",
     "quick_howLong": "कितना समय लगेगा?",
-    "quick_callMe": "कृपया कॉल करें"
+    "quick_callMe": "कृपया कॉल करें",
+    "sendFailed": "संदेश नहीं गया। फिर से कोशिश करें।"
   },
   "jobs": {
     "title": "काम के अनुरोध",
