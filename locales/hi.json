@@ -156,7 +156,10 @@
     "availability": "उपलब्धता",
     "status_available": "उपलब्ध",
     "status_busy": "व्यस्त",
-    "status_paused": "रुका हुआ"
+    "status_paused": "रुका हुआ",
+    "needPhoto": "सेव करने के लिए अपनी फ़ोटो जोड़ें।",
+    "needService": "सेव करने के लिए कम से कम एक सेवा चुनें।",
+    "needUpi": "सेव करने के लिए सही UPI ID (जैसे name@bank) डालें।"
   },
   "booking": {
     "dispatchStuckTitle": "अभी प्रो तक नहीं पहुँच पाए",
@@ -238,7 +241,8 @@
     },
     "customerLbl": "ग्राहक",
     "call": "फ़ोन करें",
-    "noPhone": "नंबर उपलब्ध नहीं"
+    "noPhone": "नंबर उपलब्ध नहीं",
+    "needAddress": "अनुरोध भेजने के लिए अपना पता जोड़ें।"
   },
   "chat": {
     "title": "चैट",

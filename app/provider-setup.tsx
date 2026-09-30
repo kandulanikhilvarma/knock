@@ -92,6 +92,8 @@ export default function ProviderSetup() {
 
   // The face is mandatory: customers open the door to this person. No photo, no listing.
   const valid = services.length > 0 && isValidUpi(upiId) && !!photoUrl;
+  // First missing item, in form order, shown under the disabled save.
+  const need = !photoUrl ? 'needPhoto' : !services.length ? 'needService' : !isValidUpi(upiId) ? 'needUpi' : null;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -190,6 +192,7 @@ export default function ProviderSetup() {
       <Pressable accessibilityRole="button" style={[styles.cta, (!valid || save.isPending) && styles.ctaOff]} disabled={!valid || save.isPending} onPress={() => save.mutate()}>
         <AppText style={styles.ctaTxt}>{save.isPending ? t('providerSetup.saving') : t('providerSetup.save')}</AppText>
       </Pressable>
+      {need && <AppText style={styles.hint}>{t(`providerSetup.${need}`)}</AppText>}
       {save.isError && <AppText style={styles.err}>{errorMessage(save.error, t)}</AppText>}
     </ScrollView>
   );
@@ -255,4 +258,5 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.semibold, fontSize: type.body, color: colors.onDark },
   err: { fontFamily: font.te, fontSize: type.small, color: colors.danger },
+  hint: { fontFamily: font.te, fontSize: type.small, color: colors.inkMuted, textAlign: 'center' },
 });

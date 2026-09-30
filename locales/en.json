@@ -156,7 +156,10 @@
     "availability": "Availability",
     "status_available": "Available",
     "status_busy": "Busy",
-    "status_paused": "Paused"
+    "status_paused": "Paused",
+    "needPhoto": "Add your photo to save.",
+    "needService": "Pick at least one service to save.",
+    "needUpi": "Enter a valid UPI ID (like name@bank) to save."
   },
   "booking": {
     "dispatchStuckTitle": "We could not reach pros yet",
@@ -238,7 +241,8 @@
     },
     "customerLbl": "Customer",
     "call": "Call",
-    "noPhone": "No number on file"
+    "noPhone": "No number on file",
+    "needAddress": "Add your address to send the request."
   },
   "chat": {
     "title": "Chat",

@@ -156,7 +156,10 @@
     "availability": "అందుబాటు",
     "status_available": "అందుబాటులో",
     "status_busy": "బిజీ",
-    "status_paused": "పాజ్"
+    "status_paused": "పాజ్",
+    "needPhoto": "సేవ్ చేయడానికి మీ ఫోటో జోడించండి.",
+    "needService": "సేవ్ చేయడానికి కనీసం ఒక సేవను ఎంచుకోండి.",
+    "needUpi": "సేవ్ చేయడానికి సరైన UPI ID (name@bank లాగా) ఇవ్వండి."
   },
   "booking": {
     "dispatchStuckTitle": "ఇంకా నిపుణులను చేరుకోలేకపోయాం",
@@ -238,7 +241,8 @@
     },
     "customerLbl": "కస్టమర్",
     "call": "ఫోన్ చేయండి",
-    "noPhone": "నంబర్ లేదు"
+    "noPhone": "నంబర్ లేదు",
+    "needAddress": "అభ్యర్థన పంపడానికి మీ చిరునామా ఇవ్వండి."
   },
   "chat": {
     "title": "చాట్",

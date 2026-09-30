@@ -198,6 +198,7 @@ export default function NewBookingScreen() {
       >
         <AppText style={styles.ctaTxt}>{m.isPending ? t('booking.submitting') : t('booking.submit')}</AppText>
       </Touchable>
+      {!valid && <AppText style={styles.hint}>{t('booking.needAddress')}</AppText>}
       {m.isError && <AppText style={styles.err}>{errorMessage(m.error, t)}</AppText>}
     </ScrollView>
   );
@@ -298,4 +299,5 @@ const styles = StyleSheet.create({
   ctaOff: { opacity: 0.4 },
   ctaTxt: { fontFamily: font.teBold, fontSize: type.body, color: colors.surface },
   err: { fontFamily: font.regular, fontSize: type.small, color: colors.danger, marginTop: space.sm },
+  hint: { fontFamily: font.regular, fontSize: type.small, color: colors.inkMuted, marginTop: space.sm, textAlign: 'center' },
 });
