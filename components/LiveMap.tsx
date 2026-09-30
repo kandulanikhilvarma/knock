@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useReducedMotion } from '../lib/useReducedMotion';
-import { View, Image, Animated, Easing, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Image, Animated, Easing, Platform, StyleSheet, useWindowDimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AppText from './AppText';
 import { colors, space, radius, font, type, shadow } from '../theme/tokens';
@@ -9,10 +9,14 @@ import { project, TILE, type LatLng } from '../lib/geo';
 export type PinState = 'idle' | 'pinged' | 'accepted';
 export type MapPin = LatLng & { id: string; name: string; state: PinState };
 
-// CARTO's light basemap (OpenStreetMap data). Key-free, and the muted grey sits
-// under the cream palette instead of fighting it.
-const TILE_URL = (z: number, x: number, y: number) =>
-  `https://basemaps.cartocdn.com/light_all/${z}/${x}/${y}@2x.png`;
+// OpenStreetMap standard tiles: key-free. (CARTO's basemaps started returning
+// an "API KEY REQUIRED" image to every caller in Sep 2026.) A paper wash on top
+// mutes the colours to sit under the palette. OSM's tile policy asks apps for an
+// identifying User-Agent and attribution, and allows light use only.
+// ponytail: fine for the pilot; move to a keyed provider before launch traffic (TODO.md).
+const TILE_URL = (z: number, x: number, y: number) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+// Browsers send their own UA and refuse to override it, so headers are native-only.
+const TILE_HEADERS = Platform.OS === 'web' ? undefined : { 'User-Agent': 'Knock/1.0 (+https://knock-kandula.vercel.app)' };
 
 function Pulse({ color, size = 26 }: { color: string; size?: number }) {
   const a = useRef(new Animated.Value(0)).current;
@@ -105,11 +109,12 @@ export default function LiveMap({
           {view.tiles.map((t) => (
             <Image
               key={t.key}
-              source={{ uri: t.url }}
+              source={{ uri: t.url, headers: TILE_HEADERS }}
               style={{ position: 'absolute', left: t.left, top: t.top, width: TILE, height: TILE }}
               fadeDuration={160}
             />
           ))}
+          <View pointerEvents="none" style={styles.wash} />
 
           {pins.map((p) => {
             const pos = view.at(p);
@@ -148,7 +153,7 @@ export default function LiveMap({
       )}
 
       <View style={styles.attr}>
-        <AppText style={styles.attrTxt}>© OpenStreetMap · CARTO</AppText>
+        <AppText style={styles.attrTxt}>© OpenStreetMap contributors</AppText>
       </View>
     </View>
   );
@@ -164,6 +169,8 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
     ...shadow.card,
   },
+  // Mutes OSM's colours toward the paper ground; pins and labels sit above it.
+  wash: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: colors.bg, opacity: 0.5 },
   pulse: { position: 'absolute', top: 0, borderWidth: 1.5 },
 
   pin: { position: 'absolute', width: 52, alignItems: 'center' },
